@@ -67,7 +67,7 @@ rzslider .rz-pointer {
 }
 
 rzslider .rz-pointer.rz-active:after {
-  background-color: #c3931a
+  background-color: #FFBB00
 }
 
 rzslider .rz-bar.rz-selection {
@@ -116,8 +116,8 @@ rzslider .rz-bar.rz-selection {
   margin-top: 200px;
 }
 
-.ol-zoomslider-thumb {
-  margin: 5px;
+.ol-zoomslider button {
+  margin: -1px;
   background-color: rgba(156, 156, 156, 1);
 }
 
