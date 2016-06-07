@@ -110,7 +110,7 @@ angular
             timeProp = 'LayerDate:['+ formatTime(reqParamsUi.yearMin)+' TO '+ formatTime(reqParamsUi.yearMax)+']';
             params.fq.push(timeProp);
 
-            baseUrl = './API/mockup_existing_all.json';
+            baseUrl = './API/mockup2.json';
 
             config = {
               url: baseUrl,
