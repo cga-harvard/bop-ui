@@ -11,7 +11,7 @@ module.exports = function(grunt) {
             publish: {
                 repo: 'https://github.com/ahennr/SolrHeatmap.git',
                 message: 'Publish gh-pages (grunt cli)',
-                src: ['index.html', 'app/**', 'assets/**', 'config/**', 'LICENSE']
+                src: ['index.html', 'app/**', 'assets/**', 'config/**', 'LICENSE', 'API/*.json']
             },
             deploy: {
                 options: {
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                     message: 'Publish gh-pages (auto)' + getDeployMessage(),
                     silent: true
                 },
-                src: ['index.html', 'app/**', 'assets/**', 'config/**', 'LICENSE']
+                src: ['index.html', 'app/**', 'assets/**', 'config/**', 'LICENSE', 'API/*.json']
             }
         }
     });
