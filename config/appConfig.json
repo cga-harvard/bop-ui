@@ -24,12 +24,12 @@
             "name": "terrestris OSM WMS",
             "attribution": "Data © OpenStreetMap contributors <br>(<a href='http://www.openstreetmap.org/copyright'>http://www.openstreetmap.org/copyright)</a>",
             "logo": {
-                "src": "http://www.terrestris.de/wp-content/uploads/icon_terrestris_tiny.png",
-                "href": "http://www.terrestris.de"
+                "src": "https://www.terrestris.de/wp-content/uploads/icon_terrestris_tiny.png",
+                "href": "https://www.terrestris.de"
             },
             "ratio": null,
             "resolutions": null,
-            "url": "http://ows.terrestris.de/osm/service",
+            "url": "https://ows.terrestris.de/osm/service",
             "params": {
                 "LAYERS": "OSM-WMS",
                 "VERSION": "1.1.0",
