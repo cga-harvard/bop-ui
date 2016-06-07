@@ -26,19 +26,14 @@
     "OpenLayers 3",
     "Heatmap"
   ],
-  "engines": {
-    "node": ">= 0.10.0 && < 0.11.0"
-  },
   "scripts": {
-    "build": "grunt build"
+    "deploy": "grunt deploy"
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-cli": "~0.1.0",
-    "grunt-gh-pages": "0.9.1"
-  },
-  "peerDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "1.0.1",
+    "grunt-cli": "1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-gh-pages": "1.1.0"
   }
 }
