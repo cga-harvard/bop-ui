@@ -1,7 +1,7 @@
 {
     "appConfig": {
         "proxyPath": "",
-        "solrBaseUrl": ".API/mockup_existing_all.json"
+        "solrBaseUrl": ".API/mockup2.json"
     },
     "mapConfig": {
         "renderer": "canvas",
