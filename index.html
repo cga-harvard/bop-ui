@@ -2,73 +2,74 @@
 <html ng-app="SolrHeatmapApp">
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Solr &dash; Heatmap (Sample UI)</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Solr &dash; Heatmap (Sample UI)</title>
 
-  <!-- LIBRARY CSS -->
-  <link rel="stylesheet" href="./assets/lib/ol3/ol.css">
-  <link rel="stylesheet" href="./assets/lib/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.css"/>
+    <!-- LIBRARY CSS -->
+    <link rel="stylesheet" href="./assets/lib/ol3/ol.css">
+    <link rel="stylesheet" href="./assets/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.css" />
 
-  <!-- LIBRARY JS -->
-  <script src="./assets/lib/jquery/jquery-2.1.3.min.js"></script>
-  <script src="./assets/lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="./assets/lib/angularjs/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.js"></script>
-  <script src="./assets/lib/proj4js/proj4.js"></script>
-  <script src="./config/3857.js"></script>
-  <!-- <script src="./assets/lib/ol3/ol-debug.js"></script> -->
-  <script src="./assets/lib/ol3/ol.js"></script>
+    <!-- LIBRARY JS -->
+    <script src="./assets/lib/jquery/jquery-2.1.3.min.js"></script>
+    <script src="./assets/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./assets/lib/angularjs/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.js"></script>
+    <script src="./assets/lib/proj4js/proj4.js"></script>
+    <script src="./config/3857.js"></script>
+    <!-- <script src="./assets/lib/ol3/ol-debug.js"></script> -->
+    <script src="./assets/lib/ol3/ol.js"></script>
 
-  <!-- APP CSS -->
-  <link rel="stylesheet" href="./assets/css/app.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./assets/css/app.css">
 
-  <!-- APP JS -->
-  <script src="./app/app.js"></script>
-  <script src="./app/controller/Main.js"></script>
-  <script src="./app/controller/BackgroundLayer.js"></script>
-  <script src="./app/controller/Search.js"></script>
-  <script src="./app/controller/Export.js"></script>
-  <script src="./app/controller/YearSlide.js"></script>
-  <script src="./app/service/Map.js"></script>
-  <script src="./app/service/HeatMapSourceGenerator.js"></script>
-  <script src="./app/service/GeoNodeSolr.js"></script>
+    <!-- APP JS -->
+    <script src="./app/app.js"></script>
+    <script src="./app/controller/Main.js"></script>
+    <script src="./app/controller/BackgroundLayer.js"></script>
+    <script src="./app/controller/Search.js"></script>
+    <script src="./app/controller/Export.js"></script>
+    <script src="./app/controller/YearSlide.js"></script>
+    <script src="./app/service/Map.js"></script>
+    <script src="./app/service/HeatMapSourceGenerator.js"></script>
+    <script src="./app/service/GeoNodeSolr.js"></script>
 
 </head>
 
 <body ng-controller="mainCtrl">
-   <div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="page-header">
-					<h1>Solr-Heatmap-Client based on AngularJS and OL3</h1>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<ng-include src="'./app/view/sliderChooseYear.html'"></ng-include>
-					</div>
-				</div>
-        <hr>
-				<div class="row">
-					<div class="col-md-12">
-            <!-- the ol3 map -->
-            <div class="map" id="map"></div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<ng-include src="'./app/view/exportButton.html'"></ng-include>
-					</div>
-				</div>
-			</div>
-		</div>
-    <ng-include src="'./app/view/mapPopup.html'"></ng-include>
-	</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>Solr-Heatmap-Client based on AngularJS and OL3</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ng-include src="'./app/view/sliderChooseYear.html'"></ng-include>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- the ol3 map -->
+                        <div class="map" id="map"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ng-include src="'./app/view/exportButton.html'"></ng-include>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-include src="'./app/view/mapPopup.html'"></ng-include>
+    </div>
 </body>
+
 </html>
