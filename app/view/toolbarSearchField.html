@@ -1,0 +1,11 @@
+<div ng-controller="Search">
+  <div class="input-group" id="searchinput">
+    <span class="input-group-btn">
+        <button class="btn btn-primary btn-sm" type="button" ng-click="resetSearchInput()">Reset</button>
+      </span>
+    <input class="form-control input-sm" type="text" placeholder="Search for..." ng-keypress="onKeyPress($event)" ng-model="searchInput" ng-click="onFocus()" ng-blur="onBlur()">
+    <span class="input-group-btn">
+      <button class="btn btn-primary btn-sm" type="button" ng-click="doSearch()">Search</button>
+    </span>
+  </div>
+</div>

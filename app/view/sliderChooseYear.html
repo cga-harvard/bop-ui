@@ -1,0 +1,13 @@
+<div ng-controller="YearSlide">
+  <div class="row">
+    <div class="input-group" id="fromToInputs">
+      <span class="input-group-addon">From year:</span>
+      <input type="text" id="from-year" placeholder=" {{ys.years.min}}" readonly>
+      <span class="input-group-addon">To year:</span>
+      <input type="text" id="to-year" placeholder="{{ys.years.max}}" readonly>
+    </div>
+  </div>
+  <div class="row" id="fromToSlider">
+    <rzslider rz-slider-model="ys.years.min" rz-slider-high="ys.years.max" rz-slider-options="ys.years.options"></rzslider>
+  </div>
+</div>
