@@ -1,0 +1,47 @@
+{
+  "name": "SolrHeatmapApp",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Solr-Heatmap-Client based on AngularJS and OL3",
+  "homepage": "http://terrrestris.github.io/SolrHeatmap",
+  "author": {
+    "name": "Andre Henn",
+    "url": "https://github.com/ahennr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/terrestris/SolrHeatmap"
+  },
+  "bugs": {
+    "url": "https://github.com/terrestris/SolrHeatmap/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT/"
+    }
+  ],
+  "keywords": [
+    "Apache Solr",
+    "OpenLayers 3"
+    "Heatmap"
+  ],
+  "engines": {
+    "node": ">= 0.10.0 && < 0.11.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-gh-pages": "0.9.1",
+    "grunt-markdown": "^0.5.0"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  }
+}
