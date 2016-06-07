@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 		'gh-pages': {
 			options: {
 				branch: 'gh-pages',
-        repo: 'https://github.com/ahennr/SolrHeatmap.git',
+        repo: 'https://github.com/terrestris/SolrHeatmap.git',
         message: 'Publish gh-pages (grunt cli)'
 			},
       src: ['**/*']
