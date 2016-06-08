@@ -23,7 +23,7 @@ angular
             boost : 30.0
           },
           searchObj = {
-            yearMin: 0,
+            yearMin: 2005,
             yearMax: 2016,
             searchText : ''
           };
