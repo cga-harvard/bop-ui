@@ -9,8 +9,8 @@ html, body {
 }
 
 .map {
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
 }
 
 .panel {
@@ -19,20 +19,26 @@ html, body {
   -webkit-box-shadow: none;
 }
 
-#searchinput {
-  width: 75%
-}
-
-#fromToInputs{
-  padding-left: 15px;
+#fromToInputs {
   padding-top: 25px;
-  padding-bottom: 25px
+  padding-bottom: 15px;
 }
 
 #fromToSlider {
-  width: 75%;
-  padding-left: 15px;
-  padding-bottom: 25px;
+  padding-bottom: 15px;
+}
+
+.center-form {
+    text-align:center;
+}
+
+.center-form form {
+    display:inline-block;
+}
+
+.center-form form label {
+  margin-left: 15px;
+  margin-right: 5px;
 }
 
 hr {
