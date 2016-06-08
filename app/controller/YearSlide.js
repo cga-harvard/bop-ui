@@ -10,8 +10,8 @@ angular
             min: HeatMapSourceGeneratorService.getSearchObj().yearMin,
             max: HeatMapSourceGeneratorService.getSearchObj().yearMax,
             options: {
-              floor: -1000,
-              ceil: 2100
+              floor: 2005,
+              ceil: 2016
             //  showTicks: true
             }
           }
