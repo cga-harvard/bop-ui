@@ -1,5 +1,5 @@
 /**
- * Toolbar Controller
+ * ResultCounter Controller
  */
 angular
     .module('SolrHeatmapApp')

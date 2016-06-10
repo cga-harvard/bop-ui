@@ -1,5 +1,5 @@
 /**
- * Toolbar Controller
+ * YearSlide Controller
  */
 angular
     .module('SolrHeatmapApp')

@@ -1,5 +1,5 @@
 /**
- * Map Service
+ * HeatMapSourceGenerator Service
  */
 angular
     .module('SolrHeatmapApp')

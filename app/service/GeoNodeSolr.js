@@ -1,5 +1,5 @@
 /**
- * Map Service
+ * GeoNodeSolr Service
  */
 angular
     .module('SolrHeatmapApp')
