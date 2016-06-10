@@ -42,11 +42,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
-                  <div class="col-md-2"></div>
-                  <div class="col-md-8">
+                  <div class="col-md-8 col-md-offset-2">
                       <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
                   </div>
-                  <div class="col-md-2"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3"></div>
@@ -55,15 +53,14 @@
                     </div>
                     <div class="col-md-3"></div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- the ol3 map -->
-                        <div class="map" id="map"></div>
-                    </div>
+                <div class="row map-row">
+                  <div class="col-md-8 col-md-offset-2">
+                      <!-- the ol3 map -->
+                      <div class="map" id="map"></div>
+                  </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-8 col-md-offset-2">
                         <ng-include src="'./app/view/exportButton.html'"></ng-include>
                     </div>
                 </div>
