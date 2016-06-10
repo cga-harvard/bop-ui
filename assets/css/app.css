@@ -28,6 +28,10 @@ html, body {
   padding-bottom: 15px;
 }
 
+#searchinput {
+  padding-top: 25px;
+}
+
 .center-form {
     text-align:center;
 }
