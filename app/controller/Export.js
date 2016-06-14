@@ -1,5 +1,5 @@
 /**
- * Toolbar Controller
+ * Export Controller
  */
 angular
     .module('SolrHeatmapApp')
