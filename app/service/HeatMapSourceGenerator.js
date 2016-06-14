@@ -1,5 +1,5 @@
 /**
- * Map Service
+ * HeatMapSourceGenerator Service
  */
 angular
     .module('SolrHeatmapApp')
@@ -9,7 +9,6 @@ angular
             term : "LayerWithinMap",
             boost : 80.0
           },
-
           LayerMatchesScale = {
             term : "LayerMatchesScale",
             boost : 70.0
@@ -27,6 +26,7 @@ angular
             yearMax: 2016,
             searchText : ''
           };
+
 
         var methods = {
             getSolrQueryParameters: getSolrQueryParameters,
@@ -124,6 +124,9 @@ angular
             $http(config).
             success(function(data, status, headers, config) {
               MapService.createOrUpdateHeatMapLayer(data);
+              if (data.response && data.response.numFound) {
+                  $rootScope.$broadcast('setCounter', data.response.numFound);
+              }
             }).
             error(function(data, status, headers, config) {
               // hide the loading mask
