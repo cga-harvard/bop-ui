@@ -31,6 +31,7 @@
     <script src="./app/controller/Search.js"></script>
     <script src="./app/controller/Export.js"></script>
     <script src="./app/controller/YearSlide.js"></script>
+    <script src="./app/controller/ResultCounter.js"></script>
     <script src="./app/service/Map.js"></script>
     <script src="./app/service/HeatMapSourceGenerator.js"></script>
     <script src="./app/service/GeoNodeSolr.js"></script>
@@ -41,15 +42,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="page-header text-center">
-                    <h1>Solr-Heatmap-Client based on AngularJS and OL3</h1>
-                </div>
                 <div class="row">
-                  <div class="col-md-2"></div>
-                  <div class="col-md-8">
+                  <div class="col-md-8 col-md-offset-2">
                       <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
                   </div>
-                  <div class="col-md-2"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-3"></div>
@@ -58,20 +54,21 @@
                     </div>
                     <div class="col-md-3"></div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- the ol3 map -->
-                        <div class="map" id="map"></div>
-                    </div>
+                <div class="row map-row">
+                  <div class="col-md-8 col-md-offset-2">
+                      <ng-include src="'./app/view/resultCounterText.html'"></ng-include>
+                      <!-- the ol3 map -->
+                      <div class="map" id="map"></div>
+                  </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-8 col-md-offset-2">
                         <ng-include src="'./app/view/exportButton.html'"></ng-include>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- map popup -->
         <ng-include src="'./app/view/mapPopup.html'"></ng-include>
     </div>
 </body>

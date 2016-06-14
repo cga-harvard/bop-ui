@@ -1,5 +1,5 @@
 /**
- * LayerPanel Service
+ * BackgroundLayer Controller
  */
 angular
     .module('SolrHeatmapApp')
