@@ -6,9 +6,9 @@
     "mapConfig": {
         "renderer": "canvas",
         "view": {
-            "center": [0, 0],
-            "maxResolution": null,
-            "minResolution": null,
+            "center": [430493, 6887893],
+            "minResolution": 9.554628534317017,
+            "maxResolution": 156543.03390625,
             "maxZoom": null,
             "minZoom": null,
             "projection": "EPSG:3857",
@@ -29,7 +29,7 @@
             },
             "ratio": null,
             "resolutions": null,
-            "url": "https://ows.terrestris.de/osm/service",
+            "url": "https://ows.terrestris.de/osm-gray/service",
             "params": {
                 "LAYERS": "OSM-WMS",
                 "VERSION": "1.1.0",
