@@ -9,9 +9,9 @@ angular
             defaults = {
                 renderer: 'canvas',
                 view: {
-                    center: [0, 0],
+                    center: [0 ,0],
                     projection: 'EPSG:3857',
-                    zoom: 14
+                    zoom: 2
                 }
             };
 
@@ -19,7 +19,6 @@ angular
             //map: map,
             init: init,
             getMap: getMap,
-            getTransformedCenterCoords: getTransformedCenterCoords,
             getLayersBy: getLayersBy,
             getInteractionsByClass: getInteractionsByClass,
             getInteractionsByType: getInteractionsByType,
@@ -37,8 +36,7 @@ angular
          */
         function init(config) {
             var viewConfig = angular.extend(defaults.view, config.mapConfig.view),
-                // TODO overwrite with default if not set
-                rendererConfig = config.mapConfig.renderer,
+                rendererConfig = angular.extend(defaults.renderer, config.mapConfig.renderer),
                 layerConfig = config.mapConfig.layers;
 
             map = new ol.Map({
@@ -52,8 +50,8 @@ angular
                     undefined,
                 target: 'map',
                 view: new ol.View({
-                    center: getTransformedCenterCoords(viewConfig.center,
-                            viewConfig.projection),
+                    center: angular.isArray(viewConfig.center) ?
+                            viewConfig.center : undefined,
                     maxResolution: angular.isNumber(viewConfig.maxResolution) ?
                             viewConfig.maxResolution : undefined,
                     minResolution: angular.isNumber(viewConfig.minResolution) ?
@@ -76,19 +74,6 @@ angular
                             viewConfig.zoomFactor : undefined,
                 })
             });
-
-        }
-
-        /**
-         *
-         */
-        function getTransformedCenterCoords(center, projection) {
-            var centerNew;
-            if (angular.isArray(center) &&
-                    angular.isString(projection)) {
-                centerNew = ol.proj.transform(center, 'EPSG:4326', projection);
-            }
-            return centerNew;
         }
 
         /**
