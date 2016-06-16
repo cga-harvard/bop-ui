@@ -3,7 +3,7 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('YearSlide', ['Map', 'HeatMapSourceGenerator', '$scope', '$filter', '$timeout', function(MapService, HeatMapSourceGeneratorService, $scope, $filter, $timeout) {
+    .controller('YearSlideCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', '$filter', '$timeout', function(MapService, HeatMapSourceGeneratorService, $scope, $filter, $timeout) {
 
         $scope.ys = {
           years : {
