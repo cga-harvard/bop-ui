@@ -3,7 +3,7 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('BackgroundLayer', ['Map', '$scope', function(MapService, $scope) {
+    .controller('BackgroundLayerCtrl', ['Map', '$scope', function(MapService, $scope) {
 
         /**
          *

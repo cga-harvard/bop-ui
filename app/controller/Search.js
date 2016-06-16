@@ -3,7 +3,7 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('Search', ['Map', 'HeatMapSourceGenerator', '$scope', '$http', function(MapService, HeatMapSourceGeneratorService, $scope, $http) {
+    .controller('SearchCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', '$http', function(MapService, HeatMapSourceGeneratorService, $scope, $http) {
 
         /**
          *
