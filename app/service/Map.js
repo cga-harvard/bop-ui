@@ -71,7 +71,7 @@ angular
                     zoom: angular.isNumber(viewConfig.zoom) ?
                             viewConfig.zoom : undefined,
                     zoomFactor: angular.isNumber(viewConfig.zoomFactor) ?
-                            viewConfig.zoomFactor : undefined,
+                            viewConfig.zoomFactor : undefined
                 })
             });
         }
@@ -99,7 +99,7 @@ angular
                                 params: conf.params,
                                 ratio: conf.ratio,
                                 resolutions: conf.resoltions,
-                                url: conf.url,
+                                url: conf.url
                             }),
                             opacity: conf.opacity,
                             visible: conf.visible
@@ -230,14 +230,14 @@ angular
               var layerSrc = currHeatmapLayer.getSource();
               if (layerSrc){
                 layerSrc.clear();
-                currHeatmapLayer.setSource(olVecSrc);
               }
+              currHeatmapLayer.setSource(olVecSrc);
           } else {
             newHeatMapLayer = new ol.layer.Heatmap({
              name: 'HeatMapLayer',
              source: olVecSrc,
              radius: 10,
-             opacity: 0.25
+             //opacity: 0.25
            });
             map.addLayer(newHeatMapLayer);
           }
@@ -246,17 +246,17 @@ angular
         /*
          *
          */
-        function createHeatMapSource(data) {
-          if (data && data.response) {
-          //  console.log("Number of found examples: ", data.response.numFound);
-            var counts_ints2D = data.facet_counts.facet_heatmaps.bbox[15],
-                gridLevel = data.facet_counts.facet_heatmaps.bbox[1],
-                gridColumns = data.facet_counts.facet_heatmaps.bbox[3],
-                gridRows = data.facet_counts.facet_heatmaps.bbox[5],
-                minX = data.facet_counts.facet_heatmaps.bbox[7],
-                minY = data.facet_counts.facet_heatmaps.bbox[11],
-                maxX = data.facet_counts.facet_heatmaps.bbox[9],
-                maxY = data.facet_counts.facet_heatmaps.bbox[13],
+        function createHeatMapSource(hmParams) {
+
+            var counts_ints2D = hmParams.counts_ints2D,
+                gridLevel = hmParams.gridLevel,
+                gridColumns = hmParams.columns,
+                gridRows = hmParams.rows,
+                minX = hmParams.minX,
+                minY = hmParams.minY,
+                maxX = hmParams.maxX,
+                maxY = hmParams.maxY,
+                hmProjection = hmParams.projection,
                 dx = maxX - minX,
                 dy = maxY - minY,
                 sx = dx / gridColumns,
@@ -270,7 +270,6 @@ angular
               return null;
             }
             minMaxValue = this.heatmapMinMax(counts_ints2D, gridRows, gridColumns);
-
             for (var i = 0 ; i < gridRows ; i++){
               for (var j = 0 ; j < gridColumns ; j++){
                   var hmVal = counts_ints2D[counts_ints2D.length - i - 1][j],
@@ -282,10 +281,9 @@ angular
                   if (hmVal && hmVal !== null){
                     lat = minY + i*sy + (0.5 * sy);
                     lon = minX + j*sx + (0.5 * sx);
-
                     coords = ol.proj.transform(
                       [lon, lat],
-                      'EPSG:4326',
+                      hmProjection,
                       map.getView().getProjection().getCode()
                     );
 
@@ -308,7 +306,7 @@ angular
               useSpatialIndex: true
             });
             return olVecSrc;
-          }
+
         }
 
         function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){

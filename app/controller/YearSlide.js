@@ -11,8 +11,9 @@ angular
             max: HeatMapSourceGeneratorService.getSearchObj().yearMax,
             options: {
               floor: 2005,
-              ceil: 2016
-            //  showTicks: true
+              ceil: 2016,
+              noSwitching: true
+              //showTicks: true
             }
           }
         };

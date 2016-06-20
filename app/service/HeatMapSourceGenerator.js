@@ -3,33 +3,17 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', 'GeoNodeSolr', '$rootScope', '$filter', '$http', function(MapService, GeoNodeSolrService, $rootScope, $filter, $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$http', function(MapService, $rootScope, $filter, $http) {
 
-        var LayerWithinMap = {
-            term : "LayerWithinMap",
-            boost : 80.0
-          },
-          LayerMatchesScale = {
-            term : "LayerMatchesScale",
-            boost : 70.0
-          },
-          LayerMatchesCenter = {
-            term : "LayerMatchesCenter",
-            boost : 15.0
-          },
-          LayerAreaIntersection = {
-            term : "LayerAreaIntersection",
-            boost : 30.0
-          },
-          searchObj = {
+        var searchObj = {
             yearMin: 2005,
             yearMax: 2016,
             searchText : ''
-          };
-
+        };
 
         var methods = {
-            getSolrQueryParameters: getSolrQueryParameters,
+            getGeospatialFilter: getGeospatialFilter,
+            getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
             performSearch: performSearch,
             setSearchText: setSearchText,
             setMinYear: setMinYear,
@@ -39,93 +23,85 @@ angular
 
         return methods;
 
+        /**
+         *
+         */
         function setSearchText(val) {
           searchObj.searchText = val;
         }
 
+        /**
+         *
+         */
         function setMinYear(val) {
           searchObj.yearMin = val;
         }
 
+        /**
+         *
+         */
         function setMaxYear(val) {
           searchObj.yearMax = val;
         }
 
+        /**
+         *
+         */
         function getSearchObj(){
           return searchObj;
         }
 
-        function getSolrQueryParameters(){
+        /**
+         *
+         */
+        function getGeospatialFilter(){
           var map = MapService.getMap(),
-              viewProj = map.getView().getProjection().getCode(),
-              extent = map.getView().calculateExtent(map.getSize()),
-              center = map.getView().getCenter(),
-              centerWgs84,
-              extentWgs84,
-              solrCenter = {},
-              solrBbox = {};
+                viewProj = map.getView().getProjection().getCode(),
+                extent = map.getView().calculateExtent(map.getSize()),
+                extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
+                geoFilter = {};
 
-          if (extent && center){
-            //transform to WGS84
-            centerWgs84 = ol.proj.transform(center, viewProj, 'EPSG:4326');
-            extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326');
+            if (extent && extentWgs84){
 
-            solrBbox = {
-              minX: extentWgs84[0],
-              maxX: extentWgs84[2],
-              minY: extentWgs84[1],
-              maxY: extentWgs84[3]
-            };
-            solrCenter = {
-              centerX: centerWgs84[0],
-              centerY: centerWgs84[1]
-            };
+                var minX = extentWgs84[1],
+                    maxX = extentWgs84[3]
+                    minY = wrapLon(extentWgs84[0]),
+                    maxY = wrapLon(extentWgs84[2]);
 
-            var params = GeoNodeSolrService.getOgpSpatialQueryParams(solrBbox, solrCenter);
-            return params;
-          }
-        }
-
-        function performSearch(){
-          var baseUrl = solrHeatmapApp.appConfig.proxyPath;
-          var config = {},
-              formatTime = function(year){
-                return year + "-01-01T00:00:00.0Z";
-              };
-
-          var params = this.getSolrQueryParameters(),
-              reqParamsUi = this.getSearchObj();
-
-          if (params && params.fq) {
-            // Merge parameters of
-            // a) time slider  params.fq.push([fromTo...])
-            // b) search field params['q'] = ...
-            if (reqParamsUi.searchText.length === 0){
-              params.q = '*';
-            } else {
-              params.q = reqParamsUi.searchText;
+                geoFilter = {
+                    minX: minX,
+                    maxX: maxX,
+                    minY: minY < maxY ? minY : maxY,
+                    maxY: maxY > minY ? maxY : minY
+                };
             }
 
-            // time slider  params.fq.push([fromTo...])
-            timeProp = 'LayerDate:['+ formatTime(reqParamsUi.yearMin)+' TO '+ formatTime(reqParamsUi.yearMax)+']';
-            params.fq.push(timeProp);
+            return geoFilter;
+        }
 
-            baseUrl = './API/mockup2.json';
+        /**
+         *
+         */
+        function performSearch(){
+          var config = {},
+              params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
 
-            config = {
-              url: baseUrl,
-              method: 'GET',
-              params: {
-                url: encodeURIComponent(solrHeatmapApp.appConfig.solrBaseUrl) + $.param(params)
-              }
-            };
+          if (params) {
 
-            //  load the data at the moment: use mockup
+              config = {
+                  url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                  method: 'GET',
+                  params: params
+              };
+
+            //  load the data
             $http(config).
             success(function(data, status, headers, config) {
-              MapService.createOrUpdateHeatMapLayer(data);
-              if (data.response && data.response.numFound) {
-                  $rootScope.$broadcast('setCounter', data.response.numFound);
+              // check if we have a heatmap facet and update the map with it
+              if (data && data["a.hm"]) {
+                  MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
+                  // get the count of matches
+                  $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
               }
             }).
             error(function(data, status, headers, config) {
@@ -136,4 +112,36 @@ angular
           }
         }
 
+        /**
+         *
+         */
+        function getTweetsSearchQueryParameters(bounds) {
+
+            // get keyword and time range
+            var reqParamsUi = this.getSearchObj(),
+                keyword;
+
+            if (reqParamsUi.searchText.length === 0){
+                keyword = '*';
+            } else {
+                keyword = reqParamsUi.searchText;
+            }
+
+            var params = {
+                "q.text": keyword,
+                "q.time": '['+ reqParamsUi.yearMin + '-01-01 TO ' + reqParamsUi.yearMax + '-01-01]',
+                "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
+                "a.hm.limit": 10
+            };
+
+           return params;
+        }
+
+        /**
+         * Wrap longitude to the WGS84 bounds [-90,-180,90,180]
+         */
+        function wrapLon(value) {
+            var worlds = Math.floor((value + 180) / 360);
+            return value - (worlds * 360);
+        }
     }]);
