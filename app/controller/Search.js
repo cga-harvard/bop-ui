@@ -24,9 +24,9 @@ angular
          */
         $scope.doSearch = function() {
             // if no input is given
-            if ($scope.searchInput.length === 0) {
-               return false;
-          }
+            // if ($scope.searchInput.length === 0) {
+            //    return false;
+            // }
 
           HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
           HeatMapSourceGeneratorService.performSearch();
