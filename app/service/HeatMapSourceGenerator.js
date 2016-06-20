@@ -131,7 +131,7 @@ angular
                 "q.text": keyword,
                 "q.time": '['+ reqParamsUi.yearMin + '-01-01 TO ' + reqParamsUi.yearMax + '-01-01]',
                 "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
-                "a.hm.limit": 10
+                "a.hm.limit": 1000
             };
 
            return params;
