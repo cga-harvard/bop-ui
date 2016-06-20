@@ -230,14 +230,14 @@ angular
               var layerSrc = currHeatmapLayer.getSource();
               if (layerSrc){
                 layerSrc.clear();
-                currHeatmapLayer.setSource(olVecSrc);
               }
+              currHeatmapLayer.setSource(olVecSrc);
           } else {
             newHeatMapLayer = new ol.layer.Heatmap({
              name: 'HeatMapLayer',
              source: olVecSrc,
              radius: 10,
-             opacity: 0.25
+             //opacity: 0.25
            });
             map.addLayer(newHeatMapLayer);
           }
@@ -270,7 +270,6 @@ angular
               return null;
             }
             minMaxValue = this.heatmapMinMax(counts_ints2D, gridRows, gridColumns);
-
             for (var i = 0 ; i < gridRows ; i++){
               for (var j = 0 ; j < gridColumns ; j++){
                   var hmVal = counts_ints2D[counts_ints2D.length - i - 1][j],
@@ -282,7 +281,6 @@ angular
                   if (hmVal && hmVal !== null){
                     lat = minY + i*sy + (0.5 * sy);
                     lon = minX + j*sx + (0.5 * sx);
-
                     coords = ol.proj.transform(
                       [lon, lat],
                       hmProjection,

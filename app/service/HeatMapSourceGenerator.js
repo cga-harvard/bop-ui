@@ -91,10 +91,7 @@ angular
               config = {
                   url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                   method: 'GET',
-                  params: params,
-                  headers: {
-                      Authorization: false
-                  }
+                  params: params
               };
 
             //  load the data
@@ -103,10 +100,7 @@ angular
               // check if we have a heatmap facet and update the map with it
               if (data && data["a.hm"]) {
                   MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
-              }
-
-              // get the count of matches
-              if (data && data["a.matchDocs"]) {
+                  // get the count of matches
                   $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
               }
             }).
