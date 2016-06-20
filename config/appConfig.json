@@ -1,7 +1,6 @@
 {
     "appConfig": {
-        "proxyPath": "",
-        "solrBaseUrl": ".API/mockup2.json"
+        "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?"
     },
     "mapConfig": {
         "renderer": "canvas",
@@ -10,7 +9,8 @@
             "minResolution": 9.554628534317017,
             "maxResolution": 156543.03390625,
             "maxZoom": null,
-            "minZoom": null,
+            "minZoom": 1,
+            "extent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
             "projection": "EPSG:3857",
             "resolution": null,
             "resolutions": null,
