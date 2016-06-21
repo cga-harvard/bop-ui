@@ -2,6 +2,8 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-gh-pages');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.initConfig({
         'gh-pages': {
@@ -25,7 +27,24 @@ module.exports = function(grunt) {
                 },
                 src: ['index.html', 'app/**', 'assets/**', 'config/**', 'LICENSE', 'API/*.json']
             }
-        }
+        },
+        jshint: {
+            files: ['Gruntfile.js', 'app/**/*.js'],
+            options: {
+                globals: {
+                    undef: true,
+                    unused: true,
+                    curly: true,
+                    eqeqeq: true,
+                    globals: 'solrHeatmapApp',
+                    latedef: true
+                }
+            }
+        },
+        watch: {
+            files: ['<%= jshint.files %>'],
+            tasks: ['jshint']
+}
     });
 
     // get a formatted commit message to review changes from the commit log
@@ -56,11 +75,12 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('publish', 'Publish from CLI', [
+        'jshint',
         'gh-pages:publish'
     ]);
 
     grunt.registerTask('deploy', 'Publish from travis', [
+        'jshint',
         'check-deploy'
     ]);
-
 };
