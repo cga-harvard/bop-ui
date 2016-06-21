@@ -90,6 +90,9 @@ angular
           var config = {},
               params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
 
+         // add additional parameter for the soft maximum of the heatmap grid
+        params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
+
           if (params) {
 
               config = {
@@ -123,8 +126,8 @@ angular
         function startCsvExport(){
             var config = {},
                 params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
-                // TODO make it configurable
-                params["d.docs.limit"] = 1;
+                // add additional parameter for the number of documents to return
+                params["d.docs.limit"] = solrHeatmapApp.bopwsConfig.csvDocsLimit;
 
             if (params) {
                 config = {

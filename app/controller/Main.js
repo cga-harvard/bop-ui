@@ -11,23 +11,23 @@ angular
             success(function(data, status, headers, config) {
                 if (data && data.mapConfig) {
                     var mapConf = data.mapConfig,
-                        appConf = data.appConfig;
+                        appConf = data.appConfig,
+                        bopwsConfig = data.bopwsConfig;
                     // create the map with the given config
                     MapService.init({
                         mapConfig: mapConf
                     });
                     solrHeatmapApp.appConfig = appConf;
                     solrHeatmapApp.initMapConf = mapConf;
-                    // set the map to access it at runtime (for debugging only)
-                    solrHeatmapApp.map = MapService.getMap();
+                    solrHeatmapApp.bopwsConfig = bopwsConfig;
                     // fire event mapReady
                     $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                    solrHeatmapApp.map.on('moveend', function(evt){
+                    MapService.getMap().on('moveend', function(evt){
                       HeatMapSourceGeneratorService.performSearch();
                     });
 
-                    solrHeatmapApp.map.getView().on('change:resolution', function(evt){
+                    MapService.getMap().getView().on('change:resolution', function(evt){
                       var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
                       if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                         var radius = 500 * evt.target.getResolution();
