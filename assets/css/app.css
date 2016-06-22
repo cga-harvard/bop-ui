@@ -56,6 +56,15 @@ html, body {
   margin-right: 5px;
 }
 
+#fromToDateInputs .btn:hover {
+    color: #337AB7;
+}
+
+#fromToDateInputs td .btn-info.active {
+  background-color: #337AB7;
+}
+
+
 hr {
   width: 75%;
 }
