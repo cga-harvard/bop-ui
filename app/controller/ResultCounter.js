@@ -10,5 +10,5 @@ angular
               data = "No results found";
           }
             $scope.counter = data;
-        })
+        });
     }]);
