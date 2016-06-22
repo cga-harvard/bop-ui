@@ -72,7 +72,7 @@ angular.module('SolrHeatmapApp')
         $scope.onChangeEndDate = function(){
             $scope.setDateRange($scope.dts, $scope.dte);
             HeatMapSourceGeneratorService.performSearch();
-        }
+        };
 
         /**
          * Help method that updates `searchObj` of the heatmap with
@@ -83,5 +83,5 @@ angular.module('SolrHeatmapApp')
         $scope.setDateRange = function(minDate, maxDate){
           HeatMapSourceGeneratorService.setMinDate(minDate);
           HeatMapSourceGeneratorService.setMaxDate(maxDate);
-        }
+        };
     }]);
