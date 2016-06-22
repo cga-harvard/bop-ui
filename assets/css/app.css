@@ -25,13 +25,9 @@ html, body {
   -webkit-box-shadow: none;
 }
 
-#fromToInputs {
+#fromToDateInputs {
   padding-top: 25px;
   padding-bottom: 10px;
-}
-
-#fromToSlider {
-  padding-bottom: 25px;
 }
 
 #searchinput {
@@ -82,29 +78,6 @@ hr {
 
 code {
   padding: 0;
-}
-
-/*
- * Slider
- */
-rzslider .rz-pointer {
-   top: -14px;
-   z-index: 3;
-   width: 32px;
-   height: 32px;
-   cursor: pointer;
-   background-color: #337AB7;
-   -webkit-border-radius: 16px;
-     -moz-border-radius: 16px;
-        border-radius: 16px;
-}
-
-rzslider .rz-pointer.rz-active:after {
-  background-color: #FFBB00
-}
-
-rzslider .rz-bar.rz-selection {
-  background-color: #337AB7;
 }
 
 /*
