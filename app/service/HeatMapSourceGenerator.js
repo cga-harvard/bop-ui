@@ -67,7 +67,7 @@ angular
             if (extent && extentWgs84){
 
                 var minX = extentWgs84[1],
-                    maxX = extentWgs84[3]
+                    maxX = extentWgs84[3],
                     minY = wrapLon(extentWgs84[0]),
                     maxY = wrapLon(extentWgs84[2]);
 
