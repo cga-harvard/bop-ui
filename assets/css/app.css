@@ -51,16 +51,8 @@ html, body {
   padding-left: 5px;
 }
 
-.center-form {
-    text-align:center;
-}
-
-.center-form form {
-    display:inline-block;
-}
-
-.center-form form label {
-  margin-left: 15px;
+.col-md-6 label {
+  vertical-align: middle;
   margin-right: 5px;
 }
 
