@@ -1,0 +1,24 @@
+<div ng-controller="DatePickerCtrl">
+    <div class="row center-form" id="fromToDateInputs">
+        <div class="col-md-6">
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="dts"
+                    is-open="startDate.opened" show-button-bar="false" datepicker-options="dateOptions"
+                    ng-required="true" ng-change="onChangeStartDate()" readonly />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="dte"
+                    is-open="endDate.opened" show-button-bar="false" datepicker-options="dateOptions"
+                    ng-required="true" ng-change="onChangeEndDate()" readonly />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
