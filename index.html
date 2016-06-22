@@ -9,13 +9,12 @@
     <!-- LIBRARY CSS -->
     <link rel="stylesheet" href="./assets/lib/ol3/ol.css">
     <link rel="stylesheet" href="./assets/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.css" />
 
     <!-- LIBRARY JS -->
     <script src="./assets/lib/jquery/jquery-2.1.3.min.js"></script>
     <script src="./assets/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="./assets/lib/angularjs/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.js"></script>
+    <script src="./assets/lib/ui-bootstrap/ui-bootstrap-tpls-1.3.3.min.js"></script>
     <script src="./assets/lib/proj4js/proj4.js"></script>
     <script src="./config/3857.js"></script>
     <!--<script src="./assets/lib/ol3/ol-debug.js"></script>-->
@@ -30,7 +29,7 @@
     <script src="./app/controller/BackgroundLayer.js"></script>
     <script src="./app/controller/Search.js"></script>
     <script src="./app/controller/Export.js"></script>
-    <script src="./app/controller/YearSlide.js"></script>
+    <script src="./app/controller/DatePickerCtrl.js"></script>
     <script src="./app/controller/ResultCounter.js"></script>
     <script src="./app/service/Map.js"></script>
     <script src="./app/service/HeatMapSourceGenerator.js"></script>
@@ -47,11 +46,11 @@
                   </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6">
-                        <ng-include src="'./app/view/sliderChooseYear.html'"></ng-include>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <ng-include src="'./app/view/datePicker.html'"></ng-include>
                     </div>
-                    <div class="col-md-3"></div>
+                    <div class="col-md-4"></div>
                 </div>
                 <div class="row map-row">
                   <div class="col-md-8 col-md-offset-2">
