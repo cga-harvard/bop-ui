@@ -25,13 +25,9 @@ html, body {
   -webkit-box-shadow: none;
 }
 
-#fromToInputs {
+#fromToDateInputs {
   padding-top: 25px;
   padding-bottom: 10px;
-}
-
-#fromToSlider {
-  padding-bottom: 25px;
 }
 
 #searchinput {
@@ -55,18 +51,19 @@ html, body {
   padding-left: 5px;
 }
 
-.center-form {
-    text-align:center;
-}
-
-.center-form form {
-    display:inline-block;
-}
-
-.center-form form label {
-  margin-left: 15px;
+.col-md-6 label {
+  vertical-align: middle;
   margin-right: 5px;
 }
+
+#fromToDateInputs .btn:hover {
+    color: #337AB7;
+}
+
+#fromToDateInputs td .btn-info.active {
+  background-color: #337AB7;
+}
+
 
 hr {
   width: 75%;
@@ -82,29 +79,6 @@ hr {
 
 code {
   padding: 0;
-}
-
-/*
- * Slider
- */
-rzslider .rz-pointer {
-   top: -14px;
-   z-index: 3;
-   width: 32px;
-   height: 32px;
-   cursor: pointer;
-   background-color: #337AB7;
-   -webkit-border-radius: 16px;
-     -moz-border-radius: 16px;
-        border-radius: 16px;
-}
-
-rzslider .rz-pointer.rz-active:after {
-  background-color: #FFBB00
-}
-
-rzslider .rz-bar.rz-selection {
-  background-color: #337AB7;
 }
 
 /*

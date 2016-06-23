@@ -2,7 +2,7 @@
  * The main solrHeatmapApp module
  */
 angular
-    .module('SolrHeatmapApp', ['rzModule']);
+    .module('SolrHeatmapApp', ['ui.bootstrap']);
 
 /**
  * BackgroundLayer Controller
@@ -67,6 +67,94 @@ angular
             });
         };
 
+    }]);
+
+/**
+ * DatePickerCtrl Controller
+ */
+angular.module('SolrHeatmapApp')
+    .controller('DatePickerCtrl', ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+
+        $scope.initialDateOptions = {
+            minDate: new Date('2000-01-01'),
+            maxDate: new Date('2016-12-31')
+        };
+
+        $scope.dateOptions = {
+            minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
+            maxDate: HeatMapSourceGeneratorService.getSearchObj().maxDate,
+            startingDay: 1, // Monday
+            showWeeks: false
+        };
+
+        /**
+         * Will be called on click on start datepicker.
+         * `minDate` will be reset to the initial value (e.g. 2000-01-01),
+         * `maxDate` will be adjusted with the `$scope.dte` value to restrict
+         *  it not to be below the `minDate`.
+         */
+        $scope.openStartDate = function() {
+            $scope.startDate.opened = true;
+            $scope.dateOptions.minDate = $scope.initialDateOptions.minDate;
+            $scope.dateOptions.maxDate = $scope.dte;
+        };
+
+        /**
+         * Will be called on click on end datepicker.
+         * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
+         * `minDate` will be adjusted with the `$scope.dts` value to restrict
+         *  it not to be bigger than the `maxDate`.
+         */
+        $scope.openEndDate = function() {
+            $scope.endDate.opened = true;
+            $scope.dateOptions.maxDate = $scope.initialDateOptions.maxDate;
+            $scope.dateOptions.minDate = $scope.dts;
+        };
+
+        $scope.startDate = {
+            opened: false
+        };
+
+        $scope.endDate = {
+            opened: false
+        };
+
+        /**
+         * Set initial values for min and max dates in both of datepicker.
+         */
+        $scope.setInitialDates = function(){
+            $scope.dts = $scope.dateOptions.minDate;
+            $scope.dte = $scope.dateOptions.maxDate;
+        };
+
+        $scope.setInitialDates();
+
+        /**
+         * Will be fired after the start date was chosen.
+         */
+        $scope.onChangeStartDate = function(){
+            $scope.setDateRange($scope.dts, $scope.dte);
+            HeatMapSourceGeneratorService.performSearch();
+        };
+
+        /**
+         * Will be fired after the end date was chosen.
+         */
+        $scope.onChangeEndDate = function(){
+            $scope.setDateRange($scope.dts, $scope.dte);
+            HeatMapSourceGeneratorService.performSearch();
+        };
+
+        /**
+         * Help method that updates `searchObj` of the heatmap with
+         * the current min and max dates.
+         * @param {Date} minDate date value of the start datepicker
+         * @param {Date} maxDate date value of the end datepicker
+         */
+        $scope.setDateRange = function(minDate, maxDate){
+          HeatMapSourceGeneratorService.setMinDate(minDate);
+          HeatMapSourceGeneratorService.setMaxDate(maxDate);
+        };
     }]);
 
 /**
@@ -201,37 +289,6 @@ angular
     }]);
 
 /**
- * YearSlide Controller
- */
-angular
-    .module('SolrHeatmapApp')
-    .controller('YearSlideCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', '$filter', '$timeout', function(MapService, HeatMapSourceGeneratorService, $scope, $filter, $timeout) {
-
-        $scope.ys = {
-          years : {
-            min: HeatMapSourceGeneratorService.getSearchObj().yearMin,
-            max: HeatMapSourceGeneratorService.getSearchObj().yearMax,
-            options: {
-              floor: 2005,
-              ceil: 2016,
-              noSwitching: true
-              //showTicks: true
-            }
-          }
-        };
-
-        $scope.$on("slideEnded", function() {
-            var newMin = $scope.ys.years.min,
-                newMax = $scope.ys.years.max;
-
-             HeatMapSourceGeneratorService.setMinYear(newMin);
-             HeatMapSourceGeneratorService.setMaxYear(newMax);
-             HeatMapSourceGeneratorService.performSearch();
-        });
-
-    }]);
-
-/**
  * HeatMapSourceGenerator Service
  */
 angular
@@ -239,8 +296,8 @@ angular
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$http', function(MapService, $rootScope, $filter, $http) {
 
         var searchObj = {
-            yearMin: 2005,
-            yearMax: 2016,
+            minDate: new Date('2000-01-01'),
+            maxDate: new Date('2016-12-31'),
             searchText : ''
         };
 
@@ -249,43 +306,46 @@ angular
             getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
             performSearch: performSearch,
             setSearchText: setSearchText,
-            setMinYear: setMinYear,
-            setMaxYear: setMaxYear,
+            setMinDate: setMinDate,
+            setMaxDate: setMaxDate,
+            getFormattedDateString: getFormattedDateString,
             getSearchObj: getSearchObj
         };
 
         return methods;
 
         /**
-         *
+         * Set keyword text
          */
         function setSearchText(val) {
           searchObj.searchText = val;
         }
 
         /**
-         *
+         * Set start search date
          */
-        function setMinYear(val) {
-          searchObj.yearMin = val;
+        function setMinDate(val) {
+          searchObj.minDate = val;
         }
 
         /**
-         *
+         * Set end search date
          */
-        function setMaxYear(val) {
-          searchObj.yearMax = val;
+        function setMaxDate (val) {
+          searchObj.maxDate = val;
         }
 
         /**
-         *
+         * Returns the complete search object
          */
         function getSearchObj(){
           return searchObj;
         }
 
         /**
-         *
+         * Builds geospatial filter depending on the current map extent.
+         * This filter will be used later for `q.geo` parameter of the API
+         * search or export request.
          */
         function getGeospatialFilter(){
           var map = MapService.getMap(),
@@ -313,9 +373,10 @@ angular
         }
 
         /**
-         *
+         * Performs search with the given full configuration / search object.
          */
         function performSearch(){
+
           var config = {},
               params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
 
@@ -327,7 +388,7 @@ angular
                   params: params
               };
 
-            //  load the data
+            //load the data
             $http(config).
             success(function(data, status, headers, config) {
               // check if we have a heatmap facet and update the map with it
@@ -346,7 +407,8 @@ angular
         }
 
         /**
-         *
+         * Help method to build the whole params object, that will be used in
+         * the API requests.
          */
         function getTweetsSearchQueryParameters(bounds) {
 
@@ -362,7 +424,7 @@ angular
 
             var params = {
                 "q.text": keyword,
-                "q.time": '['+ reqParamsUi.yearMin + '-01-01 TO ' + reqParamsUi.yearMax + '-01-01]',
+                "q.time": '[' + this.getFormattedDateString(reqParamsUi.minDate) + ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) + ']',
                 "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
                 "a.hm.limit": 1000
             };
@@ -377,6 +439,15 @@ angular
             var worlds = Math.floor((value + 180) / 360);
             return value - (worlds * 360);
         }
+
+        /**
+         * Returns the formatted date object that can be parsed by API.
+         * @param {Date} date full date object (e.g. 'Sat Jan 01 2000 01:00:00 GMT+0100 (CET))
+         * @return {String} formatted date as string (e.g. '2000-01-01')
+         */
+         function getFormattedDateString(date){
+             return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+         }
     }]);
 
 /**
