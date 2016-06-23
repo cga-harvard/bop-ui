@@ -1,6 +1,7 @@
 {
     "appConfig": {
-        "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?"
+        "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?",
+        "tweetsExportBaseUrl": "http://54.158.101.33:8080/bopws/tweets/export?"
     },
     "mapConfig": {
         "renderer": "canvas",
