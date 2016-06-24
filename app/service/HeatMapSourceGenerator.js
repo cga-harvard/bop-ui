@@ -164,7 +164,7 @@ angular
          *   `+90`.
          */
         function outsideLatRange(lat) {
-            return lat < -90 || lat > 90
+            return lat < -90 || lat > 90;
         }
 
         /**
