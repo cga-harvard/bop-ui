@@ -3,7 +3,7 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$http', function(MapService, $rootScope, $filter, $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$window', '$http', function(MapService, $rootScope, $filter, $window, $http) {
 
         var searchObj = {
             minDate: new Date('2000-01-01'),
@@ -114,7 +114,7 @@ angular
             error(function(data, status, headers, config) {
                 // hide the loading mask
                 //angular.element(document.querySelector('.waiting-modal')).modal('hide');
-                console.log("An error occured while reading heatmap data");
+                $window.alert("An error occured while reading heatmap data");
             });
           }
         }
@@ -150,7 +150,7 @@ angular
                     anchor.remove(); // Clean it up afterwards
                 }).
                 error(function(data, status, headers, config) {
-                    console.log("An error occured while exporting csv data");
+                    $window.alert("An error occured while exporting csv data");
                 });
             }
         }
