@@ -3,10 +3,9 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('ExportCtrl', ['Map', '$scope', '$filter', '$timeout', function(MapService, $scope, $filter, $timeout) {
+    .controller('ExportCtrl', ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
 
         $scope.startExport = function() {
-          console.log("Here will be an awesome export");
+          HeatMapSourceGeneratorService.startCsvExport();
         };
-
     }]);

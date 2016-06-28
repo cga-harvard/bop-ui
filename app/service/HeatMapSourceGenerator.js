@@ -3,7 +3,7 @@
  */
 angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$http', function(MapService, $rootScope, $filter, $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$window', '$http', function(MapService, $rootScope, $filter, $window, $http) {
 
         var searchObj = {
             minDate: new Date('2000-01-01'),
@@ -15,6 +15,7 @@ angular
             getGeospatialFilter: getGeospatialFilter,
             getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
             performSearch: performSearch,
+            startCsvExport: startCsvExport,
             setSearchText: setSearchText,
             setMinDate: setMinDate,
             setMaxDate: setMaxDate,
@@ -28,28 +29,28 @@ angular
          * Set keyword text
          */
         function setSearchText(val) {
-          searchObj.searchText = val;
+            searchObj.searchText = val;
         }
 
         /**
          * Set start search date
          */
         function setMinDate(val) {
-          searchObj.minDate = val;
+            searchObj.minDate = val;
         }
 
         /**
          * Set end search date
          */
         function setMaxDate (val) {
-          searchObj.maxDate = val;
+            searchObj.maxDate = val;
         }
 
         /**
          * Returns the complete search object
          */
         function getSearchObj(){
-          return searchObj;
+            return searchObj;
         }
 
         /**
@@ -58,7 +59,7 @@ angular
          * search or export request.
          */
         function getGeospatialFilter(){
-          var map = MapService.getMap(),
+            var map = MapService.getMap(),
                 viewProj = map.getView().getProjection().getCode(),
                 extent = map.getView().calculateExtent(map.getSize()),
                 extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
@@ -88,9 +89,11 @@ angular
          * Performs search with the given full configuration / search object.
          */
         function performSearch(){
-
           var config = {},
               params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
+
+         // add additional parameter for the soft maximum of the heatmap grid
+        params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
 
           if (params) {
 
@@ -103,17 +106,17 @@ angular
             //load the data
             $http(config).
             success(function(data, status, headers, config) {
-              // check if we have a heatmap facet and update the map with it
-              if (data && data["a.hm"]) {
-                  MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
-                  // get the count of matches
-                  $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
-              }
+                // check if we have a heatmap facet and update the map with it
+                if (data && data["a.hm"]) {
+                    MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
+                    // get the count of matches
+                    $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
+                }
             }).
             error(function(data, status, headers, config) {
-              // hide the loading mask
-              //angular.element(document.querySelector('.waiting-modal')).modal('hide');
-              console.log("An error occured while reading heatmap data");
+                // hide the loading mask
+                //angular.element(document.querySelector('.waiting-modal')).modal('hide');
+                $window.alert("An error occured while reading heatmap data");
             });
           }
         }
@@ -121,6 +124,41 @@ angular
         /**
          * Help method to build the whole params object, that will be used in
          * the API requests.
+         */
+        function startCsvExport(){
+            var config = {},
+                params = this.getTweetsSearchQueryParameters(this.getGeospatialFilter());
+                // add additional parameter for the number of documents to return
+                params["d.docs.limit"] = solrHeatmapApp.bopwsConfig.csvDocsLimit;
+
+            if (params) {
+                config = {
+                    url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
+                    method: 'GET',
+                    params: params
+                };
+
+                //start the export
+                $http(config).
+                success(function(data, status, headers, config) {
+                    var anchor = angular.element('<a/>');
+                    anchor.css({display: 'none'}); // Make sure it's not visible
+                    angular.element(document.body).append(anchor); // Attach to document
+                    anchor.attr({
+                        href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                        target: '_blank',
+                       download: 'bop_export.csv'
+                    })[0].click();
+                    anchor.remove(); // Clean it up afterwards
+                }).
+                error(function(data, status, headers, config) {
+                    $window.alert("An error occured while exporting csv data");
+                });
+            }
+        }
+
+        /**
+         *
          */
         function getTweetsSearchQueryParameters(bounds) {
 
@@ -137,8 +175,7 @@ angular
             var params = {
                 "q.text": keyword,
                 "q.time": '[' + this.getFormattedDateString(reqParamsUi.minDate) + ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) + ']',
-                "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
-                "a.hm.limit": 1000
+                "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']'
             };
 
            return params;
