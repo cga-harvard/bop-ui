@@ -60,6 +60,11 @@ angular.module('SolrHeatmapApp')
                                 viewConfig.zoomFactor : undefined
                     })
                 });
+
+                if (angular.isArray(viewConfig.extent)) {
+                    var vw = map.getView();
+                    vw.set('extent', viewConfig.extent);
+                }
             }
 
             /**

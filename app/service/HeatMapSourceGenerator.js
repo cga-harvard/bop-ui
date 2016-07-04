@@ -56,6 +56,11 @@ angular
                                     transformExtent(extent, viewProj, 'EPSG:4326'),
                     geoFilter = {};
 
+                // default: Zoom level <= 1 query whole world
+                if (map.getView().getZoom() <= 1) {
+                    extentWgs84 = [-180, -90 ,180, 90];
+                }
+
                 if (extent && extentWgs84){
                     var normalizedExtent = normalize(extentWgs84);
 
