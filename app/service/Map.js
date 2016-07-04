@@ -64,6 +64,7 @@ angular.module('SolrHeatmapApp')
                 if (angular.isArray(viewConfig.extent)) {
                     var vw = map.getView();
                     vw.set('extent', viewConfig.extent);
+                    createOrUpdateBboxLayer(viewConfig.extent, viewConfig.projection);
                 }
             }
 
@@ -125,7 +126,7 @@ angular.module('SolrHeatmapApp')
              *
              */
             function getLayersBy(key, value) {
-                var layers = this.getMap().getLayers().getArray();
+                var layers = getMap().getLayers().getArray();
                 return $filter('filter')(layers, function(layer) {
                     return layer.get(key) === value;
                 });
@@ -211,8 +212,8 @@ angular.module('SolrHeatmapApp')
             }
 
             function createOrUpdateHeatMapLayer(data) {
-                var olVecSrc = this.createHeatMapSource(data),
-                    existingHeatMapLayers = this.getLayersBy('name', 'HeatMapLayer'),
+                var olVecSrc = createHeatMapSource(data),
+                    existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
                     newHeatMapLayer;
                 if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                     var currHeatmapLayer = existingHeatMapLayers[0];
@@ -257,8 +258,7 @@ angular.module('SolrHeatmapApp')
                 if (!counts_ints2D) {
                     return null;
                 }
-                minMaxValue = this.heatmapMinMax(counts_ints2D,
-                                                        gridRows, gridColumns);
+                minMaxValue = heatmapMinMax(counts_ints2D, gridRows, gridColumns);
                 for (var i = 0 ; i < gridRows ; i++){
                     for (var j = 0 ; j < gridColumns ; j++){
                         var hmVal = counts_ints2D[counts_ints2D.length-i-1][j],
@@ -281,8 +281,7 @@ angular.module('SolrHeatmapApp')
                             });
 
                             // needs to be rescaled.
-                            var scaledValue = this.rescaleHeatmapValue(hmVal,
-                                                                minMaxValue);
+                            var scaledValue = rescaleHeatmapValue(hmVal,minMaxValue);
                             feat.set('weight', scaledValue);
                             feat.set('origVal', hmVal);
 
@@ -296,8 +295,9 @@ angular.module('SolrHeatmapApp')
                     useSpatialIndex: true
                 });
                 return olVecSrc;
-
             }
+
+
 
             function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
                 var max = -1;
@@ -345,6 +345,90 @@ angular.module('SolrHeatmapApp')
                         (minMaxValue[1] - minMaxValue[0]);
             }
 
+            /**
+             * Helper method to reset the map
+             */
+            function resetMap() {
+                // Reset view
+                var intitalCenter = solrHeatmapApp.initMapConf.view.center,
+                    intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
+                if (intitalZoom && intitalCenter) {
+                    var vw = map.getView();
+                    vw.setCenter(intitalCenter);
+                    vw.setZoom(intitalZoom);
+                    createOrUpdateBboxLayer(solrHeatmapApp.initMapConf.view.extent);
+                }
+            }
+
+            /*
+             * Layer which holds the query bbox (q.geo)
+             */
+            function createOrUpdateBboxLayer (bboxFeature, fromSrs) {
+                var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
+                    polySrc,
+                    existingBboxLayer = getLayersBy('name', 'BoundingBoxLayer'),
+                    style = new ol.style.Style({
+                      stroke: new ol.style.Stroke({
+                        color: '#000000',
+                        width: 1
+                      })
+                    });
+
+                if (fromSrs !== map.getView().getProjection().getCode()){
+                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
+                                                map.getView().getProjection().getCode());
+                    polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
+                }
+
+                polySrc = new ol.source.Vector({
+                    features: [polygon]
+                });
+
+                if (existingBboxLayer && existingBboxLayer.length > 0){
+                    var currBboxLayer = existingBboxLayer[0];
+                    // Update layer source
+                    var layerSrc = currBboxLayer.getSource();
+                    if (layerSrc){
+                      layerSrc.clear();
+                    }
+                    currBboxLayer.setSource(polySrc);
+                    currBboxLayer.setStyle(style);
+                } else {
+                     var newBboxLayer = new ol.layer.Heatmap({
+                       name: 'BoundingBoxLayer',
+                       source: polySrc,
+                       style: style
+                   });
+
+                  map.addLayer(newBboxLayer);
+
+                  // add interactions
+                  var select = new ol.interaction.Select({
+                      condition: function(mapBrowserEvent) {
+                          return ol.events.condition.click(mapBrowserEvent) &&
+                              ol.events.condition.altKeyOnly(mapBrowserEvent);
+                        },
+                      wrapX: false
+                   });
+
+                   var modify = new ol.interaction.Modify({
+                     features: select.getFeatures()
+                   });
+
+                   map.addInteraction(select);
+                   map.addInteraction(modify);
+
+                   // TODO:
+                   // * restrict modify feature only to bbox
+                   // * trigger heatmap recalculation when modification ended
+                   // * => modifyend event
+
+                   // Zoom Evenet muss interactions zurücksetzen
+
+                }
+
+            }
+
             var ms = {
                 //map: map,
                 init: init,
@@ -354,9 +438,11 @@ angular.module('SolrHeatmapApp')
                 getInteractionsByType: getInteractionsByType,
                 displayFeatureInfo: displayFeatureInfo,
                 createOrUpdateHeatMapLayer: createOrUpdateHeatMapLayer,
+                createOrUpdateBboxLayer : createOrUpdateBboxLayer,
                 createHeatMapSource: createHeatMapSource,
                 heatmapMinMax: heatmapMinMax,
-                rescaleHeatmapValue: rescaleHeatmapValue
+                rescaleHeatmapValue: rescaleHeatmapValue,
+                resetMap: resetMap
             };
 
             return ms;

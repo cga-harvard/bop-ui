@@ -5,8 +5,8 @@
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['HeatMapSourceGenerator', '$scope', '$window',
-        function(HeatMapSourceGeneratorService, $scope, $window) {
+    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$window',
+        function(MapService, HeatMapSourceGeneratorService, $scope, $window) {
 
             /**
              *
@@ -47,6 +47,9 @@ angular.module('SolrHeatmapApp')
                 $scope.searchInput = '';
                 HeatMapSourceGeneratorService.setSearchText('');
                 HeatMapSourceGeneratorService.performSearch();
+
+                // Reset the map
+                MapService.resetMap();
             };
 
         }]

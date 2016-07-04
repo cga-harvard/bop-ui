@@ -171,13 +171,26 @@ angular
                     keyword = reqParamsUi.searchText;
                 }
 
+                // calculate reduced bounding box
+                var dx = bounds.maxX - bounds.minX,
+                    dy = bounds.maxY - bounds.minY,
+                    minInnerX = bounds.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    maxInnerX = bounds.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                    maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+
+                MapService.createOrUpdateBboxLayer([ minInnerY, minInnerX, maxInnerY,
+                                                                    maxInnerX], 'EPSG:4326');
+
                 var params = {
                     "q.text": keyword,
                     "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +
                          ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) +
                          ']',
                     "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' +
-                                 bounds.maxX + ',' + bounds.maxY + ']'
+                                 bounds.maxX + ',' + bounds.maxY + ']',
+                    "a.hm.filter": '[' + minInnerX + ',' + minInnerY + ' TO ' +
+                                                        maxInnerX + ',' + maxInnerY + ']'
                 };
 
                 return params;
