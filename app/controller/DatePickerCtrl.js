@@ -1,3 +1,4 @@
+/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
 /**
  * DatePickerCtrl Controller
  */
@@ -81,7 +82,7 @@ angular.module('SolrHeatmapApp')
          * @param {Date} maxDate date value of the end datepicker
          */
         $scope.setDateRange = function(minDate, maxDate){
-          HeatMapSourceGeneratorService.setMinDate(minDate);
-          HeatMapSourceGeneratorService.setMaxDate(maxDate);
+            HeatMapSourceGeneratorService.setMinDate(minDate);
+            HeatMapSourceGeneratorService.setMaxDate(maxDate);
         };
     }]);

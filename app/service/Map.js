@@ -1,9 +1,9 @@
+/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.factory.*" }]*/
 /**
  * Map Service
  */
-angular
-    .module('SolrHeatmapApp')
-    .factory('Map', ['$rootScope', '$filter', '$http', function($rootScope, $filter, $http) {
+angular.module('SolrHeatmapApp')
+    .factory('Map', ['$rootScope', '$filter', function($rootScope, $filter) {
 
         var map = {},
             defaults = {
@@ -35,8 +35,10 @@ angular
          *
          */
         function init(config) {
-            var viewConfig = angular.extend(defaults.view, config.mapConfig.view),
-                rendererConfig = angular.extend(defaults.renderer, config.mapConfig.renderer),
+            var viewConfig = angular.extend(defaults.view,
+                                                config.mapConfig.view),
+                rendererConfig = angular.extend(defaults.renderer,
+                                                config.mapConfig.renderer),
                 layerConfig = config.mapConfig.layers;
 
             map = new ol.Map({
@@ -114,7 +116,7 @@ angular
                                 logo: conf.logo,
                                 params: conf.params,
                                 resolutions: conf.resoltions,
-                                url: conf.url,
+                                url: conf.url
                             }),
                             opacity: conf.opacity,
                             visible: conf.visible
@@ -167,9 +169,10 @@ angular
          */
         function displayFeatureInfo(evt) {
             var coord = evt.coordinate,
-                feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-                    return feature;
-                }),
+                feature = map.forEachFeatureAtPixel(evt.pixel,
+                        function(feat, layer) {
+                            return feat;
+                        }),
                 msg = '',
                 evtCnt = 0,
                 lyrCnt = 0;
@@ -199,20 +202,20 @@ angular
             map.addOverlay(overlay);
 
             if (feature) {
-              var data = feature.get('origVal');
-              if (data) {
-                   $rootScope.$broadcast('featureInfoLoaded', data);
-              }
+                var data = feature.get('origVal');
+                if (data) {
+                    $rootScope.$broadcast('featureInfoLoaded', data);
+                }
             }
 
-            $rootScope.$on('featureInfoLoaded', function(evt, data) {
-               msg += '<h5>Number of elements: </h5>' + data;
-               content.innerHTML = msg;
-               var overlay = solrHeatmapApp.map.getOverlays().getArray()[0];
-               if (overlay) {
-                 overlay.setPosition(coord);
-               }
-           });
+            $rootScope.$on('featureInfoLoaded', function(event, dta) {
+                msg += '<h5>Number of elements: </h5>' + data;
+                content.innerHTML = msg;
+                var overlayFi = solrHeatmapApp.map.getOverlays().getArray()[0];
+                if (overlayFi) {
+                    overlayFi.setPosition(coord);
+                }
+            });
 
         }
 
@@ -232,8 +235,7 @@ angular
             newHeatMapLayer = new ol.layer.Heatmap({
              name: 'HeatMapLayer',
              source: olVecSrc,
-             radius: 10,
-             //opacity: 0.25
+             radius: 10
            });
             map.addLayer(newHeatMapLayer);
           }
@@ -258,96 +260,98 @@ angular
                 sx = dx / gridColumns,
                 sy = dy / gridRows,
                 olFeatures = [],
-                map = this.getMap(),
                 minMaxValue,
-                sumOfAllVals = 0;
+                sumOfAllVals = 0,
+                olVecSrc;
 
             if (!counts_ints2D) {
-              return null;
+                return null;
             }
-            minMaxValue = this.heatmapMinMax(counts_ints2D, gridRows, gridColumns);
+            minMaxValue = this.heatmapMinMax(counts_ints2D,
+                                                    gridRows, gridColumns);
             for (var i = 0 ; i < gridRows ; i++){
-              for (var j = 0 ; j < gridColumns ; j++){
-                  var hmVal = counts_ints2D[counts_ints2D.length - i - 1][j],
-                      lon,
-                      lat,
-                      feat,
-                      coords;
+                for (var j = 0 ; j < gridColumns ; j++){
+                    var hmVal = counts_ints2D[counts_ints2D.length - i - 1][j],
+                        lon,
+                        lat,
+                        feat,
+                        coords;
 
-                  if (hmVal && hmVal !== null){
-                    lat = minY + i*sy + (0.5 * sy);
-                    lon = minX + j*sx + (0.5 * sx);
-                    coords = ol.proj.transform(
-                      [lon, lat],
-                      hmProjection,
-                      map.getView().getProjection().getCode()
-                    );
+                    if (hmVal && hmVal !== null){
+                        lat = minY + i*sy + (0.5 * sy);
+                        lon = minX + j*sx + (0.5 * sx);
+                        coords = ol.proj.transform(
+                          [lon, lat],
+                          hmProjection,
+                          map.getView().getProjection().getCode()
+                        );
 
-                    feat = new ol.Feature({
-                      geometry: new ol.geom.Point(coords)
-                    });
+                        feat = new ol.Feature({
+                            geometry: new ol.geom.Point(coords)
+                        });
 
-                    // needs to be rescaled.
-                    var scaledValue = this.rescaleHeatmapValue(hmVal, minMaxValue);
-                    feat.set('weight',  scaledValue);
-                    feat.set('origVal', hmVal);
+                        // needs to be rescaled.
+                        var scaledValue = this.rescaleHeatmapValue(hmVal,
+                                                                minMaxValue);
+                        feat.set('weight', scaledValue);
+                        feat.set('origVal', hmVal);
 
-                    olFeatures.push(feat);
-                  }
-              }
+                        olFeatures.push(feat);
+                    }
+                }
             }
 
             olVecSrc = new ol.source.Vector({
-              features: olFeatures,
-              useSpatialIndex: true
+                features: olFeatures,
+                useSpatialIndex: true
             });
             return olVecSrc;
 
         }
 
         function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
-          var max = -1;
-          var min = Number.MAX_VALUE;
-          for (var i = 0 ; i < stepsLatitude ; i++){
-            var currentRow = heatmap[i];
-            if (currentRow === null){
-              heatmap[i] = currentRow = [];
-            }
-            for (var j = 0 ; j < stepsLongitude ; j++){
-              if (currentRow[j] === null){
-                currentRow[j] = -1;
-              }
+            var max = -1;
+            var min = Number.MAX_VALUE;
+            for (var i = 0 ; i < stepsLatitude ; i++){
+                var currentRow = heatmap[i];
+                if (currentRow === null){
+                    heatmap[i] = currentRow = [];
+                }
+                for (var j = 0 ; j < stepsLongitude ; j++){
+                    if (currentRow[j] === null){
+                        currentRow[j] = -1;
+                    }
 
-              if (currentRow[j] > max){
-                max = currentRow[j];
-              }
+                    if (currentRow[j] > max){
+                        max = currentRow[j];
+                    }
 
-              if (currentRow[j] < min && currentRow[j] > -1){
-                min = currentRow[j];
-              }
+                    if (currentRow[j] < min && currentRow[j] > -1){
+                        min = currentRow[j];
+                    }
+                }
             }
-          }
-          return [min, max];
+            return [min, max];
         }
 
         function rescaleHeatmapValue(value, minMaxValue){
-          if (value === null){
-            return 0;
-          }
+            if (value === null){
+                return 0;
+            }
 
-          if (value == -1){
-            return -1;
-          }
+            if (value === -1){
+                return -1;
+            }
 
-          if (value === 0){
-            return 0;
-          }
+            if (value === 0){
+                return 0;
+            }
 
-          if ((minMaxValue[1] - minMaxValue[0]) === 0){
-            return 0;
-          }
+            if ((minMaxValue[1] - minMaxValue[0]) === 0){
+                return 0;
+            }
 
-          return (value - minMaxValue[0]) / (minMaxValue[1] - minMaxValue[0]) ;
+            return (value - minMaxValue[0]) / (minMaxValue[1] - minMaxValue[0]);
         }
 
     }]);

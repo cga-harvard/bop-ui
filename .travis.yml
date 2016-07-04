@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '4'
 script:
-- npm run deploy
+- eslint -c .eslintrc ./ && npm run deploy
 branches:
   only:
   - master

@@ -1,3 +1,4 @@
+/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
 /**
  * BackgroundLayer Controller
  */

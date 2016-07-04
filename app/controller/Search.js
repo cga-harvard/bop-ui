@@ -1,9 +1,9 @@
+/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
 /**
  * Search Controller
  */
-angular
-    .module('SolrHeatmapApp')
-    .controller('SearchCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', '$http', function(MapService, HeatMapSourceGeneratorService, $scope, $http) {
+angular.module('SolrHeatmapApp')
+    .controller('SearchCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', function(MapService, HeatMapSourceGeneratorService, $scope) {
 
         /**
          *
@@ -28,14 +28,14 @@ angular
             //    return false;
             // }
 
-          HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
-          HeatMapSourceGeneratorService.performSearch();
+            HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
+            HeatMapSourceGeneratorService.performSearch();
         };
 
         $scope.resetSearchInput = function() {
-          $scope.searchInput = '';
-          HeatMapSourceGeneratorService.setSearchText('');
-          HeatMapSourceGeneratorService.performSearch();
+            $scope.searchInput = '';
+            HeatMapSourceGeneratorService.setSearchText('');
+            HeatMapSourceGeneratorService.performSearch();
         };
 
         /**

@@ -1,3 +1,4 @@
+/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
 /**
  * Main Controller
  */
@@ -24,24 +25,28 @@ angular
                     $rootScope.$broadcast('mapReady', MapService.getMap());
 
                     MapService.getMap().on('moveend', function(evt){
-                      HeatMapSourceGeneratorService.performSearch();
+                        HeatMapSourceGeneratorService.performSearch();
                     });
 
-                    MapService.getMap().getView().on('change:resolution', function(evt){
-                      var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
-                      if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
-                        var radius = 500 * evt.target.getResolution();
-                        var hmLayer = existingHeatMapLayers[0];
-                        if (radius > 15) {
-                          radius = 15;
+                    MapService.getMap().getView()
+                    .on('change:resolution', function(evt){
+                        var existingHeatMapLayers = MapService.
+                                        getLayersBy('name', 'HeatMapLayer');
+                        if (existingHeatMapLayers &&
+                                existingHeatMapLayers.length > 0){
+                            var radius = 500 * evt.target.getResolution();
+                            var hmLayer = existingHeatMapLayers[0];
+                            if (radius > 15) {
+                                radius = 15;
+                            }
+                            hmLayer.setRadius(radius);
+                            hmLayer.setBlur(radius*2);
                         }
-                        hmLayer.setRadius(radius);
-                        hmLayer.setBlur(radius*2);
-                      }
                     });
 
                   // Prepared featureInfo (display number of elements)
-                  //solrHeatmapApp.map.on('singleclick', MapService.displayFeatureInfo);
+                  //solrHeatmapApp.map.on('singleclick',
+                  //                          MapService.displayFeatureInfo);
 
                 } else {
                     throw 'Could not find the mapConfig';
