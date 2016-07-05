@@ -1,65 +1,69 @@
-/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
+/*eslint angular/di: [2,"array"]*/
 /**
  * BackgroundLayer Controller
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('BackgroundLayerCtrl', ['Map', '$scope', function(MapService, $scope) {
+    .controller('BackgroundLayerController',
+        ['MapService', '$scope', function(MapService, $scope) {
 
-        /**
-         *
-         */
-        $scope.layers = {};
-        $scope.selectedLayer = {};
+            var vm = this;
 
-        /**
-         *
-         */
-        $scope.$on('mapReady', function(event, map) {
-            $scope.layers = map.getLayers().getArray();
-            $scope.selectedLayer = {
-                name: $scope.getBackgroundLayers()[0].get('name')
+            /**
+             *
+             */
+            vm.layers = {};
+            vm.selectedLayer = {};
+
+            /**
+             *
+             */
+            vm.$on('mapReady', function(event, map) {
+                vm.layers = map.getLayers().getArray();
+                vm.selectedLayer = {
+                    name: vm.getBackgroundLayers()[0].get('name')
+                };
+            });
+
+            /**
+             *
+             */
+            vm.isBackgroundLayer = function(layer) {
+                var isBackgroundLayer = false;
+                if (layer.get('backgroundLayer')) {
+                    isBackgroundLayer = true;
+                }
+                return isBackgroundLayer;
             };
-        });
 
-        /**
-         *
-         */
-        $scope.isBackgroundLayer = function(layer) {
-            var isBackgroundLayer = false;
-            if (layer.get('backgroundLayer')) {
-                isBackgroundLayer = true;
-            }
-            return isBackgroundLayer;
-        };
+            /**
+             *
+             */
+            vm.setBackgroundLayer = function(layer) {
+                angular.forEach(vm.getBackgroundLayers(), function(bgLayer) {
+                    if (bgLayer === layer) {
+                        layer.setVisible(true);
+                        vm.selectedLayer = {name: layer.get('name')};
+                    } else {
+                        bgLayer.setVisible(false);
+                    }
+                });
+            };
 
-        /**
-         *
-         */
-        $scope.setBackgroundLayer = function(layer) {
-            angular.forEach($scope.getBackgroundLayers(), function(bgLayer) {
-                if (bgLayer === layer) {
-                    layer.setVisible(true);
-                    $scope.selectedLayer = {name: layer.get('name')};
-                } else {
-                    bgLayer.setVisible(false);
-                }
-            });
-        };
+            /**
+             *
+             */
+            vm.getBackgroundLayers = function() {
+                var layers = MapService.getMap().getLayers().getArray();
 
-        /**
-         *
-         */
-        $scope.getBackgroundLayers = function() {
-            var layers = MapService.getMap().getLayers().getArray();
+                return layers.filter(function(l) {
+                    if (l.get('backgroundLayer')) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            };
 
-            return layers.filter(function(l) {
-                if (l.get('backgroundLayer')) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        };
-
-    }]);
+        }]
+);

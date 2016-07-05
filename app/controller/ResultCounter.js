@@ -1,9 +1,11 @@
+/*eslint angular/di: [2,"array"]*/
+/*eslint angular/controller-as: 0*/
 /**
  * ResultCounter Controller
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('ResultCounterCtrl', ['$scope', function($scope) {
+    .controller('ResultCounterController', ['$scope', function($scope) {
 
         $scope.$on('setCounter', function(e, data){
             if (data < 1) {

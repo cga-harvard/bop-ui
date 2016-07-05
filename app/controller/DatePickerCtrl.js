@@ -1,88 +1,94 @@
-/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,100]*/
 /**
  * DatePickerCtrl Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('DatePickerCtrl', ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+    .controller('DatePickerController',
+        ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
 
-        $scope.initialDateOptions = {
-            minDate: new Date('2000-01-01'),
-            maxDate: new Date('2016-12-31')
-        };
+            var vm = this;
 
-        $scope.dateOptions = {
-            minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
-            maxDate: HeatMapSourceGeneratorService.getSearchObj().maxDate,
-            startingDay: 1, // Monday
-            showWeeks: false
-        };
+            vm.initialDateOptions = {
+                minDate: new Date('2000-01-01'),
+                maxDate: new Date('2016-12-31')
+            };
 
-        /**
-         * Will be called on click on start datepicker.
-         * `minDate` will be reset to the initial value (e.g. 2000-01-01),
-         * `maxDate` will be adjusted with the `$scope.dte` value to restrict
-         *  it not to be below the `minDate`.
-         */
-        $scope.openStartDate = function() {
-            $scope.startDate.opened = true;
-            $scope.dateOptions.minDate = $scope.initialDateOptions.minDate;
-            $scope.dateOptions.maxDate = $scope.dte;
-        };
+            vm.dateOptions = {
+                minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
+                maxDate: HeatMapSourceGeneratorService.getSearchObj().maxDate,
+                startingDay: 1, // Monday
+                showWeeks: false
+            };
 
-        /**
-         * Will be called on click on end datepicker.
-         * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
-         * `minDate` will be adjusted with the `$scope.dts` value to restrict
-         *  it not to be bigger than the `maxDate`.
-         */
-        $scope.openEndDate = function() {
-            $scope.endDate.opened = true;
-            $scope.dateOptions.maxDate = $scope.initialDateOptions.maxDate;
-            $scope.dateOptions.minDate = $scope.dts;
-        };
+            /**
+             * Will be called on click on start datepicker.
+             * `minDate` will be reset to the initial value (e.g. 2000-01-01),
+             * `maxDate` will be adjusted with the `$scope.dte` value to
+             *  restrict it not to be below the `minDate`.
+             */
+            vm.openStartDate = function() {
+                vm.startDate.opened = true;
+                vm.dateOptions.minDate = vm.initialDateOptions.minDate;
+                vm.dateOptions.maxDate = vm.dte;
+            };
 
-        $scope.startDate = {
-            opened: false
-        };
+            /**
+             * Will be called on click on end datepicker.
+             * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
+             * `minDate` will be adjusted with the `$scope.dts` value to
+             *  restrict it not to be bigger than the `maxDate`.
+             */
+            vm.openEndDate = function() {
+                vm.endDate.opened = true;
+                vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
+                vm.dateOptions.minDate = vm.dts;
+            };
 
-        $scope.endDate = {
-            opened: false
-        };
+            vm.startDate = {
+                opened: false
+            };
 
-        /**
-         * Set initial values for min and max dates in both of datepicker.
-         */
-        $scope.setInitialDates = function(){
-            $scope.dts = $scope.dateOptions.minDate;
-            $scope.dte = $scope.dateOptions.maxDate;
-        };
+            vm.endDate = {
+                opened: false
+            };
 
-        $scope.setInitialDates();
+            /**
+             * Set initial values for min and max dates in both of datepicker.
+             */
+            vm.setInitialDates = function(){
+                vm.dts = vm.dateOptions.minDate;
+                vm.dte = vm.dateOptions.maxDate;
+            };
 
-        /**
-         * Will be fired after the start date was chosen.
-         */
-        $scope.onChangeStartDate = function(){
-            $scope.setDateRange($scope.dts, $scope.dte);
-            HeatMapSourceGeneratorService.performSearch();
-        };
+            vm.setInitialDates();
 
-        /**
-         * Will be fired after the end date was chosen.
-         */
-        $scope.onChangeEndDate = function(){
-            $scope.setDateRange($scope.dts, $scope.dte);
-            HeatMapSourceGeneratorService.performSearch();
-        };
+            /**
+             * Will be fired after the start date was chosen.
+             */
+            vm.onChangeStartDate = function(){
+                vm.setDateRange(vm.dts, vm.dte);
+                HeatMapSourceGeneratorService.performSearch();
+            };
 
-        /**
-         * Help method that updates `searchObj` of the heatmap with
-         * the current min and max dates.
-         * @param {Date} minDate date value of the start datepicker
-         * @param {Date} maxDate date value of the end datepicker
-         */
-        $scope.setDateRange = function(minDate, maxDate){
-            HeatMapSourceGeneratorService.setMinDate(minDate);
-            HeatMapSourceGeneratorService.setMaxDate(maxDate);
-        };
-    }]);
+            /**
+             * Will be fired after the end date was chosen.
+             */
+            vm.onChangeEndDate = function(){
+                vm.setDateRange(vm.dts, vm.dte);
+                HeatMapSourceGeneratorService.performSearch();
+            };
+
+            /**
+             * Help method that updates `searchObj` of the heatmap with
+             * the current min and max dates.
+             * @param {Date} minDate date value of the start datepicker
+             * @param {Date} maxDate date value of the end datepicker
+             */
+            vm.setDateRange = function(minDate, maxDate){
+                HeatMapSourceGeneratorService.setMinDate(minDate);
+                HeatMapSourceGeneratorService.setMaxDate(maxDate);
+            };
+        }]
+
+);

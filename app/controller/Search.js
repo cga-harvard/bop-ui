@@ -1,48 +1,54 @@
-/*eslint max-len: ["error", { "ignorePattern": "^\s{4}.controller.*" }]*/
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,100]*/
 /**
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', function(MapService, HeatMapSourceGeneratorService, $scope) {
+    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$window',
+        function(MapService, HeatMapSourceGeneratorService, $scope, $window) {
 
-        /**
-         *
-         */
-        $scope.searchInput = '';
-        /**
-         *
-         */
-        $scope.onKeyPress = function($event) {
-            // only fire the search if Enter-key (13) is pressed
-            if (getKeyboardCodeFromEvent($event) === 13) {
-                $scope.doSearch();
-            }
-        };
-
-        /**
-         *
-         */
-        $scope.doSearch = function() {
-            // if no input is given
-            // if ($scope.searchInput.length === 0) {
-            //    return false;
-            // }
-
-            HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
-            HeatMapSourceGeneratorService.performSearch();
-        };
-
-        $scope.resetSearchInput = function() {
+            /**
+             *
+             */
             $scope.searchInput = '';
-            HeatMapSourceGeneratorService.setSearchText('');
-            HeatMapSourceGeneratorService.performSearch();
-        };
 
-        /**
-         *
-         */
-        function getKeyboardCodeFromEvent(keyEvt) {
-            return window.event ? keyEvt.keyCode : keyEvt.which;
-        }
+            /**
+             *
+             */
+            function getKeyboardCodeFromEvent(keyEvt) {
+                return $window.event ? keyEvt.keyCode : keyEvt.which;
+            }
 
-    }]);
+            /**
+             *
+             */
+            $scope.onKeyPress = function($event) {
+                // only fire the search if Enter-key (13) is pressed
+                if (getKeyboardCodeFromEvent($event) === 13) {
+                    $scope.doSearch();
+                }
+            };
+
+            /**
+             *
+             */
+            $scope.doSearch = function() {
+                // if no input is given
+                // if ($scope.searchInput.length === 0) {
+                //    return false;
+                // }
+
+                HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
+                HeatMapSourceGeneratorService.performSearch();
+            };
+
+            $scope.resetSearchInput = function() {
+                $scope.searchInput = '';
+                HeatMapSourceGeneratorService.setSearchText('');
+                HeatMapSourceGeneratorService.performSearch();
+            };
+
+        }]
+
+);
