@@ -427,7 +427,7 @@ angular.module('SolrHeatmapApp')
 
                 }
 
-            }
+
 
             var ms = {
                 //map: map,
