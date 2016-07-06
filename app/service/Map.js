@@ -366,12 +366,25 @@ angular.module('SolrHeatmapApp')
             function createOrUpdateBboxLayer (bboxFeature, fromSrs) {
                 var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
                     polySrc,
-                    existingBboxLayer = getLayersBy('name', 'BoundingBoxLayer'),
-                    style = new ol.style.Style({
-                      stroke: new ol.style.Stroke({
-                        color: '#000000',
-                        width: 1
-                      })
+                    washingSrc,
+                    existingBboxLayer = getLayersBy('name', 'BoundingBoxLayer')[0],
+                    washingFrameLayer = getLayersBy('name', 'WashingFrameLayer')[0],
+                    bboxLayerStyle = new ol.style.Style({
+                        image: new ol.style.RegularShape({
+                            fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
+                            stroke: new ol.style.Stroke({ color: [255,0,0,1], width: 1 }),
+                            radius: this.isTouch ? 16 : 8,
+                            points: 4,
+                            angle: Math.PI/4
+                        }),
+                       fill: new ol.style.Fill({ color:[255,0,0,0.01] }),
+                       stroke: new ol.style.Stroke({ color: [255,0,0,1], width: 1,
+                                                                        lineDash:[4,4] })
+                    }),
+                    washingFrameLayerStyle = new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: [150, 150, 150, 0.5]
+                        })
                     });
 
                 if (fromSrs !== map.getView().getProjection().getCode()){
@@ -380,52 +393,48 @@ angular.module('SolrHeatmapApp')
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
+                // create feature for the mask (extent of the map with the bbox polygon)
+                // as hole
+                var washingOuterExtent = map.getView().calculateExtent(map.getSize()),
+                    washingOuterPolygon = ol.geom.Polygon.fromExtent(washingOuterExtent);
+                washingOuterPolygon.appendLinearRing(
+                                    polygon.getGeometry().getLinearRing(0));
+
                 polySrc = new ol.source.Vector({
                     features: [polygon]
                 });
+                washingSrc = new ol.source.Vector({
+                    features: [new ol.Feature(washingOuterPolygon)]
+                });
 
-                if (existingBboxLayer && existingBboxLayer.length > 0){
-                    var currBboxLayer = existingBboxLayer[0];
-                    // Update layer source
-                    var layerSrc = currBboxLayer.getSource();
+                if (existingBboxLayer){
+                    // Update layer sources
+                    var layerSrc = existingBboxLayer.getSource();
                     if (layerSrc){
                       layerSrc.clear();
                     }
-                    currBboxLayer.setSource(polySrc);
-                    currBboxLayer.setStyle(style);
+                    existingBboxLayer.setSource(polySrc);
+                    layerSrc = washingFrameLayer.getSource();
+                    if (layerSrc){
+                      layerSrc.clear();
+                    }
+                    washingFrameLayer.setSource(washingSrc);
+
                 } else {
-                     var newBboxLayer = new ol.layer.Heatmap({
+                   existingBboxLayer = new ol.layer.Vector({
                        name: 'BoundingBoxLayer',
                        source: polySrc,
-                       style: style
+                       style: bboxLayerStyle
                    });
-
-                  map.addLayer(newBboxLayer);
-
-                  // add interactions
-                  var select = new ol.interaction.Select({
-                      condition: function(mapBrowserEvent) {
-                          return ol.events.condition.click(mapBrowserEvent) &&
-                              ol.events.condition.altKeyOnly(mapBrowserEvent);
-                        },
-                      wrapX: false
+                   washingFrameLayer = new ol.layer.Vector({
+                       name: 'WashingFrameLayer',
+                       source: washingSrc,
+                       style: washingFrameLayerStyle
                    });
-
-                   var modify = new ol.interaction.Modify({
-                     features: select.getFeatures()
-                   });
-
-                   map.addInteraction(select);
-                   map.addInteraction(modify);
-
-                   // TODO:
-                   // * restrict modify feature only to bbox
-                   // * trigger heatmap recalculation when modification ended
-                   // * => modifyend event
-
-                   // Zoom Evenet muss interactions zurücksetzen
-
+                   map.addLayer(existingBboxLayer);
+                   map.addLayer(washingFrameLayer);
                 }
+            }
 
 
 
