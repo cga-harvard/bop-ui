@@ -1,6 +1,6 @@
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
-/*eslint max-len: [2,90]*/
+/*eslint max-len: [2,100]*/
 /**
  * Map Service
  */
@@ -64,7 +64,7 @@ angular.module('SolrHeatmapApp')
                 if (angular.isArray(viewConfig.extent)) {
                     var vw = map.getView();
                     vw.set('extent', viewConfig.extent);
-                    createOrUpdateBboxLayer(viewConfig.extent, viewConfig.projection);
+                    generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
                 }
             }
 
@@ -136,8 +136,7 @@ angular.module('SolrHeatmapApp')
              *
              */
             function getInteractionsByClass(value) {
-                var interactions = solrHeatmapApp.map.
-                                    getInteractions().getArray();
+                var interactions = getMap().getInteractions().getArray();
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction instanceof value;
                 });
@@ -212,25 +211,57 @@ angular.module('SolrHeatmapApp')
             }
 
             function createOrUpdateHeatMapLayer(data) {
-                var olVecSrc = createHeatMapSource(data),
-                    existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
-                    newHeatMapLayer;
-                if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
-                    var currHeatmapLayer = existingHeatMapLayers[0];
-                    // Update layer source
-                    var layerSrc = currHeatmapLayer.getSource();
-                    if (layerSrc){
-                        layerSrc.clear();
-                    }
-                    currHeatmapLayer.setSource(olVecSrc);
-                } else {
-                    newHeatMapLayer = new ol.layer.Heatmap({
-                        name: 'HeatMapLayer',
-                        source: olVecSrc,
-                        radius: 10
-                    });
-                    map.addLayer(newHeatMapLayer);
-                }
+              var olVecSrc = createHeatMapSource(data),
+                  existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
+                  transformInteractionLayer =  getLayersBy('name', "TransformInteractionLayer")[0],
+                  newHeatMapLayer;
+              if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
+                  var currHeatmapLayer = existingHeatMapLayers[0];
+                  // Update layer source
+                  var layerSrc = currHeatmapLayer.getSource();
+                  if (layerSrc){
+                    layerSrc.clear();
+                  }
+                  currHeatmapLayer.setSource(olVecSrc);
+              } else {
+                newHeatMapLayer = new ol.layer.Heatmap({
+                  name: 'HeatMapLayer',
+                  source: olVecSrc,
+                  radius: 10
+                });
+
+                map.addLayer(newHeatMapLayer);
+
+                // Add Mask to HeatMapLayer
+                var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
+
+                var mask = new ol.filter.Mask({
+                    feature: currentBBox,
+                    inner: false,
+                    fill: new ol.style.Fill({
+                        color: [255,255,255,0.5]
+                    })
+                });
+                newHeatMapLayer.addFilter(mask);
+              }
+
+              switchMasks(olVecSrc !== null);
+            }
+
+            /**
+             * Helper method to change active mode of masks for backgroundLayer and
+             * heatmap layer
+             */
+            function switchMasks(hmAvailable) {
+                var heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0],
+                    heatMapMask = heatMapLayer.getFilters()[0],
+                    backgroundLayer =  getLayersBy('backgroundLayer', true)[0],
+                    backgroundLayerMask = backgroundLayer.getFilters()[0];
+
+                // disable mask of backgroundLayer if heatmap is available and vice versa
+                backgroundLayerMask.setActive(!hmAvailable);
+                // enable mask of heatMapLayer if heatmap is available and vice versa
+                heatMapMask.setActive(hmAvailable);
             }
 
             /*
@@ -356,84 +387,71 @@ angular.module('SolrHeatmapApp')
                     var vw = map.getView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
-                    createOrUpdateBboxLayer(solrHeatmapApp.initMapConf.view.extent);
+
+                    var transformationLayer = getLayersBy("name","TransformInteractionLayer")[0],
+                        vectorSrc = transformationLayer.getSource(),
+                        currentBbox = vectorSrc.getFeatures()[0],
+                        polyNew;
+
+                    polyNew = ol.geom.Polygon.fromExtent(solrHeatmapApp.initMapConf.view.extent);
+                    currentBbox.setGeometry(polyNew);
+
+                    // update interaction
+                    map.getInteractions().getArray().forEach(function(interaction){
+                        if(interaction instanceof ol.interaction.Transform){
+                            interaction.dispatchEvent('propertychange');
+                        }
+                    });
                 }
             }
 
-            /*
-             * Layer which holds the query bbox (q.geo)
+            /**
+             * This method adds a transfrom interaction to the mapand a mask to background layer
+             * The area outer the feature which can be modified by the transfrom interaction
+             * will have a white shadow
              */
-            function createOrUpdateBboxLayer (bboxFeature, fromSrs) {
+            function generateMaskAndAssociatedInteraction (bboxFeature, fromSrs) {
                 var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
-                    polySrc,
-                    washingSrc,
-                    existingBboxLayer = getLayersBy('name', 'BoundingBoxLayer')[0],
-                    washingFrameLayer = getLayersBy('name', 'WashingFrameLayer')[0],
-                    bboxLayerStyle = new ol.style.Style({
-                        image: new ol.style.RegularShape({
-                            fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
-                            stroke: new ol.style.Stroke({ color: [255,0,0,1], width: 1 }),
-                            radius: this.isTouch ? 16 : 8,
-                            points: 4,
-                            angle: Math.PI/4
-                        }),
-                       fill: new ol.style.Fill({ color:[255,0,0,0.01] }),
-                       stroke: new ol.style.Stroke({ color: [255,0,0,1], width: 1,
-                                                                        lineDash:[4,4] })
-                    }),
-                    washingFrameLayerStyle = new ol.style.Style({
-                        fill: new ol.style.Fill({
-                            color: [150, 150, 150, 0.5]
-                        })
-                    });
+                    backGroundLayer =  getLayersBy('backgroundLayer', true)[0],
+                    heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0];
 
                 if (fromSrs !== map.getView().getProjection().getCode()){
                     var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                                map.getView().getProjection().getCode());
+                                                    map.getView().getProjection().getCode());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
-                // create feature for the mask (extent of the map with the bbox polygon)
-                // as hole
-                var washingOuterExtent = map.getView().calculateExtent(map.getSize()),
-                    washingOuterPolygon = ol.geom.Polygon.fromExtent(washingOuterExtent);
-                washingOuterPolygon.appendLinearRing(
-                                    polygon.getGeometry().getLinearRing(0));
-
-                polySrc = new ol.source.Vector({
-                    features: [polygon]
+                // TransformInteractionLayer
+                // holds the value of q.geo
+                var vector = new ol.layer.Vector({
+                    name: 'TransformInteractionLayer',
+                    source: new ol.source.Vector(),
+                    style: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: [255,255,255,0.01]
+                        })
+                    })
                 });
-                washingSrc = new ol.source.Vector({
-                    features: [new ol.Feature(washingOuterPolygon)]
-                });
+                map.addLayer(vector);
+                vector.getSource().addFeature(polygon);
 
-                if (existingBboxLayer){
-                    // Update layer sources
-                    var layerSrc = existingBboxLayer.getSource();
-                    if (layerSrc){
-                      layerSrc.clear();
-                    }
-                    existingBboxLayer.setSource(polySrc);
-                    layerSrc = washingFrameLayer.getSource();
-                    if (layerSrc){
-                      layerSrc.clear();
-                    }
-                    washingFrameLayer.setSource(washingSrc);
+                var transformInteraction = new ol.interaction.Transform({
+                     translate: true,
+                     scale: true,
+                     translateFeature: false,
+                     rotate: false,
+                     stretch: false
+                 });
+                map.addInteraction(transformInteraction);
 
-                } else {
-                   existingBboxLayer = new ol.layer.Vector({
-                       name: 'BoundingBoxLayer',
-                       source: polySrc,
-                       style: bboxLayerStyle
-                   });
-                   washingFrameLayer = new ol.layer.Vector({
-                       name: 'WashingFrameLayer',
-                       source: washingSrc,
-                       style: washingFrameLayerStyle
-                   });
-                   map.addLayer(existingBboxLayer);
-                   map.addLayer(washingFrameLayer);
-                }
+                 var mask = new ol.filter.Mask({
+                     feature: polygon,
+                     inner:false,
+                     fill: new ol.style.Fill({
+                         color:[255,255,255,0.5]
+                     })
+                 });
+                 backGroundLayer.addFilter(mask);
             }
 
 
@@ -447,7 +465,7 @@ angular.module('SolrHeatmapApp')
                 getInteractionsByType: getInteractionsByType,
                 displayFeatureInfo: displayFeatureInfo,
                 createOrUpdateHeatMapLayer: createOrUpdateHeatMapLayer,
-                createOrUpdateBboxLayer : createOrUpdateBboxLayer,
+                generateMaskAndAssociatedInteraction: generateMaskAndAssociatedInteraction,
                 createHeatMapSource: createHeatMapSource,
                 heatmapMinMax: heatmapMinMax,
                 rescaleHeatmapValue: rescaleHeatmapValue,

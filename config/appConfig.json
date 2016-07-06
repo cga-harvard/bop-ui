@@ -1,7 +1,8 @@
 {
     "appConfig": {
         "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?",
-        "tweetsExportBaseUrl": "http://54.158.101.33:8080/bopws/tweets/export?"
+        "tweetsExportBaseUrl": "http://54.158.101.33:8080/bopws/tweets/export?",
+        "ratioInnerBbox": 0.9
     },
     "bopwsConfig": {
         "heatmapFacetLimit": 10000,

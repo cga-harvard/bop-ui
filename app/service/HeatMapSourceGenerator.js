@@ -52,9 +52,19 @@ angular
                 var map = MapService.getMap(),
                     viewProj = map.getView().getProjection().getCode(),
                     extent = map.getView().calculateExtent(map.getSize()),
-                    extentWgs84 = ol.proj.
-                                    transformExtent(extent, viewProj, 'EPSG:4326'),
+                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
+                    transformInteractionLayer = MapService.
+                                    getLayersBy('name', 'TransformInteractionLayer')[0],
+                    currentBbox,
+                    currentBboxExtentWgs84,
                     geoFilter = {};
+
+                if (!transformInteractionLayer) {
+                    return null;
+                }
+                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
+                currentBboxExtentWgs84 = ol.proj.transformExtent(
+                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
 
                 // default: Zoom level <= 1 query whole world
                 if (map.getView().getZoom() <= 1) {
@@ -62,20 +72,34 @@ angular
                 }
 
                 if (extent && extentWgs84){
-                    var normalizedExtent = normalize(extentWgs84);
+                  var normalizedExtentMap = normalize(extentWgs84),
+                      normalizedExtentBox = normalize(currentBboxExtentWgs84);
 
-                    var minX = normalizedExtent[1],
-                        maxX = normalizedExtent[3],
-                        minY = normalizedExtent[0],
-                        maxY = normalizedExtent[2];
+                    var minX = normalizedExtentMap[1],
+                        maxX = normalizedExtentMap[3],
+                        minY = normalizedExtentMap[0],
+                        maxY = normalizedExtentMap[2];
 
-                    geoFilter = {
+                    geoFilter.hmFilter = {
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY,
+                        maxY: maxY
+                    };
+
+                    minX = normalizedExtentBox[1];
+                    maxX = normalizedExtentBox[3];
+                    minY = normalizedExtentBox[0];
+                    maxY = normalizedExtentBox[2];
+
+                    geoFilter.queryGeo = {
                         minX: minX,
                         maxX: maxX,
                         minY: minY,
                         maxY: maxY
                     };
                 }
+
 
                 return geoFilter;
             }
@@ -85,13 +109,14 @@ angular
              */
             function performSearch(){
                 var config = {},
+                    spatialFilters = this.getGeospatialFilter(),
                     params = this.getTweetsSearchQueryParameters(
-                                                    this.getGeospatialFilter());
+                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
 
                 // add additional parameter for the soft maximum of the heatmap grid
                 params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
 
-                if (params) {
+                if (params && spatialFilters !== null) {
 
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
@@ -99,22 +124,26 @@ angular
                         params: params
                     };
 
-                  //load the data
+                    //load the data
                     $http(config).
                     success(function(data, status, headers, cfg) {
-                        // check if we have a heatmap facet and update the map
+                        // check if we have a heatmap facet and update the map with it
                         if (data && data["a.hm"]) {
                             MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
                             // get the count of matches
-                            $rootScope.$broadcast('setCounter',data["a.matchDocs"]);
+                            $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
                         }
                     }).
                     error(function(data, status, headers, cfg) {
                         // hide the loading mask
-                        $window.alert("An error occured while reading heatmap");
+                        //angular.element(document.querySelector('.waiting-modal')).modal('hide');
+                        $window.alert("An error occured while reading heatmap data");
                     });
+                } else {
+                    $window.alert("Spatial filter could not be computed.");
                 }
             }
+
 
             /**
              * Help method to build the whole params object, that will be used in
@@ -122,13 +151,14 @@ angular
              */
             function startCsvExport(){
                 var config = {},
+                    spatialFilters = this.getGeospatialFilter(),
                     params = this.getTweetsSearchQueryParameters(
-                                            this.getGeospatialFilter());
-                    // add additional parameter for number of documents to return
-                params["d.docs.limit"] =
-                                solrHeatmapApp.bopwsConfig.csvDocsLimit;
+                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
 
-                if (params) {
+                // add additional parameter for the number of documents to return
+                params["d.docs.limit"] = solrHeatmapApp.bopwsConfig.csvDocsLimit;
+
+                if (params && spatialFilters !== null) {
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
                         method: 'GET',
@@ -140,11 +170,9 @@ angular
                     success(function(data, status, headers, cfg) {
                         var anchor = angular.element('<a/>');
                         anchor.css({display: 'none'}); // Make sure it's not visible
-                        angular.element($document.body).append(anchor);
-                         // Attach to document
+                        angular.element($document.body).append(anchor); // Attach to document
                         anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' +
-                                                                encodeURI(data),
+                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
                             target: '_blank',
                             download: 'bop_export.csv'
                         })[0].click();
@@ -153,6 +181,8 @@ angular
                     error(function(data, status, headers, cfg) {
                         $window.alert("An error occured while exporting csv data");
                     });
+                } else {
+                    $window.alert("Spatial filter could not be computed.");
                 }
             }
 
