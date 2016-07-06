@@ -179,9 +179,6 @@ angular
                     minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
                     maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
 
-                MapService.createOrUpdateBboxLayer([ minInnerY, minInnerX, maxInnerY,
-                                                                    maxInnerX], 'EPSG:4326');
-
                 var params = {
                     "q.text": keyword,
                     "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +

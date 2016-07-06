@@ -1,8 +1,7 @@
 {
     "appConfig": {
         "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?",
-        "tweetsExportBaseUrl": "http://54.158.101.33:8080/bopws/tweets/export?",
-        "ratioInnerBbox": 0.9
+        "tweetsExportBaseUrl": "http://54.158.101.33:8080/bopws/tweets/export?"
     },
     "bopwsConfig": {
         "heatmapFacetLimit": 10000,
@@ -12,7 +11,7 @@
         "renderer": "canvas",
         "view": {
             "center": [0, 0],
-            "extent": [-20026376.39,-20048966.10,20026376.39,20048966.10],
+            "extent": [-20000000.00,-20000000.00,20000000.00,20000000.00],
             "maxZoom": 15,
             "minZoom": 1,
             "projection": "EPSG:3857",
