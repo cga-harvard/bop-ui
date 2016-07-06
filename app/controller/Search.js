@@ -1,12 +1,12 @@
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,100]*/
+/*eslint max-len: [2,110]*/
 /**
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $window) {
+    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$controller', '$window',
+        function(MapService, HeatMapSourceGeneratorService, $scope, $controller, $window) {
 
             /**
              *
@@ -50,6 +50,11 @@ angular.module('SolrHeatmapApp')
 
                 // Reset the map
                 MapService.resetMap();
+
+                // Reset the date fields
+                var ctrlViewModelNew = $scope.$new();
+                $controller('DatePickerCtrl', {$scope : ctrlViewModelNew });
+                ctrlViewModelNew.setInitialDates();
             };
 
         }]
