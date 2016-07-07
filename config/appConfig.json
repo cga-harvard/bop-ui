@@ -43,5 +43,27 @@
             "opacity": 1,
             "visible": true
         }]
+    },
+    "instructions": {
+      "textsearch": {
+        "toolTitle": "Filter by text",
+        "instruction": "Place instruction for text search here."
+      },
+      "datepicker": {
+        "toolTitle": "Filter by date",
+        "instruction": "Place instruction for datepicker here."
+      },
+      "geospatialsearch": {
+        "toolTitle": "Geospatial filter",
+        "instruction": "Place instruction for geospatial search field here."
+      },
+      "userfilter": {
+        "toolTitle": "Filter by user name",
+        "instruction": "Place instruction for user filter here."
+      },
+      "export": {
+        "toolTitle": "Export button",
+        "instruction": "Place instruction for export button here."
+      }
     }
 }

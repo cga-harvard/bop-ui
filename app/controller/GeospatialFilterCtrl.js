@@ -13,10 +13,10 @@ angular
                  size: 'lg',
                  resolve: {
                      infoMsg: function(){
-                         return 'Geospatial filter!';
+                         return solrHeatmapApp.instructions.geospatialsearch.instruction;
                      },
                      toolName: function(){
-                         return 'Geospatial filter';
+                         return solrHeatmapApp.instructions.geospatialsearch.toolTitle;
                      }
                  }
              });

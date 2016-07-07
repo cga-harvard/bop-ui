@@ -56,6 +56,10 @@ html, body {
   margin-right: 5px;
 }
 
+.col-md-11 span {
+  vertical-align: middle;
+}
+
 #fromToDateInputs .btn:hover {
     color: #337AB7;
 }
@@ -63,7 +67,6 @@ html, body {
 #fromToDateInputs td .btn-info.active {
   background-color: #337AB7;
 }
-
 
 hr {
   width: 75%;
@@ -83,6 +86,11 @@ code {
 
 .glyphicon {
     color: #337ab7
+}
+
+.row {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /*

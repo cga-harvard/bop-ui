@@ -98,10 +98,10 @@ angular.module('SolrHeatmapApp')
                     size: 'lg',
                     resolve: {
                         infoMsg: function(){
-                            return 'Datem suchen!';
+                            return solrHeatmapApp.instructions.datepicker.instruction;
                         },
                         toolName: function(){
-                            return 'Choose date!';
+                            return solrHeatmapApp.instructions.datepicker.toolTitle;
                         }
                     }
                 });

@@ -12,12 +12,12 @@ angular
                  controller: 'InfoWindowCtrl',
                  size: 'lg',
                  resolve: {
-                     infoMsg: function(){
-                         return 'Filter by user';
-                     },
-                     toolName: function(){
-                         return 'Filter by user';
-                     }
+                   infoMsg: function(){
+                       return solrHeatmapApp.instructions.userfilter.instruction;
+                   },
+                   toolName: function(){
+                       return solrHeatmapApp.instructions.userfilter.toolTitle;
+                   }
                  }
              });
         };

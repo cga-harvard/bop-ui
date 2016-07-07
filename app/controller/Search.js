@@ -65,10 +65,10 @@ angular.module('SolrHeatmapApp')
                     size: 'lg',
                     resolve: {
                         infoMsg: function(){
-                            return 'Suche!';
+                            return solrHeatmapApp.instructions.textsearch.instruction;
                         },
                         toolName: function(){
-                            return 'Suche!';
+                            return solrHeatmapApp.instructions.textsearch.toolTitle;
                         }
                     }
                 });

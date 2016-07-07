@@ -32,10 +32,10 @@ angular
                     size: 'lg',
                     resolve: {
                         infoMsg: function(){
-                            return 'Export datasets';
+                            return solrHeatmapApp.instructions.export.instruction;
                         },
                         toolName: function(){
-                            return 'Export datasets';
+                            return solrHeatmapApp.instructions.export.toolTitle;
                         }
                     }
                 });
