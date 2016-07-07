@@ -1,12 +1,12 @@
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,110]*/
+/*eslint max-len: [2,120]*/
 /**
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$controller', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $controller, $window) {
+    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
+        function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
 
             /**
              *
@@ -55,6 +55,23 @@ angular.module('SolrHeatmapApp')
                 var ctrlViewModelNew = $scope.$new();
                 $controller('DatePickerController', {$scope : ctrlViewModelNew });
                 ctrlViewModelNew.resetDates();
+            };
+
+            $scope.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowCtrl',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return 'Suche!';
+                        },
+                        toolName: function(){
+                            return 'Suche!';
+                        }
+                    }
+                });
             };
 
         }]

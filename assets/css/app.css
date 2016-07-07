@@ -81,6 +81,37 @@ code {
   padding: 0;
 }
 
+.glyphicon {
+    color: #337ab7
+}
+
+/*
+ * CSS properties of search fields
+ */
+.searchinputfield span{
+    background-color: #FFF
+}
+
+.searchinputfield input{
+    border-right-style:none;
+}
+
+.input-group-addon {
+    border-left-style:none;
+}
+
+.infobtn {
+    border: none;
+}
+
+.btn:hover {
+    background-color: #FFF;
+}
+
+.btn-primary:hover {
+    background: #2e6da4;
+}
+
 /*
  * ol3
  */

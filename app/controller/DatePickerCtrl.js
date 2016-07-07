@@ -4,8 +4,8 @@
  * DatePickerCtrl Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('DatePickerController',
-        ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+    .controller('DatePickerController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
+        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
 
             var vm = $scope;
 
@@ -89,6 +89,24 @@ angular.module('SolrHeatmapApp')
                 HeatMapSourceGeneratorService.setMinDate(minDate);
                 HeatMapSourceGeneratorService.setMaxDate(maxDate);
             };
+
+            vm.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowCtrl',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return 'Datem suchen!';
+                        },
+                        toolName: function(){
+                            return 'Choose date!';
+                        }
+                    }
+                });
+            };
+
         }]
 
 );
