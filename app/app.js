@@ -2,4 +2,4 @@
  * The main solrHeatmapApp module
  */
 angular
-    .module('SolrHeatmapApp', ['ui.bootstrap']);
+    .module('SolrHeatmapApp', ['ui.bootstrap', 'rzModule']);

@@ -42,12 +42,22 @@
                     </div>
                     <div class="col-md-4"></div>
                 </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <ng-include src="'./app/view/geospatialFilter.html'"></ng-include>
+                    </div>
+                </div>
                 <div class="row map-row">
                   <div class="col-md-8 col-md-offset-2">
                       <ng-include src="'./app/view/resultCounterText.html'"></ng-include>
                       <!-- the ol3 map -->
                       <div class="map" id="map"></div>
                   </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <ng-include src="'./app/view/userFilter.html'"></ng-include>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
