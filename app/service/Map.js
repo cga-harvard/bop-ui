@@ -213,7 +213,7 @@ angular.module('SolrHeatmapApp')
             function createOrUpdateHeatMapLayer(data) {
               var olVecSrc = createHeatMapSource(data),
                   existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
-                  transformInteractionLayer =  getLayersBy('name', "TransformInteractionLayer")[0],
+                  transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0],
                   newHeatMapLayer;
               if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                   var currHeatmapLayer = existingHeatMapLayers[0];
@@ -388,21 +388,25 @@ angular.module('SolrHeatmapApp')
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
 
-                    var transformationLayer = getLayersBy("name","TransformInteractionLayer")[0],
-                        vectorSrc = transformationLayer.getSource(),
-                        currentBbox = vectorSrc.getFeatures()[0],
-                        polyNew;
-
-                    polyNew = ol.geom.Polygon.fromExtent(solrHeatmapApp.initMapConf.view.extent);
-                    currentBbox.setGeometry(polyNew);
-
-                    // update interaction
-                    map.getInteractions().getArray().forEach(function(interaction){
-                        if(interaction instanceof ol.interaction.Transform){
-                            interaction.dispatchEvent('propertychange');
-                        }
-                    });
+                    setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
+            }
+
+            function setTransactionBBox(extent) {
+                var transformationLayer = getLayersBy('name','TransformInteractionLayer')[0],
+                    vectorSrc = transformationLayer.getSource(),
+                    currentBbox = vectorSrc.getFeatures()[0],
+                    polyNew;
+
+                polyNew = ol.geom.Polygon.fromExtent(extent);
+                currentBbox.setGeometry(polyNew);
+
+                // update interaction
+                map.getInteractions().getArray().forEach(function(interaction){
+                    if(interaction instanceof ol.interaction.Transform){
+                        interaction.dispatchEvent('propertychange');
+                    }
+                });
             }
 
             /**
@@ -416,8 +420,7 @@ angular.module('SolrHeatmapApp')
                     heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0];
 
                 if (fromSrs !== map.getView().getProjection().getCode()){
-                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                                    map.getView().getProjection().getCode());
+                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs, map.getView().getProjection().getCode());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
@@ -454,7 +457,44 @@ angular.module('SolrHeatmapApp')
                  backGroundLayer.addFilter(mask);
             }
 
+            /*
+             * For change:resolution event (zoom in map):
+             * If bounding of transform interaction is grater than the map extent
+             * the transform box will be resized to 90%
+             */
+            function checkBoxOfTransformInteraction () {
+                var transformInteractionLayer = getLayersBy('name', 'TransformInteractionLayer')[0],
+                    mapExtent = map.getView().calculateExtent(map.getSize()),
+                    vectorSrc = transformInteractionLayer.getSource(),
+                    currentBbox = vectorSrc.getFeatures()[0],
+                    needsUpdate = false,
+                    ordArray = currentBbox.getGeometry().getCoordinates()[0];
 
+                 // check if current bbox is greater than map extent
+                 for (var i = 0; i<ordArray.length; i++) {
+                     if (! new ol.geom.Point(ordArray[i]).intersectsExtent(mapExtent)){
+                         needsUpdate = true;
+                         break;
+                     }
+                 }
+
+                 if (needsUpdate === true) {
+                     // calculate reduced bounding box
+                     var minx = mapExtent[0],
+                         miny = mapExtent[1],
+                         maxx = mapExtent[2],
+                         maxy = mapExtent[3],
+                         dx = maxx - minx,
+                         dy = maxy - miny,
+                         minInnerX = minx + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                         maxInnerX = minx + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                         minInnerY = miny + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                         maxInnerY = miny + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+
+                     setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
+                 }
+
+            }
 
             var ms = {
                 //map: map,
@@ -466,6 +506,8 @@ angular.module('SolrHeatmapApp')
                 displayFeatureInfo: displayFeatureInfo,
                 createOrUpdateHeatMapLayer: createOrUpdateHeatMapLayer,
                 generateMaskAndAssociatedInteraction: generateMaskAndAssociatedInteraction,
+                checkBoxOfTransformInteraction: checkBoxOfTransformInteraction,
+                setTransactionBBox: setTransactionBBox,
                 createHeatMapSource: createHeatMapSource,
                 heatmapMinMax: heatmapMinMax,
                 rescaleHeatmapValue: rescaleHeatmapValue,
