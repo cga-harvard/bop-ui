@@ -1,15 +1,17 @@
 <div ng-controller="ExportController">
-    <div class="row" id="fromToSlider">
+            <div class="input-group">
         <!-- <div> -->
           <input type="number" class="ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
         <!-- </div> -->
         <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
         <div>Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span></div>
         <button class="btn btn-primary btn-sm pull-right" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+
+        <span class="input-group-btn searchbtn">
+          <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
+            <span class="glyphicon glyphicon-info-sign"></span>
+          </button>
+        </span>
     </div>
-    <span class="input-group-btn searchbtn">
-      <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
-        <span class="glyphicon glyphicon-info-sign"></span>
-      </button>
-    </span>
+
 </div>

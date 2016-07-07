@@ -27,11 +27,11 @@ html, body {
 
 #fromToDateInputs {
   padding-top: 25px;
-  padding-bottom: 10px;
 }
 
 #searchinput {
   padding-top: 25px;
+  padding-buttom: 25px;
 }
 
 #exportbtn {
