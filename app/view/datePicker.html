@@ -1,29 +1,46 @@
 <div ng-controller="DatePickerController">
-    <div class="input-group">
-        <label class=" control-label">Date:</label>
-        <input class="form-control" id="focusedInput" type="text" ng-model="dateString">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="focusedInput" class="control-label col-md-1">Date:</label>
+                <div class="col-md-11">
+                    <input id="focusedInput" class="form-control" type="text" ng-model="dateString">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1 col-md-offset-1">
         <span class="input-group-btn searchbtn">
           <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
             <span class="glyphicon glyphicon-info-sign"></span>
         </button>
         </span>
     </div>
-    <div class="col-md-4 col-md-offset-2">
-        <label>From:</label>
-        <p class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup ng-model="dts" is-open="startDate.opened" show-button-bar="false" datepicker-options="dateOptions" ng-required="true" ng-change="onChangeStartDate()" readonly/>
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-        </p>
+
+    <div class="col-md-8 col-md-offset-2">
+        <div class="form-horizontal">
+            <div class="form-group">
+            <label class="control-label col-md-1">From:</label>
+                <div class="col-md-5">
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup ng-model="dts" is-open="startDate.opened" show-button-bar="false" datepicker-options="dateOptions" ng-required="true" ng-change="onChangeStartDate()" readonly/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <label class="control-label col-md-1">To:</label>
+                <div class="col-md-5">
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup ng-model="dte" is-open="endDate.opened" show-button-bar="false" datepicker-options="dateOptions" ng-required="true" ng-change="onChangeEndDate()" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <label>To:</label>
-        <p class="input-group">
-            <input type="text" class="form-control" uib-datepicker-popup ng-model="dte" is-open="endDate.opened" show-button-bar="false" datepicker-options="dateOptions" ng-required="true" ng-change="onChangeEndDate()" readonly />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-        </p>
-    </div>
+
+
 </div>

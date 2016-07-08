@@ -29,11 +29,6 @@ html, body {
   padding-top: 25px;
 }
 
-#searchinput {
-  padding-top: 25px;
-  padding-buttom: 25px;
-}
-
 #exportbtn {
   margin-top: 10px;
 }
@@ -47,17 +42,9 @@ html, body {
   font-weight: normal;
 }
 
-.searchbtn {
-  padding-left: 5px;
-}
-
 .col-md-6 label {
   vertical-align: middle;
   margin-right: 5px;
-}
-
-.col-md-11 span {
-  vertical-align: middle;
 }
 
 #fromToDateInputs .btn:hover {
@@ -70,6 +57,14 @@ html, body {
 
 hr {
   width: 75%;
+}
+
+p {
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 5px;
 }
 
 /*
@@ -240,7 +235,7 @@ code {
  */
 rzslider {
     width: 75%;
-    margin: 35px 0 0 35px;
+    margin: 0;
 }
 
 rzslider .rz-pointer {

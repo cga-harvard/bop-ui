@@ -1,13 +1,18 @@
 <div ng-controller="UserFilterController">
-  <div class="input-group searchinputfield" id="userfilterinput">
-    <input class="form-control input-sm" type="text" placeholder="@user" ng-keypress="onKeyPress($event)" ng-model="userfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
-    <span class="input-group-addon">
-        <i class="glyphicon glyphicon-search"></i>
-    </span>
-    <span class="input-group-btn searchbtn">
-      <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
-        <span class="glyphicon glyphicon-info-sign"></span>
-      </button>
-    </span>
-  </div>
+    <div class="col-md-11">
+        <div class="input-group searchinputfield" id="userfilterinput">
+            <input class="form-control input-sm" type="text" placeholder="@user" ng-keypress="onKeyPress($event)" ng-model="userfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
+            </span>
+        </div>
+        </div>
+        <div class="col-md-1">
+            <span class="input-group-btn searchbtn">
+                <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </button>
+            </span>
+        </div>
+    </div>
 </div>

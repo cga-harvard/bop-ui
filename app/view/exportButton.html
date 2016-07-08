@@ -1,17 +1,28 @@
 <div ng-controller="ExportController">
-    <div class="input-group">
+    <div class="col-md-2">
         <input type="number" class="ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
+    </div>
+    <div class="col-md-9">
         <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
+    </div>
+    <div class="col-md-1">
         <span class="input-group-btn searchbtn">
-        <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
-          <span class="glyphicon glyphicon-info-sign"></span>
-        </button>
+            <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
+              <span class="glyphicon glyphicon-info-sign"></span>
+            </button>
         </span>
     </div>
-    <div class="row">
-        <div class="col-md-2 col-md-offset-10">
-            <p class="pull-right">Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span></p>
-            <button class="btn btn-primary btn-sm pull-right" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="focusedInput" class="control-label col-md-2 col-md-offset-9">
+                    Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
+                </label>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
