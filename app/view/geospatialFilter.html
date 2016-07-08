@@ -1,16 +1,16 @@
 <div ng-controller="GeospatialFilterController">
-  <div class="input-group searchinputfield" id="geospatialfilterinput">
-    <input class="form-control input-sm" type="text" placeholder="[-90,-180 TO 90,180]" ng-keypress="onKeyPress($event)" ng-model="geospatialfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
-    <span class="input-group-addon">
+    <div class="input-group searchinputfield" id="geospatialfilterinput">
+        <input class="form-control input-sm" type="text" ng-model="filterString" ng-keypress="onKeyPress($event)" ng-model="geospatialfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
+        <span class="input-group-addon">
         <i class="glyphicon glyphicon-search"></i>
     </span>
-    <span class="input-group-btn searchbtn">
+        <span class="input-group-btn searchbtn">
       <button class="btn btn-primary btn-sm" type="button">Search</button>
     </span>
-    <span class="input-group-btn searchbtn">
+        <span class="input-group-btn searchbtn">
       <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
         <span class="glyphicon glyphicon-info-sign"></span>
-      </button>
-    </span>
-  </div>
+        </button>
+        </span>
+    </div>
 </div>

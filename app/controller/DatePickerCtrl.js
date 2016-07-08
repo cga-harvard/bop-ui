@@ -14,6 +14,8 @@ angular.module('SolrHeatmapApp')
                 maxDate: new Date('2016-12-31')
             };
 
+            vm.dateString = '[2000-01-01T00:00:00 TO 2016-12-31T00:00:00]';
+
             vm.dateOptions = {
                 minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
                 maxDate: HeatMapSourceGeneratorService.getSearchObj().maxDate,
@@ -88,6 +90,9 @@ angular.module('SolrHeatmapApp')
             vm.setDateRange = function(minDate, maxDate){
                 HeatMapSourceGeneratorService.setMinDate(minDate);
                 HeatMapSourceGeneratorService.setMaxDate(maxDate);
+
+                vm.dateString = '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                                                maxDate.toISOString().replace('.000Z','') + ']';
             };
 
             vm.showInfo = function(){

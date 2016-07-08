@@ -238,6 +238,11 @@ code {
 /*
  * Slider
  */
+rzslider {
+    width: 75%;
+    margin: 35px 0 0 35px;
+}
+
 rzslider .rz-pointer {
    top: -14px;
    z-index: 3;

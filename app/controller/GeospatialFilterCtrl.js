@@ -8,6 +8,8 @@ angular
     .controller('GeospatialFilterController', ['$scope', '$uibModal',
         function($scope, $uibModal) {
 
+            $scope.filterString = '[-90,-180 TO 90,180]';
+
             $scope.showInfo = function(){
                 var modalInstance = $uibModal.open({
                     animation: true,
@@ -25,6 +27,10 @@ angular
                         }
                     }
                 });
+            };
+
+            $scope.updateFilterString = function(str) {
+                $scope.filterString = str;
             };
         }]
 );
