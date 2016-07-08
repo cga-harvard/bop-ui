@@ -53,8 +53,8 @@ angular.module('SolrHeatmapApp')
 
                 // Reset the date fields
                 var ctrlViewModelNew = $scope.$new();
-                $controller('DatePickerCtrl', {$scope : ctrlViewModelNew });
-                ctrlViewModelNew.setInitialDates();
+                $controller('DatePickerController', {$scope : ctrlViewModelNew });
+                ctrlViewModelNew.resetDates();
             };
 
         }]

@@ -7,7 +7,7 @@ angular.module('SolrHeatmapApp')
     .controller('DatePickerController',
         ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
 
-            var vm = this;
+            var vm = $scope;
 
             vm.initialDateOptions = {
                 minDate: new Date('2000-01-01'),
