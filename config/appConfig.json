@@ -47,23 +47,23 @@
     "instructions": {
       "textsearch": {
         "toolTitle": "Filter by text",
-        "instruction": "Place instruction for text search here."
+        "instruction": "Instruction for text search."
       },
       "datepicker": {
         "toolTitle": "Filter by date",
-        "instruction": "Place instruction for datepicker here."
+        "instruction": "Instruction for datepicker."
       },
       "geospatialsearch": {
         "toolTitle": "Geospatial filter",
-        "instruction": "Place instruction for geospatial search field here."
+        "instruction": "Instruction for geospatial search field."
       },
       "userfilter": {
         "toolTitle": "Filter by user name",
-        "instruction": "Place instruction for user filter here."
+        "instruction": "Instruction for user filter."
       },
       "export": {
         "toolTitle": "Export button",
-        "instruction": "Place instruction for export button here."
+        "instruction": "Instruction for export button."
       }
     }
 }
