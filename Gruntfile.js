@@ -35,7 +35,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 // the files to concatenate
-                src: ['app/**/*.js'],
+                src: ['app/**/*.js', 'assets/lib/ol3-ext/interaction/transforminteraction.js', 'assets/lib/ol3-ext/filter/filter.js', 'assets/lib/ol3-ext/filter/maskfilter.js'],
                 // the location of the resulting JS file
                 dest: 'build/hm-client.js'
             }

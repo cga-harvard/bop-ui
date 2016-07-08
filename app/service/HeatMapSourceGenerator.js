@@ -44,141 +44,6 @@ angular
             }
 
             /**
-             * Builds geospatial filter depending on the current map extent.
-             * This filter will be used later for `q.geo` parameter of the API
-             * search or export request.
-             */
-            function getGeospatialFilter(){
-                var map = MapService.getMap(),
-                    viewProj = map.getView().getProjection().getCode(),
-                    extent = map.getView().calculateExtent(map.getSize()),
-                    extentWgs84 = ol.proj.
-                                    transformExtent(extent, viewProj, 'EPSG:4326'),
-                    geoFilter = {};
-
-                if (extent && extentWgs84){
-                    var normalizedExtent = normalize(extentWgs84);
-
-                    var minX = normalizedExtent[1],
-                        maxX = normalizedExtent[3],
-                        minY = normalizedExtent[0],
-                        maxY = normalizedExtent[2];
-
-                    geoFilter = {
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY
-                    };
-                }
-
-                return geoFilter;
-            }
-
-            /**
-             * Performs search with the given full configuration / search object.
-             */
-            function performSearch(){
-                var config = {},
-                    params = this.getTweetsSearchQueryParameters(
-                                                    this.getGeospatialFilter());
-
-                // add additional parameter for the soft maximum of the heatmap grid
-                params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
-
-                if (params) {
-
-                    config = {
-                        url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
-                        method: 'GET',
-                        params: params
-                    };
-
-                  //load the data
-                    $http(config).
-                    success(function(data, status, headers, cfg) {
-                        // check if we have a heatmap facet and update the map
-                        if (data && data["a.hm"]) {
-                            MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
-                            // get the count of matches
-                            $rootScope.$broadcast('setCounter',data["a.matchDocs"]);
-                        }
-                    }).
-                    error(function(data, status, headers, cfg) {
-                        // hide the loading mask
-                        $window.alert("An error occured while reading heatmap");
-                    });
-                }
-            }
-
-            /**
-             * Help method to build the whole params object, that will be used in
-             * the API requests.
-             */
-            function startCsvExport(){
-                var config = {},
-                    params = this.getTweetsSearchQueryParameters(
-                                            this.getGeospatialFilter());
-                    // add additional parameter for number of documents to return
-                params["d.docs.limit"] =
-                                solrHeatmapApp.bopwsConfig.csvDocsLimit;
-
-                if (params) {
-                    config = {
-                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
-                        method: 'GET',
-                        params: params
-                    };
-
-                    //start the export
-                    $http(config).
-                    success(function(data, status, headers, cfg) {
-                        var anchor = angular.element('<a/>');
-                        anchor.css({display: 'none'}); // Make sure it's not visible
-                        angular.element($document.body).append(anchor);
-                         // Attach to document
-                        anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' +
-                                                                encodeURI(data),
-                            target: '_blank',
-                            download: 'bop_export.csv'
-                        })[0].click();
-                        anchor.remove(); // Clean it up afterwards
-                    }).
-                    error(function(data, status, headers, cfg) {
-                        $window.alert("An error occured while exporting csv data");
-                    });
-                }
-            }
-
-            /**
-             *
-             */
-            function getTweetsSearchQueryParameters(bounds) {
-
-                // get keyword and time range
-                var reqParamsUi = this.getSearchObj(),
-                    keyword;
-
-                if (reqParamsUi.searchText.length === 0){
-                    keyword = '*';
-                } else {
-                    keyword = reqParamsUi.searchText;
-                }
-
-                var params = {
-                    "q.text": keyword,
-                    "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +
-                         ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) +
-                         ']',
-                    "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' +
-                                 bounds.maxX + ',' + bounds.maxY + ']'
-                };
-
-                return params;
-            }
-
-            /**
              * Clamps given number `num` to be inside the allowed range from `min`
              * to `max`.
              * Will also work as expected if `max` and `min` are accidently swapped.
@@ -299,6 +164,185 @@ angular
                 }
 
                 return [minX, minY, maxX, maxY];
+            }
+
+            /**
+             * Builds geospatial filter depending on the current map extent.
+             * This filter will be used later for `q.geo` parameter of the API
+             * search or export request.
+             */
+            function getGeospatialFilter(){
+                var map = MapService.getMap(),
+                    viewProj = map.getView().getProjection().getCode(),
+                    extent = map.getView().calculateExtent(map.getSize()),
+                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
+                    transformInteractionLayer = MapService.
+                                    getLayersBy('name', 'TransformInteractionLayer')[0],
+                    currentBbox,
+                    currentBboxExtentWgs84,
+                    geoFilter = {};
+
+                if (!transformInteractionLayer) {
+                    return null;
+                }
+                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
+                currentBboxExtentWgs84 = ol.proj.transformExtent(
+                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
+
+                // default: Zoom level <= 1 query whole world
+                if (map.getView().getZoom() <= 1) {
+                    extentWgs84 = [-180, -90 ,180, 90];
+                }
+
+                if (extent && extentWgs84){
+                    var normalizedExtentMap = normalize(extentWgs84),
+                        normalizedExtentBox = normalize(currentBboxExtentWgs84),
+                        minX = normalizedExtentMap[1],
+                        maxX = normalizedExtentMap[3],
+                        minY = normalizedExtentMap[0],
+                        maxY = normalizedExtentMap[2];
+
+                    geoFilter.hmFilter = {
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY,
+                        maxY: maxY
+                    };
+
+                    minX = normalizedExtentBox[1];
+                    maxX = normalizedExtentBox[3];
+                    minY = normalizedExtentBox[0];
+                    maxY = normalizedExtentBox[2];
+
+                    geoFilter.queryGeo = {
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY,
+                        maxY: maxY
+                    };
+                }
+
+
+                return geoFilter;
+            }
+
+            /**
+             * Performs search with the given full configuration / search object.
+             */
+            function performSearch(){
+                var config = {},
+                    spatialFilters = this.getGeospatialFilter(),
+                    params = this.getTweetsSearchQueryParameters(
+                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
+
+                // add additional parameter for the soft maximum of the heatmap grid
+                params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
+
+                if (params && spatialFilters !== null) {
+
+                    config = {
+                        url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                        method: 'GET',
+                        params: params
+                    };
+
+                    //load the data
+                    $http(config).
+                    success(function(data, status, headers, cfg) {
+                        // check if we have a heatmap facet and update the map with it
+                        if (data && data["a.hm"]) {
+                            MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
+                            // get the count of matches
+                            $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
+                        }
+                    }).
+                    error(function(data, status, headers, cfg) {
+                        // hide the loading mask
+                        //angular.element(document.querySelector('.waiting-modal')).modal('hide');
+                        $window.alert("An error occured while reading heatmap data");
+                    });
+                } else {
+                    $window.alert("Spatial filter could not be computed.");
+                }
+            }
+
+
+            /**
+             * Help method to build the whole params object, that will be used in
+             * the API requests.
+             */
+            function startCsvExport(){
+                var config = {},
+                    spatialFilters = this.getGeospatialFilter(),
+                    params = this.getTweetsSearchQueryParameters(
+                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
+
+                // add additional parameter for the number of documents to return
+                params["d.docs.limit"] = solrHeatmapApp.bopwsConfig.csvDocsLimit;
+
+                if (params && spatialFilters !== null) {
+                    config = {
+                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
+                        method: 'GET',
+                        params: params
+                    };
+
+                    //start the export
+                    $http(config).
+                    success(function(data, status, headers, cfg) {
+                        var anchor = angular.element('<a/>');
+                        anchor.css({display: 'none'}); // Make sure it's not visible
+                        angular.element($document.body).append(anchor); // Attach to document
+                        anchor.attr({
+                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                            target: '_blank',
+                            download: 'bop_export.csv'
+                        })[0].click();
+                        anchor.remove(); // Clean it up afterwards
+                    }).
+                    error(function(data, status, headers, cfg) {
+                        $window.alert("An error occured while exporting csv data");
+                    });
+                } else {
+                    $window.alert("Spatial filter could not be computed.");
+                }
+            }
+
+            /**
+             *
+             */
+            function getTweetsSearchQueryParameters(bounds) {
+
+                // get keyword and time range
+                var reqParamsUi = this.getSearchObj(),
+                    keyword;
+
+                if (reqParamsUi.searchText.length === 0){
+                    keyword = '*';
+                } else {
+                    keyword = reqParamsUi.searchText;
+                }
+
+                // calculate reduced bounding box
+                var dx = bounds.maxX - bounds.minX,
+                    dy = bounds.maxY - bounds.minY,
+                    minInnerX = bounds.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    maxInnerX = bounds.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                    maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+
+                var params = {
+                    "q.text": keyword,
+                    "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +
+                         ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) +
+                         ']',
+                    "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' +
+                                 bounds.maxX + ',' + bounds.maxY + ']',
+                    "a.hm.filter": '[' + minInnerX + ',' + minInnerY + ' TO ' +
+                                                        maxInnerX + ',' + maxInnerY + ']'
+                };
+
+                return params;
             }
 
             /**
