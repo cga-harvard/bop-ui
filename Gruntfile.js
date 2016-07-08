@@ -2,7 +2,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-gh-pages');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -30,24 +29,6 @@ module.exports = function(grunt) {
                 src: ['index.html', 'index-dev.html', 'app/**', 'build/**', 'assets/**', 'config/**', 'LICENSE', 'API/*.json']
             }
         },
-        jshint: {
-            files: ['Gruntfile.js', 'app/**/*.js'],
-            options: {
-                globals: {
-                    undef: true,
-                    unused: true,
-                    curly: true,
-                    eqeqeq: true,
-                    devel: false,
-                    globals: 'solrHeatmapApp',
-                    latedef: true
-                }
-            }
-        },
-        watch: {
-            files: ['<%= jshint.files %>'],
-            tasks: ['jshint']
-        },
         concat: {
             options: {
                 separator: '\n'
@@ -65,11 +46,11 @@ module.exports = function(grunt) {
               banner: '/*! Solr-Heatmap-Client created on <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
             dist: {
-              files: {
-                'build/hm-client.min.js': ['<%= concat.dist.dest %>']
-              }
+                files: {
+                    'build/hm-client.min.js': ['<%= concat.dist.dest %>']
+                }
             }
-}
+        }
     });
 
     // get a formatted commit message to review changes from the commit log
@@ -100,14 +81,12 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('publish', 'Publish from CLI', [
-        'jshint',
         'concat',
         'uglify',
         'gh-pages:publish'
     ]);
 
     grunt.registerTask('deploy', 'Publish from travis', [
-        'jshint',
         'concat',
         'uglify',
         'check-deploy'

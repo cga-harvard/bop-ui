@@ -1,11 +1,16 @@
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
 /**
  * Export Controller
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('ExportCtrl', ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+    .controller('ExportController', ['HeatMapSourceGenerator', '$scope',
+        function(HeatMapSourceGeneratorService, $scope) {
 
-        $scope.startExport = function() {
-          HeatMapSourceGeneratorService.startCsvExport();
-        };
-    }]);
+            $scope.startExport = function() {
+                HeatMapSourceGeneratorService.startCsvExport();
+            };
+        }]
+
+);

@@ -1,48 +1,54 @@
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,100]*/
 /**
  * Search Controller
  */
-angular
-    .module('SolrHeatmapApp')
-    .controller('SearchCtrl', ['Map', 'HeatMapSourceGenerator', '$scope', '$http', function(MapService, HeatMapSourceGeneratorService, $scope, $http) {
+angular.module('SolrHeatmapApp')
+    .controller('SearchController', ['HeatMapSourceGenerator', '$scope', '$window',
+        function(HeatMapSourceGeneratorService, $scope, $window) {
 
-        /**
-         *
-         */
-        $scope.searchInput = '';
-        /**
-         *
-         */
-        $scope.onKeyPress = function($event) {
-            // only fire the search if Enter-key (13) is pressed
-            if (getKeyboardCodeFromEvent($event) === 13) {
-                $scope.doSearch();
+            /**
+             *
+             */
+            $scope.searchInput = '';
+
+            /**
+             *
+             */
+            function getKeyboardCodeFromEvent(keyEvt) {
+                return $window.event ? keyEvt.keyCode : keyEvt.which;
             }
-        };
 
-        /**
-         *
-         */
-        $scope.doSearch = function() {
-            // if no input is given
-            // if ($scope.searchInput.length === 0) {
-            //    return false;
-            // }
+            /**
+             *
+             */
+            $scope.onKeyPress = function($event) {
+                // only fire the search if Enter-key (13) is pressed
+                if (getKeyboardCodeFromEvent($event) === 13) {
+                    $scope.doSearch();
+                }
+            };
 
-          HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
-          HeatMapSourceGeneratorService.performSearch();
-        };
+            /**
+             *
+             */
+            $scope.doSearch = function() {
+                // if no input is given
+                // if ($scope.searchInput.length === 0) {
+                //    return false;
+                // }
 
-        $scope.resetSearchInput = function() {
-          $scope.searchInput = '';
-          HeatMapSourceGeneratorService.setSearchText('');
-          HeatMapSourceGeneratorService.performSearch();
-        };
+                HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
+                HeatMapSourceGeneratorService.performSearch();
+            };
 
-        /**
-         *
-         */
-        function getKeyboardCodeFromEvent(keyEvt) {
-            return window.event ? keyEvt.keyCode : keyEvt.which;
-        }
+            $scope.resetSearchInput = function() {
+                $scope.searchInput = '';
+                HeatMapSourceGeneratorService.setSearchText('');
+                HeatMapSourceGeneratorService.performSearch();
+            };
 
-    }]);
+        }]
+
+);
