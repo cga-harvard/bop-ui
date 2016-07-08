@@ -22,55 +22,6 @@ angular.module('SolrHeatmapApp')
             /**
              *
              */
-            function init(config) {
-                var viewConfig = angular.extend(defaults.view,
-                                                    config.mapConfig.view),
-                    rendererConfig = angular.extend(defaults.renderer,
-                                                    config.mapConfig.renderer),
-                    layerConfig = config.mapConfig.layers;
-
-                map = new ol.Map({
-                    controls: ol.control.defaults().extend([
-                        new ol.control.ScaleLine(),
-                        new ol.control.ZoomSlider()
-                    ]),
-                    interactions: ol.interaction.defaults(),
-                    layers: buildMapLayers(layerConfig),
-                    renderer: angular.isString(rendererConfig) ?
-                                            rendererConfig : undefined,
-                    target: 'map',
-                    view: new ol.View({
-                        center: angular.isArray(viewConfig.center) ?
-                                viewConfig.center : undefined,
-                        maxZoom: angular.isNumber(viewConfig.maxZoom) ?
-                                viewConfig.maxZoom : undefined,
-                        minZoom: angular.isNumber(viewConfig.minZoom) ?
-                                viewConfig.minZoom : undefined,
-                        projection: angular.isString(viewConfig.projection) ?
-                                viewConfig.projection : undefined,
-                        resolution: angular.isString(viewConfig.resolution) ?
-                                viewConfig.resolution : undefined,
-                        resolutions: angular.isArray(viewConfig.resolutions) ?
-                                viewConfig.resolutions : undefined,
-                        rotation: angular.isNumber(viewConfig.rotation) ?
-                                viewConfig.rotation : undefined,
-                        zoom: angular.isNumber(viewConfig.zoom) ?
-                                viewConfig.zoom : undefined,
-                        zoomFactor: angular.isNumber(viewConfig.zoomFactor) ?
-                                viewConfig.zoomFactor : undefined
-                    })
-                });
-
-                if (angular.isArray(viewConfig.extent)) {
-                    var vw = map.getView();
-                    vw.set('extent', viewConfig.extent);
-                    generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
-                }
-            }
-
-            /**
-             *
-             */
             function buildMapLayers(layerConfig) {
                 var layer,
                     layers = [];
@@ -123,6 +74,13 @@ angular.module('SolrHeatmapApp')
             }
 
             /**
+            *
+            */
+            function getMap() {
+                return map;
+            }
+
+            /**
              *
              */
             function getLayersBy(key, value) {
@@ -149,13 +107,6 @@ angular.module('SolrHeatmapApp')
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction.type_ === type;
                 });
-            }
-
-            /**
-             *
-             */
-            function getMap() {
-                return map;
             }
 
             /**
@@ -210,58 +161,65 @@ angular.module('SolrHeatmapApp')
 
             }
 
-            function createOrUpdateHeatMapLayer(data) {
-              var olVecSrc = createHeatMapSource(data),
-                  existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
-                  transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0],
-                  newHeatMapLayer;
-              if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
-                  var currHeatmapLayer = existingHeatMapLayers[0];
-                  // Update layer source
-                  var layerSrc = currHeatmapLayer.getSource();
-                  if (layerSrc){
-                    layerSrc.clear();
-                  }
-                  currHeatmapLayer.setSource(olVecSrc);
-              } else {
-                newHeatMapLayer = new ol.layer.Heatmap({
-                  name: 'HeatMapLayer',
-                  source: olVecSrc,
-                  radius: 10
-                });
-
-                map.addLayer(newHeatMapLayer);
-
-                // Add Mask to HeatMapLayer
-                var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
-
-                var mask = new ol.filter.Mask({
-                    feature: currentBBox,
-                    inner: false,
-                    fill: new ol.style.Fill({
-                        color: [255,255,255,0.5]
-                    })
-                });
-                newHeatMapLayer.addFilter(mask);
-              }
-
-              switchMasks(olVecSrc !== null);
-            }
-
             /**
-             * Helper method to change active mode of masks for backgroundLayer and
-             * heatmap layer
-             */
+            * Helper method to change active mode of masks for backgroundLayer and
+            * heatmap layer
+            */
             function switchMasks(hmAvailable) {
                 var heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0],
                     heatMapMask = heatMapLayer.getFilters()[0],
-                    backgroundLayer =  getLayersBy('backgroundLayer', true)[0],
+                    backgroundLayer = getLayersBy('backgroundLayer', true)[0],
                     backgroundLayerMask = backgroundLayer.getFilters()[0];
 
                 // disable mask of backgroundLayer if heatmap is available and vice versa
                 backgroundLayerMask.setActive(!hmAvailable);
                 // enable mask of heatMapLayer if heatmap is available and vice versa
                 heatMapMask.setActive(hmAvailable);
+            }
+
+            function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
+                var max = -1;
+                var min = Number.MAX_VALUE;
+                for (var i = 0 ; i < stepsLatitude ; i++){
+                    var currentRow = heatmap[i];
+                    if (currentRow === null){
+                        heatmap[i] = currentRow = [];
+                    }
+                    for (var j = 0 ; j < stepsLongitude ; j++){
+                        if (currentRow[j] === null){
+                            currentRow[j] = -1;
+                        }
+
+                        if (currentRow[j] > max){
+                            max = currentRow[j];
+                        }
+
+                        if (currentRow[j] < min && currentRow[j] > -1){
+                            min = currentRow[j];
+                        }
+                    }
+                }
+                return [min, max];
+            }
+
+            function rescaleHeatmapValue(value, minMaxValue){
+                if (value === null){
+                    return 0;
+                }
+
+                if (value === -1){
+                    return -1;
+                }
+
+                if (value === 0){
+                    return 0;
+                }
+
+                if ((minMaxValue[1] - minMaxValue[0]) === 0){
+                    return 0;
+                }
+
+                return (value - minMaxValue[0]) / (minMaxValue[1] - minMaxValue[0]);
             }
 
             /*
@@ -328,69 +286,45 @@ angular.module('SolrHeatmapApp')
                 return olVecSrc;
             }
 
+            function createOrUpdateHeatMapLayer(data) {
+                var olVecSrc = createHeatMapSource(data),
+                    existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
+                    transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0],
+                    newHeatMapLayer;
 
-
-            function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
-                var max = -1;
-                var min = Number.MAX_VALUE;
-                for (var i = 0 ; i < stepsLatitude ; i++){
-                    var currentRow = heatmap[i];
-                    if (currentRow === null){
-                        heatmap[i] = currentRow = [];
+                if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
+                    var currHeatmapLayer = existingHeatMapLayers[0];
+                    // Update layer source
+                    var layerSrc = currHeatmapLayer.getSource();
+                    if (layerSrc){
+                        layerSrc.clear();
                     }
-                    for (var j = 0 ; j < stepsLongitude ; j++){
-                        if (currentRow[j] === null){
-                            currentRow[j] = -1;
-                        }
+                    currHeatmapLayer.setSource(olVecSrc);
+                } else {
+                    newHeatMapLayer = new ol.layer.Heatmap({
+                        name: 'HeatMapLayer',
+                        source: olVecSrc,
+                        radius: 10
+                    });
 
-                        if (currentRow[j] > max){
-                            max = currentRow[j];
-                        }
+                    map.addLayer(newHeatMapLayer);
 
-                        if (currentRow[j] < min && currentRow[j] > -1){
-                            min = currentRow[j];
-                        }
-                    }
+                    // Add Mask to HeatMapLayer
+                    var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
+
+                    var mask = new ol.filter.Mask({
+                        feature: currentBBox,
+                        inner: false,
+                        fill: new ol.style.Fill({
+                            color: [255,255,255,0.5]
+                        })
+                    });
+                    newHeatMapLayer.addFilter(mask);
                 }
-                return [min, max];
+
+                switchMasks(olVecSrc !== null);
             }
 
-            function rescaleHeatmapValue(value, minMaxValue){
-                if (value === null){
-                    return 0;
-                }
-
-                if (value === -1){
-                    return -1;
-                }
-
-                if (value === 0){
-                    return 0;
-                }
-
-                if ((minMaxValue[1] - minMaxValue[0]) === 0){
-                    return 0;
-                }
-
-                return (value - minMaxValue[0]) /
-                        (minMaxValue[1] - minMaxValue[0]);
-            }
-
-            /**
-             * Helper method to reset the map
-             */
-            function resetMap() {
-                // Reset view
-                var intitalCenter = solrHeatmapApp.initMapConf.view.center,
-                    intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
-                if (intitalZoom && intitalCenter) {
-                    var vw = map.getView();
-                    vw.setCenter(intitalCenter);
-                    vw.setZoom(intitalZoom);
-
-                    setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
-                }
-            }
 
             function setTransactionBBox(extent) {
                 var transformationLayer = getLayersBy('name','TransformInteractionLayer')[0],
@@ -416,11 +350,12 @@ angular.module('SolrHeatmapApp')
              */
             function generateMaskAndAssociatedInteraction (bboxFeature, fromSrs) {
                 var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
-                    backGroundLayer =  getLayersBy('backgroundLayer', true)[0],
+                    backGroundLayer = getLayersBy('backgroundLayer', true)[0],
                     heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0];
 
                 if (fromSrs !== map.getView().getProjection().getCode()){
-                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs, map.getView().getProjection().getCode());
+                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
+                                                    map.getView().getProjection().getCode());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
@@ -439,22 +374,22 @@ angular.module('SolrHeatmapApp')
                 vector.getSource().addFeature(polygon);
 
                 var transformInteraction = new ol.interaction.Transform({
-                     translate: true,
-                     scale: true,
-                     translateFeature: false,
-                     rotate: false,
-                     stretch: false
-                 });
+                    translate: true,
+                    scale: true,
+                    translateFeature: false,
+                    rotate: false,
+                    stretch: false
+                });
                 map.addInteraction(transformInteraction);
 
-                 var mask = new ol.filter.Mask({
-                     feature: polygon,
-                     inner:false,
-                     fill: new ol.style.Fill({
-                         color:[255,255,255,0.5]
-                     })
-                 });
-                 backGroundLayer.addFilter(mask);
+                var mask = new ol.filter.Mask({
+                    feature: polygon,
+                    inner:false,
+                    fill: new ol.style.Fill({
+                        color:[255,255,255,0.5]
+                    })
+                });
+                backGroundLayer.addFilter(mask);
             }
 
             /*
@@ -470,30 +405,95 @@ angular.module('SolrHeatmapApp')
                     needsUpdate = false,
                     ordArray = currentBbox.getGeometry().getCoordinates()[0];
 
-                 // check if current bbox is greater than map extent
-                 for (var i = 0; i<ordArray.length; i++) {
-                     if (! new ol.geom.Point(ordArray[i]).intersectsExtent(mapExtent)){
-                         needsUpdate = true;
-                         break;
-                     }
-                 }
+                // check if current bbox is greater than map extent
+                for (var i = 0; i<ordArray.length; i++) {
+                    if (! new ol.geom.Point(ordArray[i]).intersectsExtent(mapExtent)){
+                        needsUpdate = true;
+                        break;
+                    }
+                }
 
-                 if (needsUpdate === true) {
-                     // calculate reduced bounding box
-                     var minx = mapExtent[0],
-                         miny = mapExtent[1],
-                         maxx = mapExtent[2],
-                         maxy = mapExtent[3],
-                         dx = maxx - minx,
-                         dy = maxy - miny,
-                         minInnerX = minx + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                         maxInnerX = minx + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                         minInnerY = miny + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
-                         maxInnerY = miny + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+                if (needsUpdate === true) {
+                    // calculate reduced bounding box
+                    var minx = mapExtent[0],
+                        miny = mapExtent[1],
+                        maxx = mapExtent[2],
+                        maxy = mapExtent[3],
+                        dx = maxx - minx,
+                        dy = maxy - miny,
+                        minInnerX = minx + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        maxInnerX = minx + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        minInnerY = miny + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                        maxInnerY = miny + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
 
-                     setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
-                 }
+                    setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
+                }
 
+            }
+
+            /**
+             * Helper method to reset the map
+             */
+            function resetMap() {
+                // Reset view
+                var intitalCenter = solrHeatmapApp.initMapConf.view.center,
+                    intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
+                if (intitalZoom && intitalCenter) {
+                    var vw = map.getView();
+                    vw.setCenter(intitalCenter);
+                    vw.setZoom(intitalZoom);
+
+                    setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
+                }
+            }
+
+            /**
+             *
+             */
+            function init(config) {
+                var viewConfig = angular.extend(defaults.view,
+                                                    config.mapConfig.view),
+                    rendererConfig = angular.extend(defaults.renderer,
+                                                    config.mapConfig.renderer),
+                    layerConfig = config.mapConfig.layers;
+
+                map = new ol.Map({
+                    controls: ol.control.defaults().extend([
+                        new ol.control.ScaleLine(),
+                        new ol.control.ZoomSlider()
+                    ]),
+                    interactions: ol.interaction.defaults(),
+                    layers: buildMapLayers(layerConfig),
+                    renderer: angular.isString(rendererConfig) ?
+                                            rendererConfig : undefined,
+                    target: 'map',
+                    view: new ol.View({
+                        center: angular.isArray(viewConfig.center) ?
+                                viewConfig.center : undefined,
+                        maxZoom: angular.isNumber(viewConfig.maxZoom) ?
+                                viewConfig.maxZoom : undefined,
+                        minZoom: angular.isNumber(viewConfig.minZoom) ?
+                                viewConfig.minZoom : undefined,
+                        projection: angular.isString(viewConfig.projection) ?
+                                viewConfig.projection : undefined,
+                        resolution: angular.isString(viewConfig.resolution) ?
+                                viewConfig.resolution : undefined,
+                        resolutions: angular.isArray(viewConfig.resolutions) ?
+                                viewConfig.resolutions : undefined,
+                        rotation: angular.isNumber(viewConfig.rotation) ?
+                                viewConfig.rotation : undefined,
+                        zoom: angular.isNumber(viewConfig.zoom) ?
+                                viewConfig.zoom : undefined,
+                        zoomFactor: angular.isNumber(viewConfig.zoomFactor) ?
+                                viewConfig.zoomFactor : undefined
+                    })
+                });
+
+                if (angular.isArray(viewConfig.extent)) {
+                    var vw = map.getView();
+                    vw.set('extent', viewConfig.extent);
+                    generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
+                }
             }
 
             var ms = {

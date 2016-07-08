@@ -62,7 +62,7 @@ angular
                         MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
                             ['translateend', 'scaleend'], function (e) {
                                 HeatMapSourceGeneratorService.performSearch();
-                                  });
+                            });
 
                       // Prepared featureInfo (display number of elements)
                       //solrHeatmapApp.map.on('singleclick',
