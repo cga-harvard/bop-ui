@@ -31,34 +31,34 @@
 <body ng-controller="MainController">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 row-box">
                 <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 row-box">
                 <ng-include src="'./app/view/datePicker.html'"></ng-include>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 row-box">
                 <ng-include src="'./app/view/geospatialFilter.html'"></ng-include>
             </div>
         </div>
-        <div class="row map-row">
-            <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 row-box">
                 <ng-include src="'./app/view/resultCounterText.html'"></ng-include>
                 <!-- the ol3 map -->
                 <div class="map" id="map"></div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 row-box" row-box>
                 <ng-include src="'./app/view/userFilter.html'"></ng-include>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 row-box">
                 <ng-include src="'./app/view/exportButton.html'"></ng-include>
             </div>
         </div>
