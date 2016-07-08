@@ -1,15 +1,17 @@
+/*eslint angular/controller-as: 0*/
 /**
- * InfoWindowCtrl
+ * InfoWindowController
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('InfoWindowCtrl',  function ($scope, $uibModalInstance, infoMsg, toolName) {
+    .controller('InfoWindowController',
+        function ($scope, $uibModalInstance, infoMsg, toolName) {
 
-        $scope.infoMsg = infoMsg;
-        $scope.toolName = toolName;
+            $scope.infoMsg = infoMsg;
+            $scope.toolName = toolName;
 
-        $scope.ok = function () {
-            $uibModalInstance.close();
-        };
-
-    });
+            $scope.ok = function () {
+                $uibModalInstance.close();
+            };
+        })
+;

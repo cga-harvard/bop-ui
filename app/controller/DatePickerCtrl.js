@@ -94,7 +94,7 @@ angular.module('SolrHeatmapApp')
                 var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowCtrl',
+                    controller: 'InfoWindowController',
                     size: 'lg',
                     resolve: {
                         infoMsg: function(){
