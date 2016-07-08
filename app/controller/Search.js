@@ -5,8 +5,8 @@
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $window) {
+    .controller('SearchController', ['HeatMapSourceGenerator', '$scope', '$window',
+        function(HeatMapSourceGeneratorService, $scope, $window) {
 
             /**
              *
