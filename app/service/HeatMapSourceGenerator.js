@@ -1,13 +1,13 @@
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
-/*eslint max-len: [2,110]*/
+/*eslint max-len: [2,150]*/
 /**
  * HeatMapSourceGenerator Service
  */
 angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$window', '$document', '$http',
-        function(MapService, $rootScope, $filter, $window, $document , $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
+        function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
 
             var searchObj = {
                 minDate: new Date('2000-01-01'),
@@ -220,8 +220,16 @@ angular
                         minY: minY,
                         maxY: maxY
                     };
-                }
 
+                    // Reset the date fields
+                    // TODO get rid of angular.element
+                    var ctrlViewModelNew = angular.element('[ng-controller=GeospatialFilterController]').scope();
+                    $controller('GeospatialFilterController', {$scope : ctrlViewModelNew });
+                    ctrlViewModelNew.updateFilterString('[' + parseFloat(Math.round(minX * 100) / 100).toFixed(2) + ',' +
+                                            parseFloat(Math.round(minY * 100) / 100).toFixed(2) + ' TO ' +
+                                            parseFloat(Math.round(maxX * 100) / 100).toFixed(2) + ',' +
+                                            parseFloat(Math.round(maxY * 100) / 100).toFixed(2) + ']');
+                }
 
                 return geoFilter;
             }

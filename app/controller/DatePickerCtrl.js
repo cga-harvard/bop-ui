@@ -4,8 +4,8 @@
  * DatePickerCtrl Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('DatePickerController',
-        ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+    .controller('DatePickerController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
+        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
 
             var vm = $scope;
 
@@ -13,6 +13,8 @@ angular.module('SolrHeatmapApp')
                 minDate: new Date('2000-01-01'),
                 maxDate: new Date('2016-12-31')
             };
+
+            vm.dateString = '[2000-01-01T00:00:00 TO 2016-12-31T00:00:00]';
 
             vm.dateOptions = {
                 minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
@@ -88,7 +90,28 @@ angular.module('SolrHeatmapApp')
             vm.setDateRange = function(minDate, maxDate){
                 HeatMapSourceGeneratorService.setMinDate(minDate);
                 HeatMapSourceGeneratorService.setMaxDate(maxDate);
+
+                vm.dateString = '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                                                maxDate.toISOString().replace('.000Z','') + ']';
             };
+
+            vm.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.datepicker.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.datepicker.toolTitle;
+                        }
+                    }
+                });
+            };
+
         }]
 
 );

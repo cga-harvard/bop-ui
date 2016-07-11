@@ -27,11 +27,6 @@ html, body {
 
 #fromToDateInputs {
   padding-top: 25px;
-  padding-bottom: 10px;
-}
-
-#searchinput {
-  padding-top: 25px;
 }
 
 #exportbtn {
@@ -47,10 +42,6 @@ html, body {
   font-weight: normal;
 }
 
-.searchbtn {
-  padding-left: 5px;
-}
-
 .col-md-6 label {
   vertical-align: middle;
   margin-right: 5px;
@@ -64,9 +55,16 @@ html, body {
   background-color: #337AB7;
 }
 
-
 hr {
   width: 75%;
+}
+
+p {
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 5px;
 }
 
 /*
@@ -79,6 +77,51 @@ hr {
 
 code {
   padding: 0;
+}
+
+.glyphicon {
+    color: #337ab7
+}
+
+.row {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.row-box {
+    background-color: #F7F7F7;
+    border: 1px solid #e5e5e5;
+    border-radius: 9px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/*
+ * CSS properties of search fields
+ */
+.searchinputfield span{
+    background-color: #FFF
+}
+
+.searchinputfield input{
+    border-right-style:none;
+}
+
+.input-group-addon {
+    border-left-style:none;
+}
+
+.infobtn {
+    border: none;
+    background-color: transparent;
+}
+
+.btn:hover {
+    background-color: #FFF;
+}
+
+.btn-primary:hover {
+    background: #2e6da4;
 }
 
 /*
@@ -193,4 +236,37 @@ code {
 
 .ol-popup-closer:after {
   content: "✖";
+}
+
+
+/*
+ * Slider
+ */
+rzslider {
+    width: 75%;
+    margin: 0;
+}
+
+rzslider .rz-pointer {
+   top: -14px;
+   z-index: 3;
+   width: 32px;
+   height: 32px;
+   cursor: pointer;
+   background-color: #337AB7;
+   -webkit-border-radius: 16px;
+     -moz-border-radius: 16px;
+        border-radius: 16px;
+}
+
+rzslider .rz-pointer.rz-active:after {
+  background-color: #FFBB00
+}
+
+rzslider .rz-bar.rz-selection {
+  background-color: #337AB7;
+}
+
+rzslider .rz-bubble  {
+    bottom: -40px;
 }
