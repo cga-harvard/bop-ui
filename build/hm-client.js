@@ -2,7 +2,7 @@
  * The main solrHeatmapApp module
  */
 angular
-    .module('SolrHeatmapApp', ['ui.bootstrap']);
+    .module('SolrHeatmapApp', ['ui.bootstrap', 'rzModule']);
 
 /*eslint angular/di: [2,"array"]*/
 /**
@@ -80,8 +80,8 @@ angular
  * DatePickerCtrl Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('DatePickerController',
-        ['HeatMapSourceGenerator', '$scope', function(HeatMapSourceGeneratorService, $scope) {
+    .controller('DatePickerController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
+        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
 
             var vm = $scope;
 
@@ -89,6 +89,8 @@ angular.module('SolrHeatmapApp')
                 minDate: new Date('2000-01-01'),
                 maxDate: new Date('2016-12-31')
             };
+
+            vm.dateString = '[2000-01-01T00:00:00 TO 2016-12-31T00:00:00]';
 
             vm.dateOptions = {
                 minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
@@ -164,27 +166,132 @@ angular.module('SolrHeatmapApp')
             vm.setDateRange = function(minDate, maxDate){
                 HeatMapSourceGeneratorService.setMinDate(minDate);
                 HeatMapSourceGeneratorService.setMaxDate(maxDate);
+
+                vm.dateString = '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                                                maxDate.toISOString().replace('.000Z','') + ']';
             };
+
+            vm.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.datepicker.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.datepicker.toolTitle;
+                        }
+                    }
+                });
+            };
+
         }]
 
 );
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,90]*/
 /**
  * Export Controller
  */
 angular
     .module('SolrHeatmapApp')
-    .controller('ExportController', ['HeatMapSourceGenerator', '$scope',
-        function(HeatMapSourceGeneratorService, $scope) {
+    .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
+        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
+
+            $scope.export = {
+                numDocuments: 1,
+                options: {
+                    floor: 1,
+                    ceil: 10000,
+                    step: 1
+                }
+            };
 
             $scope.startExport = function() {
-                HeatMapSourceGeneratorService.startCsvExport();
+                var numDocs = $scope.export.numDocuments;
+
+                HeatMapSourceGeneratorService.startCsvExport(numDocs);
+            };
+
+            $scope.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.export.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.export.toolTitle;
+                        }
+                    }
+                });
+            };
+
+        }]
+);
+
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/**
+ * Geospatial filter Controller
+ */
+angular
+    .module('SolrHeatmapApp')
+    .controller('GeospatialFilterController', ['$scope', '$uibModal',
+        function($scope, $uibModal) {
+
+            $scope.filterString = '[-90,-180 TO 90,180]';
+
+            $scope.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.
+                                            geospatialsearch.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.
+                                            geospatialsearch.toolTitle;
+                        }
+                    }
+                });
+            };
+
+            $scope.updateFilterString = function(str) {
+                $scope.filterString = str;
             };
         }]
-
 );
+
+/*eslint angular/controller-as: 0*/
+/**
+ * InfoWindowController
+ */
+angular
+    .module('SolrHeatmapApp')
+    .controller('InfoWindowController',
+        function ($scope, $uibModalInstance, infoMsg, toolName) {
+
+            $scope.infoMsg = infoMsg;
+            $scope.toolName = toolName;
+
+            $scope.ok = function () {
+                $uibModalInstance.close();
+            };
+        })
+;
 
 /*eslint angular/no-services: [2,{"directive":["$http","$q"],"controller":["$resource"]}]*/
 /*eslint angular/di: [2,"array"]*/
@@ -207,7 +314,9 @@ angular
                     if (data && data.mapConfig) {
                         var mapConf = data.mapConfig,
                             appConf = data.appConfig,
-                            bopwsConfig = data.bopwsConfig;
+                            bopwsConfig = data.bopwsConfig,
+                            instructions = data.instructions;
+
                         // create the map with the given config
                         MapService.init({
                             mapConfig: mapConf
@@ -215,6 +324,8 @@ angular
                         solrHeatmapApp.appConfig = appConf;
                         solrHeatmapApp.initMapConf = mapConf;
                         solrHeatmapApp.bopwsConfig = bopwsConfig;
+                        solrHeatmapApp.instructions = instructions;
+
                         // fire event mapReady
                         $rootScope.$broadcast('mapReady', MapService.getMap());
 
@@ -285,13 +396,13 @@ angular
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,110]*/
+/*eslint max-len: [2,120]*/
 /**
  * Search Controller
  */
 angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$controller', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $controller, $window) {
+    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
+        function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
 
             /**
              *
@@ -339,23 +450,72 @@ angular.module('SolrHeatmapApp')
                 // Reset the date fields
                 var ctrlViewModelNew = $scope.$new();
                 $controller('DatePickerController', {$scope : ctrlViewModelNew });
-                ctrlViewModelNew.resetDates();
+                ctrlViewModelNew.setInitialDates();
+            };
+
+            $scope.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.textsearch.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.textsearch.toolTitle;
+                        }
+                    }
+                });
             };
 
         }]
 
 );
 
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,90]*/
+/**
+ * Filter by user controller
+ */
+angular
+    .module('SolrHeatmapApp')
+    .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
+        function(HeatMapSourceGeneratorService, $scope, $uibModal) {
+
+            $scope.showInfo = function(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.
+                                                    userfilter.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.
+                                                    userfilter.toolTitle;
+                        }
+                    }
+                });
+            };
+        }]
+);
+
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
-/*eslint max-len: [2,110]*/
+/*eslint max-len: [2,150]*/
 /**
  * HeatMapSourceGenerator Service
  */
 angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$filter', '$window', '$document', '$http',
-        function(MapService, $rootScope, $filter, $window, $document , $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
+        function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
 
             var searchObj = {
                 minDate: new Date('2000-01-01'),
@@ -568,8 +728,16 @@ angular
                         minY: minY,
                         maxY: maxY
                     };
-                }
 
+                    // Reset the date fields
+                    // TODO get rid of angular.element
+                    var ctrlViewModelNew = angular.element('[ng-controller=GeospatialFilterController]').scope();
+                    $controller('GeospatialFilterController', {$scope : ctrlViewModelNew });
+                    ctrlViewModelNew.updateFilterString('[' + parseFloat(Math.round(minX * 100) / 100).toFixed(2) + ',' +
+                                            parseFloat(Math.round(minY * 100) / 100).toFixed(2) + ' TO ' +
+                                            parseFloat(Math.round(maxX * 100) / 100).toFixed(2) + ',' +
+                                            parseFloat(Math.round(maxY * 100) / 100).toFixed(2) + ']');
+                }
 
                 return geoFilter;
             }

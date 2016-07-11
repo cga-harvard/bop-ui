@@ -1,11 +1,32 @@
 <div ng-controller="SearchController">
-  <div class="input-group" id="searchinput">
-    <input class="form-control input-sm" type="text" placeholder="Enter keyword" ng-keypress="onKeyPress($event)" ng-model="searchInput" ng-click="onFocus()" ng-blur="onBlur()">
-    <span class="input-group-btn searchbtn">
-      <button class="btn btn-primary btn-sm" type="button" ng-click="doSearch()">Search</button>
-    </span>
-    <span class="input-group-btn searchbtn">
-        <button class="btn btn-primary btn-sm" type="button" ng-click="resetSearchInput()">Reset</button>
-    </span>
-  </div>
+    <div class="col-md-9">
+        <div class="input-group searchinputfield" id="searchinput">
+
+            <input class="form-control input-sm" type="text" placeholder="Enter keyword" ng-keypress="onKeyPress($event)" ng-model="searchInput" ng-click="onFocus()" ng-blur="onBlur()">
+
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-search"></i>
+              </span>
+
+
+         </div>
+    </div>
+ <div class="col-md-1">
+         <span class="searchbtn">
+           <button class="btn btn-primary btn-sm" type="button" ng-click="doSearch()">Search</button>
+       </span>
+           </div>
+ <div class="col-md-1">
+         <span class="searchbtn">
+         <button class="btn btn-primary btn-sm" type="button" ng-click="resetSearchInput()">Reset</button>
+      </span>
+    </div>
+         <div class="col-md-1">
+            <span class="input-group-btn searchbtn">
+           <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
+             <span class="glyphicon glyphicon-info-sign"></span>
+            </button>
+            </span>
+        </div>
+
 </div>

@@ -19,7 +19,9 @@ angular
                     if (data && data.mapConfig) {
                         var mapConf = data.mapConfig,
                             appConf = data.appConfig,
-                            bopwsConfig = data.bopwsConfig;
+                            bopwsConfig = data.bopwsConfig,
+                            instructions = data.instructions;
+
                         // create the map with the given config
                         MapService.init({
                             mapConfig: mapConf
@@ -27,6 +29,8 @@ angular
                         solrHeatmapApp.appConfig = appConf;
                         solrHeatmapApp.initMapConf = mapConf;
                         solrHeatmapApp.bopwsConfig = bopwsConfig;
+                        solrHeatmapApp.instructions = instructions;
+
                         // fire event mapReady
                         $rootScope.$broadcast('mapReady', MapService.getMap());
 
