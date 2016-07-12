@@ -43,7 +43,8 @@ module.exports = function(grunt) {
         uglify: {
             options: {
               // the banner is inserted at the top of the output
-              banner: '/*! Solr-Heatmap-Client created on <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+              banner: '/*! Solr-Heatmap-Client created on <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+              mangle: false
             },
             dist: {
                 files: {
