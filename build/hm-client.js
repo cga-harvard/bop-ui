@@ -787,14 +787,15 @@ angular
              * Help method to build the whole params object, that will be used in
              * the API requests.
              */
-            function startCsvExport(){
+            function startCsvExport(numberOfDocuments){
                 var config = {},
                     spatialFilters = this.getGeospatialFilter(),
                     params = this.getTweetsSearchQueryParameters(
                                     spatialFilters.queryGeo, spatialFilters.hmFilter);
 
                 // add additional parameter for the number of documents to return
-                params["d.docs.limit"] = solrHeatmapApp.bopwsConfig.csvDocsLimit;
+                params["d.docs.limit"] = angular.isNumber(numberOfDocuments) ?
+                        numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
 
                 if (params && spatialFilters !== null) {
                     config = {
