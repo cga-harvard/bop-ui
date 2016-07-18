@@ -6,6 +6,10 @@ The Solr instance can be filtered by time, by a search term and by space.
 
 [Solr-Heatmap-Client](http://terrestris.github.io/SolrHeatmap)
 
+Local environment:
+- node serve
+- http://localhost:3000/index-dev.html
+
 _Used libraries_:
 * AngularJS v1.5.5
 * OpenLayers 3 (v3.16.0)
