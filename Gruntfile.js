@@ -12,7 +12,7 @@ module.exports = function(grunt) {
                 branch: 'gh-pages'
             },
             publish: {
-                repo: 'https://github.com/ahennr/SolrHeatmap.git',
+                repo: 'https://github.com/terranodo/SolrHeatmap.git',
                 message: 'Publish gh-pages (grunt cli)',
                 src: ['index.html', 'index-dev.html', 'app/**', 'build/**', 'assets/**', 'config/**', 'LICENSE', 'API/*.json']
             },
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
                         name: 'ahennr',
                         email: 'henn@terrestris.de'
                     },
-                    repo: 'https://' + process.env.GH_TOKEN + '@github.com/terrestris/SolrHeatmap.git',
+                    repo: 'https://' + process.env.GH_TOKEN + '@github.com/terranodo/SolrHeatmap.git',
                     message: 'Publish gh-pages (auto)' + getDeployMessage(),
                     silent: true
                 },
