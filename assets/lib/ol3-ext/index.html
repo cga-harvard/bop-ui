@@ -117,17 +117,11 @@
 			{	var href = /[^\/]*$/.exec( $(this).attr('href') ).pop();
 				$("<small>").text("("+href+")")
 						.appendTo($(this));
-				$("<img>").attr('src',"img/"+href.replace('html','jpg'))
+				$("<img>").attr('src',"img/"+href.replace('html',$(this).data('img')||'jpg'))
 					.appendTo($(this))
 					.load(function(e)
 					{	$(this).show();
 					})
-					.on('error', function() 
-					{	//console.log('error');
-						if (this.src != "img/"+href.replace('html','gif'))
-						{	this.src = "img/"+href.replace('html','gif')
-						}
-					});
 			})
 
 			$('#keywords').on('keyup', function()
@@ -159,7 +153,7 @@
 		</div>
 	</header>
 	<div id="examples">
-	<a href="https://github.com/Viglino/ol3-ext"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+	<a href="https://github.com/Viglino/ol3-ext"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 	
 	<div class="desc">
 		Cool extensions for OpenLayers 3 (OL3).
@@ -207,6 +201,22 @@
 		</div>
 
 	<h2>Animation</h2>
+	
+		<div class="example">
+			<a class="mainlink" href="examples/map.featureanimation.html">
+				<strong>Feature animation</strong><br>
+			</a>
+			<p class="description"><i>ol.featureAnimation</i> provides animations to animate features on a map.</p>
+			<p class="tag">map, feature, animation, bounce, drop</p>
+		</div>
+	
+		<div class="example">
+			<a class="mainlink" href="examples/map.featureanimation.path.html">
+				<strong>Animate features along a path</strong><br>
+			</a>
+			<p class="description">This example animates deatures along a path.</p>
+			<p class="tag">map, feature, animation, path</p>
+		</div>
 	
 		<div class="example">
 			<a class="mainlink" href="examples/map.pulse.html">
@@ -288,6 +298,22 @@
 			<p class="tag">interaction, regular, interaction, draw, circle, triangle</p>
 		</div>
 	
+		<div class="example">
+			<a class="mainlink" href="examples/map.interaction.clip.html">
+				<strong>Clip interaction</strong><br>
+			</a>
+			<p class="description"><i>ol.interaction.Clip</i> clip layers by a circle on the map.</p>
+			<p class="tag">interaction, clip, circle, canvas</p>
+		</div>
+	
+		<div class="example">
+			<a class="mainlink" href="examples/map.ddrop.html">
+				<strong>Dropfile interaction</strong><br>
+			</a>
+			<p class="description"><i>ol.interaction.DropFile</i> is a drag and drop interaction. It fires a loadstart and loadend and errors.</p>
+			<p class="tag">interaction, drag, drop</p>
+		</div>
+	
 	<h2>Controls</h2>
 
 		<div class="example">
@@ -328,6 +354,22 @@
 			</a>
 			<p class="description">The <i>ol.control.Bar</i> is a panel that contains other controls. You can compose toolbars with it.</p>
 			<p class="tag">control, bar, toolbar, panel</p>
+		</div>
+	
+		<div class="example">
+			<a class="mainlink" href="examples/map.control.permalink.html">
+				<strong>Permalink control</strong><br>
+			</a>
+			<p class="description">The <i>ol.control.Permalink</i> is hyperlink that will return the user to the current map view.</p>
+			<p class="tag">control, permalink</p>
+		</div>
+	
+		<div class="example">
+			<a class="mainlink" href="examples/map.control.swipe.html">
+				<strong>Swipe control</strong><br>
+			</a>
+			<p class="description">The <i>ol.control.Swipe</i> is a control that add a split screen to compare two map overlays. </p>
+			<p class="tag">control, swipe, overlay, split</p>
 		</div>
 	
 	
@@ -390,15 +432,15 @@
 				<strong>Map in the cloud</strong><br>
 			</a>
 			<p class="description">The ol.control.Cloud adds an animated clouds overlay over the map.</p>
-			<p class="tag">interaction, effect, clouds, birds, animation</p>
+			<p class="tag">control, effect, clouds, birds, animation</p>
 		</div>
 
 		<div class="example">
-			<a class="mainlink" href="examples/map.interaction.ripple.html">
+			<a class="mainlink" href="examples/map.interaction.ripple.html" data-img='gif'>
 				<strong>Watter ripple</strong><br>
 			</a>
 			<p class="description">The ripple interaction add a watter ripple effect on a map.</p>
-			<p class="tag">interaction, effect, animation, watter</p>
+			<p class="tag">interaction, effect, animation, watter, ripple</p>
 		</div>
 
 		<div class="example">
@@ -406,7 +448,7 @@
 				<strong>Synchronize Maps</strong><br>
 			</a>
 			<p class="description">Synchronize maps in different windows.</p>
-			<p class="tag">synchronization, map</p>
+			<p class="tag">synchronization, map, window</p>
 		</div>
 
 	
