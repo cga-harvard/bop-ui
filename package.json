@@ -1,19 +1,19 @@
 {
-  "name": "SolrHeatmapApp",
+  "name": "angular-search",
   "private": true,
   "version": "0.0.1",
   "description": "Solr-Heatmap-Client based on AngularJS and OL3",
-  "homepage": "http://terrrestris.github.io/SolrHeatmap",
+  "homepage": "http://terranodo.io/angular-search",
   "author": {
     "name": "Andre Henn",
     "url": "https://github.com/ahennr"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/terranodo/SolrHeatmap"
+    "url": "https://github.com/terranodo/angular-search"
   },
   "bugs": {
-    "url": "https://github.com/terranodo/SolrHeatmap/issues"
+    "url": "https://github.com/terranodo/angular-search/issues"
   },
   "licenses": [
     {
