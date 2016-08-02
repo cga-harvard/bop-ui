@@ -12,14 +12,15 @@ angular
             var searchObj = {
                 minDate: new Date('2000-01-01'),
                 maxDate: new Date('2016-12-31'),
-                searchText : ''
+                searchText : null,
+                user: null
             };
 
             /**
              * Set keyword text
              */
             function setSearchText(val) {
-                searchObj.searchText = val;
+                searchObj.searchText = val.length === 0 ? null : val;
             }
 
             /**
@@ -36,12 +37,17 @@ angular
                 searchObj.maxDate = val;
             }
 
+            function setUser(val) {
+                searchObj.user = val.length === 0 ? null : val;
+            }
+
             /**
              * Returns the complete search object
              */
             function getSearchObj(){
                 return searchObj;
             }
+
 
             /**
              * Clamps given number `num` to be inside the allowed range from `min`
@@ -322,15 +328,7 @@ angular
              */
             function getTweetsSearchQueryParameters(bounds) {
 
-                // get keyword and time range
-                var reqParamsUi = this.getSearchObj(),
-                    keyword;
-
-                if (reqParamsUi.searchText.length === 0){
-                    keyword = '*';
-                } else {
-                    keyword = reqParamsUi.searchText;
-                }
+                var reqParamsUi = this.getSearchObj();
 
                 // calculate reduced bounding box
                 var dx = bounds.maxX - bounds.minX,
@@ -341,7 +339,8 @@ angular
                     maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
 
                 var params = {
-                    "q.text": keyword,
+                    "q.text": reqParamsUi.searchText,
+                    "q.user": reqParamsUi.user,
                     "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +
                          ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) +
                          ']',
@@ -375,7 +374,8 @@ angular
                 setMinDate: setMinDate,
                 setMaxDate: setMaxDate,
                 getFormattedDateString: getFormattedDateString,
-                getSearchObj: getSearchObj
+                getSearchObj: getSearchObj,
+                setUser: setUser
             };
 
             return methods;
