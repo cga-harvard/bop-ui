@@ -4,12 +4,26 @@
 /**
  * Filter by user controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
         function(HeatMapSourceGeneratorService, $scope, $uibModal) {
 
-            $scope.showInfo = function(){
+            $scope.userSearch = userSearch;
+
+            $scope.showInfo = showInfo;
+
+            /**
+             *
+             */
+            function userSearch() {
+              console.log('Lolololol');
+              HeatMapSourceGeneratorService.setUser($scope.userfilterInput);
+              HeatMapSourceGeneratorService.performSearch();
+            }
+
+            function showInfo(){
                 var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'infoPopup.html',
@@ -26,6 +40,7 @@ angular
                         }
                     }
                 });
-            };
+            }
         }]
 );
+})();
