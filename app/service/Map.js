@@ -4,6 +4,7 @@
 /**
  * Map Service
  */
+(function() {
 angular.module('SolrHeatmapApp')
     .factory('Map', ['$rootScope', '$filter', '$document',
         function($rootScope, $filter, $document) {
@@ -497,7 +498,6 @@ angular.module('SolrHeatmapApp')
             }
 
             var ms = {
-                //map: map,
                 init: init,
                 getMap: getMap,
                 getLayersBy: getLayersBy,
@@ -515,7 +515,6 @@ angular.module('SolrHeatmapApp')
             };
 
             return ms;
-
         }]
-
 );
+})();
