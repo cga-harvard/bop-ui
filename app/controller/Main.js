@@ -34,13 +34,6 @@ angular
                         // fire event mapReady
                         $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                        /*
-                         * register some events
-                         */
-                        MapService.getMap().on('moveend', function(evt){
-                            HeatMapSourceGeneratorService.performSearch();
-                        });
-
                         MapService.getMap().getView()
                             .on('change:resolution', function(evt){
                                 var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
@@ -58,7 +51,9 @@ angular
                                 // check box of transform interaction
                                 MapService.checkBoxOfTransformInteraction();
                             });
-
+                        /*
+                        * register some events
+                        */
                         MapService.getMap().on('moveend', function(evt){
                             HeatMapSourceGeneratorService.performSearch();
                         });

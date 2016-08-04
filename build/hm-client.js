@@ -1,8 +1,272 @@
 /**
  * The main solrHeatmapApp module
  */
+(function() {
+  angular.module('SolrHeatmapApp', [
+    'ui.bootstrap',
+    'rzModule',
+    'search_components'
+  ]);
+})();
+
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,100]*/
+/**
+ * DatePickerCtrl Controller
+ */
+(function() {
+
 angular
-    .module('SolrHeatmapApp', ['ui.bootstrap', 'rzModule']);
+    .module('search_datepicker_component', [])
+    .directive('datePicker', datePicker);
+
+    function datePicker() {
+      return {
+        controller: datePickerFilterController,
+        templateUrl: 'app/components/datepicker/datepicker.html',
+        restrict: 'EA'
+      };
+    }
+
+    datePickerFilterController.$inject = ['HeatMapSourceGenerator', '$uibModal', '$scope'];
+    function datePickerFilterController(HeatMapSourceGeneratorService, $uibModal, $scope) {
+
+            var vm = $scope;
+
+            vm.initialDateOptions = {
+                minDate: new Date('2010-01-01'),
+                maxDate: new Date('2013-12-31')
+            };
+
+            vm.dateOptions = {
+                minDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().minDate,
+                maxDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().maxDate,
+                startingDay: 1, // Monday
+                showWeeks: false
+            };
+
+            vm.dateString = getFormattedDateString(vm.dateOptions.minDate, vm.dateOptions.maxDate);
+
+            vm.startDate = {
+                opened: false
+            };
+
+            vm.endDate = {
+                opened: false
+            };
+
+            vm.onChangeDatepicker = onChangeDatepicker;
+
+            vm.showInfo = showInfo;
+
+            vm.openEndDate = openEndDate;
+
+            vm.openStartDate = openStartDate;
+
+            vm.onSubmitDateText = onSubmitDateText;
+
+            vm.slider = defaultSliderValue();
+
+            /**
+             * Set initial values for min and max dates in both of datepicker.
+             */
+            vm.setInitialDates = function(){
+                vm.dts = vm.dateOptions.minDate;
+                vm.dte = vm.dateOptions.maxDate;
+            };
+
+            vm.setInitialDates();
+
+
+            /**
+             * Will be called on click on start datepicker.
+             * `minDate` will be reset to the initial value (e.g. 2000-01-01),
+             * `maxDate` will be adjusted with the `$scope.dte` value to
+             *  restrict it not to be below the `minDate`.
+             */
+            function openStartDate() {
+                vm.startDate.opened = true;
+                vm.dateOptions.minDate = vm.initialDateOptions.minDate;
+                vm.dateOptions.maxDate = vm.dte;
+            };
+
+
+            /**
+             * Will be called on click on end datepicker.
+             * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
+             * `minDate` will be adjusted with the `$scope.dts` value to
+             *  restrict it not to be bigger than the `maxDate`.
+             */
+            function openEndDate() {
+                vm.endDate.opened = true;
+                vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
+                vm.dateOptions.minDate = vm.dts;
+            };
+
+
+            /**
+             * Will be fired after the start and the end date was chosen.
+             */
+            function onChangeDatepicker(){
+                vm.dateString = getFormattedDateString(vm.dts, vm.dte);
+                performDateSearch();
+            };
+
+            function getFormattedDateString(minDate, maxDate) {
+              return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                  maxDate.toISOString().replace('.000Z','') + ']';
+            }
+
+            function stringToDate(dateString) {
+                var dateArray = dateString.split(' TO ');
+                if (typeof(dateString) === 'string' && dateArray.length === 2) {
+                  dateArray[0] = new Date(dateArray[0].slice(1,11));
+                  dateArray[1] = new Date(dateArray[1].slice(0,10));
+                  if (dateArray[0] == 'Invalid Date' || dateArray[0] == 'Invalid Date') {
+                    return null;
+                  }
+                  return dateArray;
+                }
+                return null;
+            }
+
+            function onSubmitDateText() {
+                var dateArray = stringToDate(vm.dateString);
+                if (dateArray !== null) {
+                  vm.dts = dateArray[0];
+                  vm.dte = dateArray[1];
+                  performDateSearch();
+                } else{
+                  vm.dateString = getFormattedDateString(vm.dts, vm.dte)
+                }
+            }
+
+            function showInfo(){
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return solrHeatmapApp.instructions.datepicker.instruction;
+                        },
+                        toolName: function(){
+                            return solrHeatmapApp.instructions.datepicker.toolTitle;
+                        }
+                    }
+                });
+            };
+
+            vm.$on('setHistogram', function(event, dataHistogram) {
+              if (vm.slider.options.ceil === 10) {
+                vm.slider.counts = dataHistogram.counts;
+                vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
+              }
+            })
+
+            vm.$on('slideEnded', function() {
+              var minKey = vm.slider.minValue,
+                  maxKey = vm.slider.maxValue;
+              vm.dts =  new Date(vm.slider.counts[minKey].value);
+              vm.dte =  new Date(vm.slider.counts[maxKey].value);
+              vm.dateString = getFormattedDateString(vm.dts, vm.dte);
+              performDateSearch();
+            });
+
+            function performDateSearch() {
+              HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
+              HeatMapSourceGeneratorService.performSearch();
+            }
+
+            function defaultSliderValue() {
+              return {
+                minValue: 0,
+                maxValue: 10,
+                active: false,
+                options: {
+                  floor: 0,
+                  ceil: 10,
+                  step: 1,
+                  noSwitching: true, hideLimitLabels: true,
+                  getSelectionBarColor: function() {
+                    return '#dadada';
+                  },
+                  translate: function() {
+                    return '';
+                  }
+                }
+              };
+            };
+        }
+
+})();
+
+(function() {
+
+angular
+  .module('search_timehistogram_component', [])
+  .directive('timeHistogram', timeHistogram);
+
+function timeHistogram() {
+  var directive = {
+    template: '<div class="bar-graph" id="{{barId}}" style="width: 400px";></div>',
+    restrict: 'EA',
+    link: link
+  };
+  return directive;
+
+  function link(scope, element, attr) {
+
+    scope.barId = attr.barid;
+
+    scope.$on('setHistogram', function(even, histogram) {
+      makeHistogram(histogram);
+    });
+
+    /**
+     * Create histogram
+     */
+    function makeHistogram(histogram) {
+
+      findHistogramMaxValue();
+      renderingSvgBars();
+
+      function findHistogramMaxValue() {
+        histogram.maxValue = Math.max.apply(null, histogram.counts.map(function(obj) {
+          return obj.count;
+        }));
+      }
+
+      function renderingSvgBars() {
+        if (histogram.counts) {
+          histogram.bars = document.getElementById(scope.barId);
+
+          var barsheight = 60;
+          var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
+          var svgRect = histogram.counts.map(function(bar, barKey) {
+            var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
+            var y = barsheight - height;
+            var translate = (rectWidth) * barKey;
+            return '<g transform="translate(' + translate + ', 0)">' +
+                   '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="#B0B0B0"></rect>' +
+                   '</g>';
+          });
+          histogram.bars.innerHTML = '<svg width="100%" height="' + barsheight + '">' + svgRect.join('') + '</svg>';
+        }
+      }
+    }
+  }
+}
+
+}());
+
+(function() {
+  angular.module('search_components', [
+    'search_timehistogram_component',
+    'search_datepicker_component'
+  ]);
+})();
 
 /*eslint angular/di: [2,"array"]*/
 /**
@@ -72,124 +336,6 @@ angular
             };
 
         }]
-);
-
-/*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,100]*/
-/**
- * DatePickerCtrl Controller
- */
-angular.module('SolrHeatmapApp')
-    .controller('DatePickerController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
-        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
-
-            var vm = $scope;
-
-            vm.initialDateOptions = {
-                minDate: new Date('2000-01-01'),
-                maxDate: new Date('2016-12-31')
-            };
-
-            vm.dateString = '[2000-01-01T00:00:00 TO 2016-12-31T00:00:00]';
-
-            vm.dateOptions = {
-                minDate: HeatMapSourceGeneratorService.getSearchObj().minDate,
-                maxDate: HeatMapSourceGeneratorService.getSearchObj().maxDate,
-                startingDay: 1, // Monday
-                showWeeks: false
-            };
-
-            /**
-             * Will be called on click on start datepicker.
-             * `minDate` will be reset to the initial value (e.g. 2000-01-01),
-             * `maxDate` will be adjusted with the `$scope.dte` value to
-             *  restrict it not to be below the `minDate`.
-             */
-            vm.openStartDate = function() {
-                vm.startDate.opened = true;
-                vm.dateOptions.minDate = vm.initialDateOptions.minDate;
-                vm.dateOptions.maxDate = vm.dte;
-            };
-
-            /**
-             * Will be called on click on end datepicker.
-             * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
-             * `minDate` will be adjusted with the `$scope.dts` value to
-             *  restrict it not to be bigger than the `maxDate`.
-             */
-            vm.openEndDate = function() {
-                vm.endDate.opened = true;
-                vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
-                vm.dateOptions.minDate = vm.dts;
-            };
-
-            vm.startDate = {
-                opened: false
-            };
-
-            vm.endDate = {
-                opened: false
-            };
-
-            /**
-             * Set initial values for min and max dates in both of datepicker.
-             */
-            vm.setInitialDates = function(){
-                vm.dts = vm.dateOptions.minDate;
-                vm.dte = vm.dateOptions.maxDate;
-            };
-
-            vm.setInitialDates();
-
-            /**
-             * Will be fired after the start date was chosen.
-             */
-            vm.onChangeStartDate = function(){
-                vm.setDateRange(vm.dts, vm.dte);
-                HeatMapSourceGeneratorService.performSearch();
-            };
-
-            /**
-             * Will be fired after the end date was chosen.
-             */
-            vm.onChangeEndDate = function(){
-                vm.setDateRange(vm.dts, vm.dte);
-                HeatMapSourceGeneratorService.performSearch();
-            };
-
-            /**
-             * Help method that updates `searchObj` of the heatmap with
-             * the current min and max dates.
-             * @param {Date} minDate date value of the start datepicker
-             * @param {Date} maxDate date value of the end datepicker
-             */
-            vm.setDateRange = function(minDate, maxDate){
-                HeatMapSourceGeneratorService.setMinDate(minDate);
-                HeatMapSourceGeneratorService.setMaxDate(maxDate);
-
-                vm.dateString = '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
-                                                maxDate.toISOString().replace('.000Z','') + ']';
-            };
-
-            vm.showInfo = function(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.datepicker.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.datepicker.toolTitle;
-                        }
-                    }
-                });
-            };
-
-        }]
-
 );
 
 /*eslint angular/controller-as: 0*/
@@ -329,13 +475,6 @@ angular
                         // fire event mapReady
                         $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                        /*
-                         * register some events
-                         */
-                        MapService.getMap().on('moveend', function(evt){
-                            HeatMapSourceGeneratorService.performSearch();
-                        });
-
                         MapService.getMap().getView()
                             .on('change:resolution', function(evt){
                                 var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
@@ -353,7 +492,9 @@ angular
                                 // check box of transform interaction
                                 MapService.checkBoxOfTransformInteraction();
                             });
-
+                        /*
+                        * register some events
+                        */
                         MapService.getMap().on('moveend', function(evt){
                             HeatMapSourceGeneratorService.performSearch();
                         });
@@ -435,13 +576,13 @@ angular.module('SolrHeatmapApp')
                 //    return false;
                 // }
 
-                HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
+                HeatMapSourceGeneratorService.filterObj.setSearchText($scope.searchInput);
                 HeatMapSourceGeneratorService.performSearch();
             };
 
             $scope.resetSearchInput = function() {
                 $scope.searchInput = '';
-                HeatMapSourceGeneratorService.setSearchText('');
+                HeatMapSourceGeneratorService.filterObj.setSearchText('');
                 HeatMapSourceGeneratorService.performSearch();
 
                 // Reset the map
@@ -480,12 +621,25 @@ angular.module('SolrHeatmapApp')
 /**
  * Filter by user controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
         function(HeatMapSourceGeneratorService, $scope, $uibModal) {
 
-            $scope.showInfo = function(){
+            $scope.userSearch = userSearch;
+
+            $scope.showInfo = showInfo;
+
+            /**
+             *
+             */
+            function userSearch() {
+              HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
+              HeatMapSourceGeneratorService.performSearch();
+            }
+
+            function showInfo(){
                 var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'infoPopup.html',
@@ -502,54 +656,78 @@ angular
                         }
                     }
                 });
-            };
+            }
         }]
 );
+})();
 
-/*eslint angular/di: [2,"array"]*/
+/*eslint angular/di: [2,'array']*/
 /*eslint angular/document-service: 2*/
 /*eslint max-len: [2,150]*/
 /**
  * HeatMapSourceGenerator Service
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
         function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
 
-            var searchObj = {
-                minDate: new Date('2000-01-01'),
-                maxDate: new Date('2016-12-31'),
-                searchText : ''
+
+            var methods = {
+                getGeospatialFilter: getGeospatialFilter,
+                getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
+                performSearch: performSearch,
+                startCsvExport: startCsvExport,
+                getFormattedDateString: getFormattedDateString,
+                filterObj: filterMethods()
             };
 
-            /**
-             * Set keyword text
-             */
-            function setSearchText(val) {
-                searchObj.searchText = val;
+            return methods;
+
+
+            function filterMethods() {
+              var searchObj = {
+                  minDate: new Date('2013-03-10'),
+                  maxDate: new Date('2013-03-21'),
+                  textDate: null,
+                  searchText : null,
+                  user: null,
+                  histogramCount: []
+              };
+              /**
+               * Set keyword text
+               */
+              function setSearchText(val) {
+                  searchObj.searchText = val.length === 0 ? null : val;
+              }
+
+              function setUser(val) {
+                  searchObj.user = val.length === 0 ? null : val;
+              }
+
+              function setTextDate(val) {
+                  searchObj.textDate = val.length === 0 ? null : val;
+              }
+              /**
+               * Returns the complete search object
+               */
+              function getSearchObj(){
+                  return searchObj;
+              }
+
+              function setHistogramCount(val) {
+                searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
+              }
+              return {
+                getSearchObj: getSearchObj,
+                setSearchText: setSearchText,
+                setUser: setUser,
+                setTextDate: setTextDate,
+                setHistogramCount: setHistogramCount
+              }
             }
 
-            /**
-             * Set start search date
-             */
-            function setMinDate(val) {
-                searchObj.minDate = val;
-            }
-
-            /**
-             * Set end search date
-             */
-            function setMaxDate (val) {
-                searchObj.maxDate = val;
-            }
-
-            /**
-             * Returns the complete search object
-             */
-            function getSearchObj(){
-                return searchObj;
-            }
 
             /**
              * Clamps given number `num` to be inside the allowed range from `min`
@@ -752,8 +930,7 @@ angular
                                     spatialFilters.queryGeo, spatialFilters.hmFilter);
 
                 // add additional parameter for the soft maximum of the heatmap grid
-                params["a.hm.limit"] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
-
+                params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
                 if (params && spatialFilters !== null) {
 
                     config = {
@@ -761,24 +938,26 @@ angular
                         method: 'GET',
                         params: params
                     };
-
                     //load the data
                     $http(config).
                     success(function(data, status, headers, cfg) {
                         // check if we have a heatmap facet and update the map with it
-                        if (data && data["a.hm"]) {
-                            MapService.createOrUpdateHeatMapLayer(data["a.hm"]);
+                        if (data && data['a.hm']) {
+                            MapService.createOrUpdateHeatMapLayer(data['a.hm']);
                             // get the count of matches
-                            $rootScope.$broadcast('setCounter', data["a.matchDocs"]);
+                            $rootScope.$broadcast('setCounter', data['a.matchDocs']);
+
+                            $rootScope.$broadcast('setHistogram', data['a.time']);
+                            methods.filterObj.setHistogramCount(data['a.time']['counts']);
                         }
                     }).
                     error(function(data, status, headers, cfg) {
                         // hide the loading mask
                         //angular.element(document.querySelector('.waiting-modal')).modal('hide');
-                        $window.alert("An error occured while reading heatmap data");
+                        $window.alert('An error occured while reading heatmap data');
                     });
                 } else {
-                    $window.alert("Spatial filter could not be computed.");
+                    $window.alert('Spatial filter could not be computed.');
                 }
             }
 
@@ -794,7 +973,7 @@ angular
                                     spatialFilters.queryGeo, spatialFilters.hmFilter);
 
                 // add additional parameter for the number of documents to return
-                params["d.docs.limit"] = angular.isNumber(numberOfDocuments) ?
+                params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
                         numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
 
                 if (params && spatialFilters !== null) {
@@ -818,10 +997,10 @@ angular
                         anchor.remove(); // Clean it up afterwards
                     }).
                     error(function(data, status, headers, cfg) {
-                        $window.alert("An error occured while exporting csv data");
+                        $window.alert('An error occured while exporting csv data');
                     });
                 } else {
-                    $window.alert("Spatial filter could not be computed.");
+                    $window.alert('Spatial filter could not be computed.');
                 }
             }
 
@@ -830,15 +1009,7 @@ angular
              */
             function getTweetsSearchQueryParameters(bounds) {
 
-                // get keyword and time range
-                var reqParamsUi = this.getSearchObj(),
-                    keyword;
-
-                if (reqParamsUi.searchText.length === 0){
-                    keyword = '*';
-                } else {
-                    keyword = reqParamsUi.searchText;
-                }
+                var reqParamsUi = methods.filterObj.getSearchObj();
 
                 // calculate reduced bounding box
                 var dx = bounds.maxX - bounds.minX,
@@ -849,14 +1020,13 @@ angular
                     maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
 
                 var params = {
-                    "q.text": keyword,
-                    "q.time": '['+this.getFormattedDateString(reqParamsUi.minDate) +
-                         ' TO ' + this.getFormattedDateString(reqParamsUi.maxDate) +
-                         ']',
-                    "q.geo": '[' + bounds.minX + ',' + bounds.minY + ' TO ' +
-                                 bounds.maxX + ',' + bounds.maxY + ']',
-                    "a.hm.filter": '[' + minInnerX + ',' + minInnerY + ' TO ' +
-                                                        maxInnerX + ',' + maxInnerY + ']'
+                    'q.text': reqParamsUi.searchText,
+                    'q.user': reqParamsUi.user,
+                    'q.time': timeTextFormat(reqParamsUi.textDate, reqParamsUi.minDate, reqParamsUi.maxDate),
+                    'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
+                    'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
+                    'a.time.limit': '1',
+                    'a.time.gap': 'PT1H'
                 };
 
                 return params;
@@ -864,32 +1034,22 @@ angular
 
             /**
              * Returns the formatted date object that can be parsed by API.
-             * @param {Date} date full date object
+             * @param {minDate} date full date object
                             (e.g. 'Sat Jan 01 2000 01:00:00 GMT+0100 (CET))
-             * @return {String} formatted date as string (e.g. '2000-01-01')
+             * @return {String} formatted date as string (e.g. [2013-03-10T00:00:00 TO 2013-03-21T00:00:00])
              */
-            function getFormattedDateString(date){
-                return date.getFullYear() + "-" + ("0" +
-                    (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).
-                    slice(-2);
+            function getFormattedDateString(minDate, maxDate){
+              return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                  maxDate.toISOString().replace('.000Z','') + ']';
+            }
+            function timeTextFormat(textDate, minDate, maxDate) {
+              return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
             }
 
-            var methods = {
-                getGeospatialFilter: getGeospatialFilter,
-                getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
-                performSearch: performSearch,
-                startCsvExport: startCsvExport,
-                setSearchText: setSearchText,
-                setMinDate: setMinDate,
-                setMaxDate: setMaxDate,
-                getFormattedDateString: getFormattedDateString,
-                getSearchObj: getSearchObj
-            };
-
-            return methods;
 
         }]
 );
+})();
 
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
@@ -897,6 +1057,7 @@ angular
 /**
  * Map Service
  */
+(function() {
 angular.module('SolrHeatmapApp')
     .factory('Map', ['$rootScope', '$filter', '$document',
         function($rootScope, $filter, $document) {
@@ -1390,7 +1551,6 @@ angular.module('SolrHeatmapApp')
             }
 
             var ms = {
-                //map: map,
                 init: init,
                 getMap: getMap,
                 getLayersBy: getLayersBy,
@@ -1408,10 +1568,9 @@ angular.module('SolrHeatmapApp')
             };
 
             return ms;
-
         }]
-
 );
+})();
 
 /** Interaction rotate
  * @constructor

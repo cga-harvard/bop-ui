@@ -39,13 +39,13 @@ angular.module('SolrHeatmapApp')
                 //    return false;
                 // }
 
-                HeatMapSourceGeneratorService.setSearchText($scope.searchInput);
+                HeatMapSourceGeneratorService.filterObj.setSearchText($scope.searchInput);
                 HeatMapSourceGeneratorService.performSearch();
             };
 
             $scope.resetSearchInput = function() {
                 $scope.searchInput = '';
-                HeatMapSourceGeneratorService.setSearchText('');
+                HeatMapSourceGeneratorService.filterObj.setSearchText('');
                 HeatMapSourceGeneratorService.performSearch();
 
                 // Reset the map

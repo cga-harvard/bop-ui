@@ -31,6 +31,8 @@
 
     <!-- APP CSS -->
     <link rel="stylesheet" href="./assets/css/app.css">
+    <link rel="stylesheet" href="./app/components/datepicker/datepicker.css">
+    <link rel="stylesheet" href="./app/components/histogram/histogram.css">
 
     <!-- APP JS -->
     <script src="./app/app.js"></script>
@@ -39,12 +41,16 @@
     <script src="./app/controller/BackgroundLayer.js"></script>
     <script src="./app/controller/Search.js"></script>
     <script src="./app/controller/Export.js"></script>
-    <script src="./app/controller/DatePickerCtrl.js"></script>
     <script src="./app/controller/ResultCounter.js"></script>
     <script src="./app/controller/GeospatialFilterCtrl.js"></script>
     <script src="./app/controller/UserFilterCtrl.js"></script>
     <script src="./app/service/Map.js"></script>
     <script src="./app/service/HeatMapSourceGenerator.js"></script>
+
+    <!-- APP components -->
+    <script src="./app/components/modules.js"></script>
+    <script src="./app/components/histogram/HistogramDirective.js"></script>
+    <script src="./app/components/datepicker/DatepickerDirective.js"></script>
 
 </head>
 
@@ -57,7 +63,7 @@
         </div>
         <div class="row">
             <div class="col-md-8 col-md-offset-2 row-box">
-                <ng-include src="'./app/view/datePicker.html'"></ng-include>
+                <date-picker></date-picker>
             </div>
         </div>
         <div class="row">

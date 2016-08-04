@@ -1,5 +1,10 @@
 /**
  * The main solrHeatmapApp module
  */
-angular
-    .module('SolrHeatmapApp', ['ui.bootstrap', 'rzModule']);
+(function() {
+  angular.module('SolrHeatmapApp', [
+    'ui.bootstrap',
+    'rzModule',
+    'search_components'
+  ]);
+})();
