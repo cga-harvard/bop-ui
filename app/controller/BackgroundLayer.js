@@ -2,6 +2,7 @@
 /**
  * BackgroundLayer Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('BackgroundLayerController',
@@ -67,3 +68,4 @@ angular
 
         }]
 );
+})();
