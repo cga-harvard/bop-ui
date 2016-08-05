@@ -237,36 +237,3 @@ code {
 .ol-popup-closer:after {
   content: "✖";
 }
-
-
-/*
- * Slider
- */
-rzslider {
-    width: 75%;
-    margin: 0;
-}
-
-rzslider .rz-pointer {
-   top: -14px;
-   z-index: 3;
-   width: 32px;
-   height: 32px;
-   cursor: pointer;
-   background-color: #337AB7;
-   -webkit-border-radius: 16px;
-     -moz-border-radius: 16px;
-        border-radius: 16px;
-}
-
-rzslider .rz-pointer.rz-active:after {
-  background-color: #FFBB00
-}
-
-rzslider .rz-bar.rz-selection {
-  background-color: #337AB7;
-}
-
-rzslider .rz-bubble  {
-    bottom: -40px;
-}

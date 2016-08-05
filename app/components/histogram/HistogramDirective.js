@@ -13,11 +13,16 @@ function timeHistogram() {
   return directive;
 
   function link(scope, element, attr) {
-
+    var renderingSvgBars;
     scope.barId = attr.barid;
 
-    scope.$on('setHistogram', function(even, histogram) {
-      makeHistogram(histogram);
+    scope.$on('setHistogramRangeSlider', function(even, histogram) {
+      renderingSvgBars = makeHistogram(histogram);
+      renderingSvgBars();
+    });
+
+    scope.$on('changeSlider', function(event, slider) {
+      renderingSvgBars(slider.minValue, slider.maxValue);
     });
 
     /**
@@ -26,7 +31,7 @@ function timeHistogram() {
     function makeHistogram(histogram) {
 
       findHistogramMaxValue();
-      renderingSvgBars();
+      return renderingSvgBars;
 
       function findHistogramMaxValue() {
         histogram.maxValue = Math.max.apply(null, histogram.counts.map(function(obj) {
@@ -34,21 +39,30 @@ function timeHistogram() {
         }));
       }
 
-      function renderingSvgBars() {
+      function renderingSvgBars(minValue, maxValue) {
         if (histogram.counts) {
-          histogram.bars = document.getElementById(scope.barId);
+          minValue = minValue || 0;
+          maxValue = maxValue || histogram.counts.length - 1;
 
+          histogram.bars = document.getElementById(scope.barId);
           var barsheight = 60;
           var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
-          var svgRect = histogram.counts.map(function(bar, barKey) {
-            var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
-            var y = barsheight - height;
-            var translate = (rectWidth) * barKey;
-            return '<g transform="translate(' + translate + ', 0)">' +
-                   '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="#B0B0B0"></rect>' +
-                   '</g>';
-          });
+          var svgRect = histogram.counts.map(renderSvgBar);
           histogram.bars.innerHTML = '<svg width="100%" height="' + barsheight + '">' + svgRect.join('') + '</svg>';
+        }
+
+        function renderSvgBar(bar, barKey) {
+          var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
+          var y = barsheight - height;
+          var translate = (rectWidth) * barKey;
+          var color = getColor(barKey, minValue, maxValue);
+          return '<g transform="translate(' + translate + ', 0)">' +
+                 '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="' + color + '"></rect>' +
+                 '</g>';
+        }
+
+        function getColor(barKey, minValue, maxValue) {
+          return barKey >= minValue && barKey <= maxValue  ? '#2e6da4' : '#E3E3E3';
         }
       }
     }
