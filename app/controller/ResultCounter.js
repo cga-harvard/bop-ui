@@ -3,6 +3,7 @@
 /**
  * ResultCounter Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('ResultCounterController', ['$scope', function($scope) {
@@ -14,3 +15,4 @@ angular
             $scope.counter = data;
         });
     }]);
+})();
