@@ -1,7 +1,7 @@
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
         <div class="form-horizontal">
-            <div class="form-group">
-            <label class="control-label col-md-1">From:</label>
+            <div class="row">
+                <label class="control-label col-md-1">From:</label>
                 <div class="col-md-5">
                     <p class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup ng-model="dts" is-open="startDate.opened"
@@ -26,19 +26,19 @@
         </div>
     </div>
 
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-11">
         <form ng-submit="onSubmitDateText()">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="focusedInput" class="control-label col-md-1">Date:</label>
-                    <div class="col-md-11">
+                    <div class="col-md-10">
                         <input id="focusedInput" class="form-control" type="text" ng-model="dateString">
                     </div>
                 </div>
             </div>
         </form>
     </div>
-    <div class="col-md-1 col-md-offset-1">
+    <div class="col-md-1">
         <span class="input-group-btn searchbtn">
           <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
             <span class="glyphicon glyphicon-info-sign"></span>
@@ -47,7 +47,7 @@
     </div>
 
 
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
         <time-histogram barId="inbar"></time-histogram>
         <div style="width: 400px";>
           <rzslider  rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
