@@ -3,6 +3,7 @@
 /**
  * Geospatial filter Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('GeospatialFilterController', ['$scope', '$uibModal',
@@ -34,3 +35,4 @@ angular
             };
         }]
 );
+})();

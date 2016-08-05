@@ -28,14 +28,14 @@ angular
       };
     }
 
-    datePickerFilterController.$inject = ['HeatMapSourceGenerator', '$uibModal', '$scope'];
-    function datePickerFilterController(HeatMapSourceGeneratorService, $uibModal, $scope) {
+    datePickerFilterController.$inject = ['$rootScope', 'HeatMapSourceGenerator', '$uibModal', '$scope'];
+    function datePickerFilterController($rootScope, HeatMapSourceGeneratorService, $uibModal, $scope) {
 
             var vm = $scope;
 
             vm.initialDateOptions = {
-                minDate: new Date('2010-01-01'),
-                maxDate: new Date('2013-12-31')
+                minDate: new Date('2013-03-01'),
+                maxDate: new Date('2013-04-01')
             };
 
             vm.dateOptions = {
@@ -159,9 +159,14 @@ angular
             };
 
             vm.$on('setHistogram', function(event, dataHistogram) {
-              if (vm.slider.options.ceil === 10) {
+              if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
                 vm.slider.counts = dataHistogram.counts;
                 vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
+                dataHistogram.slider = vm.slider;
+                $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
+              }else{
+                vm.slider.changeTime = false;
+                $rootScope.$broadcast('changeSlider', vm.slider);
               }
             })
 
@@ -176,21 +181,22 @@ angular
 
             function performDateSearch() {
               HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
+              vm.slider.changeTime = true;
               HeatMapSourceGeneratorService.performSearch();
             }
 
             function defaultSliderValue() {
               return {
                 minValue: 0,
-                maxValue: 10,
-                active: false,
+                maxValue: 1,
+                changeTime: false,
                 options: {
                   floor: 0,
-                  ceil: 10,
+                  ceil: 1,
                   step: 1,
                   noSwitching: true, hideLimitLabels: true,
                   getSelectionBarColor: function() {
-                    return '#dadada';
+                    return '#3da9ca';
                   },
                   translate: function() {
                     return '';
@@ -217,11 +223,16 @@ function timeHistogram() {
   return directive;
 
   function link(scope, element, attr) {
-
+    var renderingSvgBars;
     scope.barId = attr.barid;
 
-    scope.$on('setHistogram', function(even, histogram) {
-      makeHistogram(histogram);
+    scope.$on('setHistogramRangeSlider', function(even, histogram) {
+      renderingSvgBars = makeHistogram(histogram);
+      renderingSvgBars();
+    });
+
+    scope.$on('changeSlider', function(event, slider) {
+      renderingSvgBars(slider.minValue, slider.maxValue);
     });
 
     /**
@@ -230,7 +241,7 @@ function timeHistogram() {
     function makeHistogram(histogram) {
 
       findHistogramMaxValue();
-      renderingSvgBars();
+      return renderingSvgBars;
 
       function findHistogramMaxValue() {
         histogram.maxValue = Math.max.apply(null, histogram.counts.map(function(obj) {
@@ -238,21 +249,30 @@ function timeHistogram() {
         }));
       }
 
-      function renderingSvgBars() {
+      function renderingSvgBars(minValue, maxValue) {
         if (histogram.counts) {
-          histogram.bars = document.getElementById(scope.barId);
+          minValue = minValue || 0;
+          maxValue = maxValue || histogram.counts.length - 1;
 
+          histogram.bars = document.getElementById(scope.barId);
           var barsheight = 60;
           var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
-          var svgRect = histogram.counts.map(function(bar, barKey) {
-            var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
-            var y = barsheight - height;
-            var translate = (rectWidth) * barKey;
-            return '<g transform="translate(' + translate + ', 0)">' +
-                   '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="#B0B0B0"></rect>' +
-                   '</g>';
-          });
+          var svgRect = histogram.counts.map(renderSvgBar);
           histogram.bars.innerHTML = '<svg width="100%" height="' + barsheight + '">' + svgRect.join('') + '</svg>';
+        }
+
+        function renderSvgBar(bar, barKey) {
+          var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
+          var y = barsheight - height;
+          var translate = (rectWidth) * barKey;
+          var color = getColor(barKey, minValue, maxValue);
+          return '<g transform="translate(' + translate + ', 0)">' +
+                 '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="' + color + '"></rect>' +
+                 '</g>';
+        }
+
+        function getColor(barKey, minValue, maxValue) {
+          return barKey >= minValue && barKey <= maxValue  ? '#2e6da4' : '#E3E3E3';
         }
       }
     }
@@ -272,6 +292,7 @@ function timeHistogram() {
 /**
  * BackgroundLayer Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('BackgroundLayerController',
@@ -337,6 +358,7 @@ angular
 
         }]
 );
+})();
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
@@ -344,6 +366,7 @@ angular
 /**
  * Export Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
@@ -383,12 +406,14 @@ angular
 
         }]
 );
+})();
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
 /**
  * Geospatial filter Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('GeospatialFilterController', ['$scope', '$uibModal',
@@ -420,11 +445,13 @@ angular
             };
         }]
 );
+})();
 
 /*eslint angular/controller-as: 0*/
 /**
  * InfoWindowController
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('InfoWindowController',
@@ -436,8 +463,8 @@ angular
             $scope.ok = function () {
                 $uibModalInstance.close();
             };
-        })
-;
+        });
+})();
 
 /*eslint angular/no-services: [2,{"directive":["$http","$q"],"controller":["$resource"]}]*/
 /*eslint angular/di: [2,"array"]*/
@@ -445,6 +472,7 @@ angular
 /**
  * Main Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
@@ -517,12 +545,14 @@ angular
                 });
         }]
 );
+})();
 
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/controller-as: 0*/
 /**
  * ResultCounter Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('ResultCounterController', ['$scope', function($scope) {
@@ -534,6 +564,7 @@ angular
             $scope.counter = data;
         });
     }]);
+})();
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/
@@ -541,6 +572,7 @@ angular
 /**
  * Search Controller
  */
+(function() {
 angular.module('SolrHeatmapApp')
     .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
         function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
@@ -612,8 +644,8 @@ angular.module('SolrHeatmapApp')
             };
 
         }]
-
 );
+})();
 
 /*eslint angular/controller-as: 0*/
 /*eslint angular/di: [2,"array"]*/

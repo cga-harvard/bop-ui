@@ -4,6 +4,7 @@
 /**
  * Main Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
@@ -76,3 +77,4 @@ angular
                 });
         }]
 );
+})();

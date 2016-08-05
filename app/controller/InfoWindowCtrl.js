@@ -2,6 +2,7 @@
 /**
  * InfoWindowController
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('InfoWindowController',
@@ -13,5 +14,5 @@ angular
             $scope.ok = function () {
                 $uibModalInstance.close();
             };
-        })
-;
+        });
+})();

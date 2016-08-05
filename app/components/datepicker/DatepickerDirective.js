@@ -17,14 +17,14 @@ angular
       };
     }
 
-    datePickerFilterController.$inject = ['HeatMapSourceGenerator', '$uibModal', '$scope'];
-    function datePickerFilterController(HeatMapSourceGeneratorService, $uibModal, $scope) {
+    datePickerFilterController.$inject = ['$rootScope', 'HeatMapSourceGenerator', '$uibModal', '$scope'];
+    function datePickerFilterController($rootScope, HeatMapSourceGeneratorService, $uibModal, $scope) {
 
             var vm = $scope;
 
             vm.initialDateOptions = {
-                minDate: new Date('2010-01-01'),
-                maxDate: new Date('2013-12-31')
+                minDate: new Date('2013-03-01'),
+                maxDate: new Date('2013-04-01')
             };
 
             vm.dateOptions = {
@@ -148,9 +148,14 @@ angular
             };
 
             vm.$on('setHistogram', function(event, dataHistogram) {
-              if (vm.slider.options.ceil === 10) {
+              if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
                 vm.slider.counts = dataHistogram.counts;
                 vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
+                dataHistogram.slider = vm.slider;
+                $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
+              }else{
+                vm.slider.changeTime = false;
+                $rootScope.$broadcast('changeSlider', vm.slider);
               }
             })
 
@@ -165,21 +170,22 @@ angular
 
             function performDateSearch() {
               HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
+              vm.slider.changeTime = true;
               HeatMapSourceGeneratorService.performSearch();
             }
 
             function defaultSliderValue() {
               return {
                 minValue: 0,
-                maxValue: 10,
-                active: false,
+                maxValue: 1,
+                changeTime: false,
                 options: {
                   floor: 0,
-                  ceil: 10,
+                  ceil: 1,
                   step: 1,
                   noSwitching: true, hideLimitLabels: true,
                   getSelectionBarColor: function() {
-                    return '#dadada';
+                    return '#3da9ca';
                   },
                   translate: function() {
                     return '';

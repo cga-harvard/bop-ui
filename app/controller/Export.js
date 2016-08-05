@@ -4,6 +4,7 @@
 /**
  * Export Controller
  */
+(function() {
 angular
     .module('SolrHeatmapApp')
     .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
@@ -43,3 +44,4 @@ angular
 
         }]
 );
+})();
