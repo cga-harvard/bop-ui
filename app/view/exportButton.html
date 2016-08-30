@@ -1,28 +1,24 @@
-<div ng-controller="ExportController">
-    <div class="col-md-2">
-        <input type="number" class="ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
-    </div>
-    <div class="col-md-9">
-        <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
-    </div>
-    <div class="col-md-1">
-        <span class="input-group-btn searchbtn">
-            <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
-              <span class="glyphicon glyphicon-info-sign"></span>
-            </button>
-        </span>
-    </div>
-    <div class="col-md-12">
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="focusedInput" class="control-label col-md-2 col-md-offset-9">
-                    Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
-                </label>
-                <div class="col-md-1">
-                    <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
-                </div>
-            </div>
-        </div>
+<div class="row" ng-controller="ExportController">
+    <div class="col-sm-4 col-xs-3" style="padding-top:30px">
+        <input type="number" class="form-control input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
     </div>
 
+    <div class="col-sm-8 col-xs-9" style="padding-top:30px">
+        <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
+    </div>
+    <div class="col-md-12">
+            <div class="pull-right">
+                <label for="focusedInput" class="control-label">
+                    Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
+                </label>
+                <span class="">
+                    <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+                </span>
+                <span class="searchbtn">
+                    <a href="" class="infobtn" ng-click="showInfo()">
+                         <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                </span>
+            </div>
+    </div>
 </div>

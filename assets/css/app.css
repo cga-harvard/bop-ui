@@ -83,17 +83,12 @@ code {
     color: #337ab7
 }
 
-.row {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
 .row-box {
-    background-color: #F7F7F7;
-    border: 1px solid #e5e5e5;
-    border-radius: 9px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
 }
 
 /*
@@ -236,4 +231,8 @@ code {
 
 .ol-popup-closer:after {
   content: "✖";
+}
+
+.component-padding {
+  padding: 4px;
 }
