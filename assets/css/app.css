@@ -67,6 +67,11 @@ p {
     margin-bottom: 5px;
 }
 
+.padin-geo {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
 /*
  * bootstrap
  */
