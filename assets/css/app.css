@@ -6,6 +6,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
+  background: #f1f1f1;
 }
 
 .map {
@@ -67,7 +68,7 @@ p {
     margin-bottom: 5px;
 }
 
-.padin-geo {
+.padding-search {
   padding-left: 4px;
   padding-right: 4px;
 }
@@ -93,7 +94,11 @@ code {
     border-radius: 2px;
     padding-top: 10px;
     padding-bottom: 10px;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
+}
+
+.export-slider {
+  padding-top:30px;
 }
 
 /*

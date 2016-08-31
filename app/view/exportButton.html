@@ -1,9 +1,9 @@
 <div class="row" ng-controller="ExportController">
-    <div class="col-sm-4 col-xs-3" style="padding-top:30px">
+    <div class="col-sm-4 col-xs-3 export-slider">
         <input type="number" class="form-control input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
     </div>
 
-    <div class="col-sm-8 col-xs-9" style="padding-top:30px">
+    <div class="col-sm-8 col-xs-9 export-slider">
         <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
     </div>
     <div class="col-md-12">
@@ -11,9 +11,7 @@
                 <label for="focusedInput" class="control-label">
                     Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
                 </label>
-                <span class="">
-                    <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
-                </span>
+                <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
                 <span class="searchbtn">
                     <a href="" class="infobtn" ng-click="showInfo()">
                          <span class="glyphicon glyphicon-info-sign"></span>

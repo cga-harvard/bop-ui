@@ -29,19 +29,18 @@
     <div class="col-md-12 component-padding">
         <div class="row">
           <div class="col-md-12">
-              <form ng-submit="onSubmitDateText()" style="display: inline;">
-                  <div class="form-inline" style="display: inline;">
-                      <div class="form-group">
-                          <label for="focusedInput" class="control-label">Date:</label>
-                          <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString" style="min-width: 300px;">
-                      </div>
+              <form ng-submit="onSubmitDateText()">
+                  <div class="form-group">
+                      <span class="searchbtn">
+                          <a href="" class="infobtn" ng-click="showInfo()">
+                               <span class="glyphicon glyphicon-info-sign"></span>
+                          </a>
+                      </span>
+                      <label for="focusedInput" class="control-label">Date:</label>
+                      <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString">
                   </div>
               </form>
-              <span class="searchbtn pull-right">
-                  <a href="" class="infobtn" ng-click="showInfo()">
-                       <span class="glyphicon glyphicon-info-sign"></span>
-                  </a>
-              </span>
+
           </div>
         </div>
     </div>

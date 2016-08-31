@@ -1,5 +1,5 @@
 <div ng-controller="GeospatialFilterController">
-    <div class="col-xs-8 padin-geo">
+    <div class="col-xs-8 padding-search">
         <div class="input-group searchinputfield" id="geospatialfilterinput">
             <input class="form-control input-sm" type="text" ng-model="filterString" ng-keypress="onKeyPress($event)" ng-model="geospatialfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
             <span class="input-group-addon">
@@ -7,11 +7,11 @@
             </span>
         </div>
     </div>
-    <div class="col-xs-4 padin-geo">
+    <div class="col-xs-4 padding-search">
         <span class="searchbtn pull-left">
             <button class="btn btn-primary btn-sm" type="button">Search</button>
         </span>
-        <span class="searchbtn padin-geo">
+        <span class="searchbtn padding-search">
             <a href="" class="infobtn" ng-click="showInfo()">
                 <span class="glyphicon glyphicon-info-sign"></span>
             </a>

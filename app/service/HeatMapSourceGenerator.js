@@ -290,7 +290,6 @@ angular
                     }).
                     error(function(data, status, headers, cfg) {
                         // hide the loading mask
-                        //angular.element(document.querySelector('.waiting-modal')).modal('hide');
                         $window.alert('An error occured while reading heatmap data');
                     });
                 } else {
