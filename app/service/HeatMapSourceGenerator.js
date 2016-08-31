@@ -285,6 +285,9 @@ angular
                             $rootScope.$broadcast('setCounter', data['a.matchDocs']);
 
                             $rootScope.$broadcast('setHistogram', data['a.time']);
+
+                            $rootScope.$broadcast('setTweetList', data['d.docs']);
+
                             methods.filterObj.setHistogramCount(data['a.time']['counts']);
                         }
                     }).
@@ -362,7 +365,8 @@ angular
                     'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
                     'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
                     'a.time.limit': '1',
-                    'a.time.gap': 'PT1H'
+                    'a.time.gap': 'PT1H',
+                    'd.docs.limit': '10'
                 };
 
                 return params;
