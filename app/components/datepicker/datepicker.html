@@ -1,24 +1,24 @@
-    <div class="col-md-12">
+    <div class="col-md-12 component-padding">
         <div class="form-horizontal">
             <div class="row">
                 <label class="control-label col-md-1">From:</label>
                 <div class="col-md-5">
                     <p class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup ng-model="dts" is-open="startDate.opened"
+                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="dts" is-open="startDate.opened"
                             show-button-bar="false" datepicker-options="dateOptions" ng-required="true"
                             ng-model-options="{timezone: 'UTC'}" ng-change="onChangeDatepicker()" readonly/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default btn-sm" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </p>
                 </div>
                 <label class="control-label col-md-1">To:</label>
                 <div class="col-md-5">
                     <p class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup ng-model="dte" is-open="endDate.opened" show-button-bar="false"
+                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="dte" is-open="endDate.opened" show-button-bar="false"
                           datepicker-options="dateOptions" ng-required="true" ng-change="onChangeDatepicker()" readonly />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default btn-sm" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </p>
                 </div>
@@ -26,30 +26,26 @@
         </div>
     </div>
 
-    <div class="col-md-11">
-        <form ng-submit="onSubmitDateText()">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label for="focusedInput" class="control-label col-md-1">Date:</label>
-                    <div class="col-md-10">
-                        <input id="focusedInput" class="form-control" type="text" ng-model="dateString">
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-1">
-        <span class="input-group-btn searchbtn">
-          <button class="btn btn-default btn-sm infobtn" type="button" ng-click="showInfo()">
-            <span class="glyphicon glyphicon-info-sign"></span>
-        </button>
-        </span>
-    </div>
+    <div class="col-md-12 component-padding">
+        <div class="row">
+          <div class="col-md-12">
+              <form ng-submit="onSubmitDateText()">
+                  <div class="form-group">
+                      <span class="searchbtn">
+                          <a href="" class="infobtn" ng-click="showInfo()">
+                               <span class="glyphicon glyphicon-info-sign"></span>
+                          </a>
+                      </span>
+                      <label for="focusedInput" class="control-label">Date:</label>
+                      <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString">
+                  </div>
+              </form>
 
-
-    <div class="col-md-12">
-        <time-histogram barId="inbar"></time-histogram>
-        <div style="width: 400px";>
-          <rzslider  rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
+          </div>
         </div>
+    </div>
+
+    <div class="col-md-12 component-padding">
+        <time-histogram barId="inbar"></time-histogram>
+        <rzslider  rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
     </div>

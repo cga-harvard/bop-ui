@@ -285,12 +285,14 @@ angular
                             $rootScope.$broadcast('setCounter', data['a.matchDocs']);
 
                             $rootScope.$broadcast('setHistogram', data['a.time']);
+
+                            $rootScope.$broadcast('setTweetList', data['d.docs']);
+
                             methods.filterObj.setHistogramCount(data['a.time']['counts']);
                         }
                     }).
                     error(function(data, status, headers, cfg) {
                         // hide the loading mask
-                        //angular.element(document.querySelector('.waiting-modal')).modal('hide');
                         $window.alert('An error occured while reading heatmap data');
                     });
                 } else {
@@ -363,7 +365,8 @@ angular
                     'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
                     'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
                     'a.time.limit': '1',
-                    'a.time.gap': 'PT1H'
+                    'a.time.gap': 'PT1H',
+                    'd.docs.limit': '10'
                 };
 
                 return params;

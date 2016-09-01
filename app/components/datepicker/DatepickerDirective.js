@@ -66,6 +66,9 @@ angular
 
             vm.setInitialDates();
 
+            vm.$on('setHistogram', setHistogram);
+
+            vm.$on('slideEnded', slideEnded);
 
             /**
              * Will be called on click on start datepicker.
@@ -91,7 +94,6 @@ angular
                 vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
                 vm.dateOptions.minDate = vm.dts;
             };
-
 
             /**
              * Will be fired after the start and the end date was chosen.
@@ -147,7 +149,7 @@ angular
                 });
             };
 
-            vm.$on('setHistogram', function(event, dataHistogram) {
+            function setHistogram(event, dataHistogram) {
               if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
                 vm.slider.counts = dataHistogram.counts;
                 vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
@@ -157,16 +159,16 @@ angular
                 vm.slider.changeTime = false;
                 $rootScope.$broadcast('changeSlider', vm.slider);
               }
-            })
+            }
 
-            vm.$on('slideEnded', function() {
+            function slideEnded() {
               var minKey = vm.slider.minValue,
                   maxKey = vm.slider.maxValue;
               vm.dts =  new Date(vm.slider.counts[minKey].value);
               vm.dte =  new Date(vm.slider.counts[maxKey].value);
               vm.dateString = getFormattedDateString(vm.dts, vm.dte);
               performDateSearch();
-            });
+            }
 
             function performDateSearch() {
               HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);

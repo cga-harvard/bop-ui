@@ -6,7 +6,7 @@ angular
 
 function timeHistogram() {
   var directive = {
-    template: '<div class="bar-graph" id="{{barId}}" style="width: 400px";></div>',
+    template: '<div class="bar-graph" id="{{barId}}" style="min-width: 400px";></div>',
     restrict: 'EA',
     link: link
   };
