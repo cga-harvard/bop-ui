@@ -3,7 +3,7 @@
  * InfoWindowController
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('InfoWindowController',
         function ($scope, $uibModalInstance, infoMsg, toolName) {

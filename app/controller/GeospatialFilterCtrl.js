@@ -4,7 +4,7 @@
  * Geospatial filter Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('GeospatialFilterController', ['$scope', '$uibModal',
         function($scope, $uibModal) {

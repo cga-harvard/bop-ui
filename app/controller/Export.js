@@ -5,7 +5,7 @@
  * Export Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
         function(HeatMapSourceGeneratorService, $uibModal, $scope) {
