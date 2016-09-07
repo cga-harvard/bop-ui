@@ -6,6 +6,16 @@ The Solr instance can be filtered by time, by a search term and by space.
 
 [Solr-Heatmap-Client](http://terrestris.github.io/SolrHeatmap)
 
+Installation
+---
+You must initialize the submodule if you did not already cloned with it
+
+`git submodule update --init`
+
+Install dependencies with
+
+`npm install`
+
 Local environment:
 - node serve
 - http://localhost:3000/index-dev.html
