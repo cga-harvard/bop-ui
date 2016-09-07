@@ -1,8 +1,11 @@
 
-<li ng-repeat="tweet in tweetlist" class="tweet" style="list-style: none;">
+<li ng-repeat="tweet in tweetList" class="tweet" style="list-style: none;">
   <div class="list-item-text">
     <h3>@{{tweet.user_name}}</h3>
     <h4>{{tweet.text}}</h4>
     <p>{{tweet.created_at | date:'medium'}}</p>
   </div>
 </li>
+<div ng-if="!tweetList.length && tweetList.exist" class="no-info">
+    No Tweets Available
+</div>

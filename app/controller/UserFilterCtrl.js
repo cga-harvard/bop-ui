@@ -5,7 +5,7 @@
  * Filter by user controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
         function(HeatMapSourceGeneratorService, $scope, $uibModal) {
@@ -18,8 +18,8 @@ angular
              *
              */
             function userSearch() {
-              HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
-              HeatMapSourceGeneratorService.performSearch();
+                HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
+                HeatMapSourceGeneratorService.performSearch();
             }
 
             function showInfo(){

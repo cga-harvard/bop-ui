@@ -5,7 +5,7 @@
  * Map Service
  */
 (function() {
-angular.module('SolrHeatmapApp')
+    angular.module('SolrHeatmapApp')
     .factory('Map', ['$rootScope', '$filter', '$document',
         function($rootScope, $filter, $document) {
 
