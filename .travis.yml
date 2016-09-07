@@ -3,7 +3,8 @@ node_js:
 - '4'
 script:
 - npm run js-lint
-- npm run deploy
+after_success:
+- './deploy.sh'
 branches:
   only:
   - master
