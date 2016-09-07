@@ -65,7 +65,7 @@
         "no-unused-expressions": 2,
         "no-with": 2,
         "radix": 2,
-        "wrap-iife": 2,
+        "wrap-iife": ["error", "inside"],
         "strict": [
             2,
             "never"
@@ -76,7 +76,7 @@
         "no-shadow": 2,
         "no-undef": 2,
         "no-unused-vars": 0,
-        "no-use-before-define": 1,
+        "no-use-before-define": ["error", { "functions": false }],
         "brace-style": [
             1,
             "1tbs"
@@ -95,8 +95,8 @@
             "always"
         ],
         "max-len": [
-            1,
-            80,
+            "error",
+            100,
             4
         ]
     }
