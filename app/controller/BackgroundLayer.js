@@ -3,7 +3,7 @@
  * BackgroundLayer Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('BackgroundLayerController',
         ['MapService', '$scope', function(MapService, $scope) {
