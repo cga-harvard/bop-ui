@@ -5,7 +5,7 @@
  * HeatMapSourceGenerator Service
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
         function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
@@ -22,47 +22,46 @@ angular
 
             return methods;
 
-
             function filterMethods() {
-              var searchObj = {
-                  minDate: new Date('2013-03-10'),
-                  maxDate: new Date('2013-03-21'),
-                  textDate: null,
-                  searchText : null,
-                  user: null,
-                  histogramCount: []
-              };
-              /**
-               * Set keyword text
-               */
-              function setSearchText(val) {
-                  searchObj.searchText = val.length === 0 ? null : val;
-              }
+                var searchObj = {
+                    minDate: new Date('2013-03-10'),
+                    maxDate: new Date('2013-03-21'),
+                    textDate: null,
+                    searchText : null,
+                    user: null,
+                    histogramCount: []
+                };
+                /**
+                 * Set keyword text
+                 */
+                function setSearchText(val) {
+                    searchObj.searchText = val.length === 0 ? null : val;
+                }
 
-              function setUser(val) {
-                  searchObj.user = val.length === 0 ? null : val;
-              }
+                function setUser(val) {
+                    searchObj.user = val.length === 0 ? null : val;
+                }
 
-              function setTextDate(val) {
-                  searchObj.textDate = val.length === 0 ? null : val;
-              }
-              /**
-               * Returns the complete search object
-               */
-              function getSearchObj(){
-                  return searchObj;
-              }
+                function setTextDate(val) {
+                    searchObj.textDate = val.length === 0 ? null : val;
+                }
+                /**
+                * Returns the complete search object
+                */
+                function getSearchObj(){
+                    return searchObj;
+                }
 
-              function setHistogramCount(val) {
-                searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
-              }
-              return {
-                getSearchObj: getSearchObj,
-                setSearchText: setSearchText,
-                setUser: setUser,
-                setTextDate: setTextDate,
-                setHistogramCount: setHistogramCount
-              }
+                function setHistogramCount(val) {
+                    searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
+                }
+                return {
+                    getSearchObj: getSearchObj,
+                    setSearchText: setSearchText,
+                    setUser: setUser,
+                    setTextDate: setTextDate,
+                    setHistogramCount: setHistogramCount
+                };
             }
 
 
@@ -379,11 +378,11 @@ angular
              * @return {String} formatted date as string (e.g. [2013-03-10T00:00:00 TO 2013-03-21T00:00:00])
              */
             function getFormattedDateString(minDate, maxDate){
-              return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
                   maxDate.toISOString().replace('.000Z','') + ']';
             }
             function timeTextFormat(textDate, minDate, maxDate) {
-              return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
+                return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
             }
 
 

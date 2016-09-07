@@ -44,3 +44,9 @@ li .tweet {
     line-height: 1.6em;
     color: #8899a6;
 }
+
+.no-info {
+    font-size: 200%;
+    text-align: center;
+    color: #888;
+}
