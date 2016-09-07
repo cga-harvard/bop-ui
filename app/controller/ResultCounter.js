@@ -4,7 +4,7 @@
  * ResultCounter Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('ResultCounterController', ['$scope', function($scope) {
 

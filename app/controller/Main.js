@@ -5,7 +5,7 @@
  * Main Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
         function(MapService, HeatMapSourceGeneratorService, $http, $scope, $rootScope) {
