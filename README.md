@@ -8,6 +8,8 @@ The Solr instance can be filtered by time, by a search term and by space.
 
 Installation
 ---
+Be sure to have at least node version 4 installed.
+
 You must initialize the submodule if you did not already cloned with it
 
 `git submodule update --init`

@@ -3,6 +3,7 @@ node_js:
 - '4'
 script:
 - npm run js-lint
+- npm run test
 after_success:
 - './deploy.sh'
 branches:
