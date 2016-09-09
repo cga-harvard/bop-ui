@@ -19,8 +19,9 @@ module.exports = function ( config ) {
     ],
     frameworks: [ 'jasmine' ],
     preprocessors: {
+      'app/**/*.js': ['coverage']
     },
-    reporters: 'spec',
+    reporters: ['spec','coverage'],
     port: 9018,
     runnerPort: 9100,
     urlRoot: '/',
