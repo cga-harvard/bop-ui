@@ -2,11 +2,11 @@
  * The main solrHeatmapApp module
  */
 (function() {
-  angular.module('SolrHeatmapApp', [
-    'ui.bootstrap',
-    'rzModule',
-    'search_components'
-  ]);
+    angular.module('SolrHeatmapApp', [
+        'ui.bootstrap',
+        'rzModule',
+        'search_components'
+    ]);
 })();
 
 /*eslint angular/di: [2,"array"]*/
@@ -16,276 +16,316 @@
  */
 (function() {
 
-angular
+    angular
     .module('search_datepicker_component', [])
     .directive('datePicker', datePicker);
 
     function datePicker() {
-      return {
-        controller: datePickerFilterController,
-        templateUrl: 'app/components/datepicker/datepicker.html',
-        restrict: 'EA'
-      };
+        return {
+            controller: datePickerFilterController,
+            templateUrl: 'app/components/datepicker/datepicker.html',
+            restrict: 'EA'
+        };
     }
 
-    datePickerFilterController.$inject = ['$rootScope', 'HeatMapSourceGenerator', '$uibModal', '$scope'];
-    function datePickerFilterController($rootScope, HeatMapSourceGeneratorService, $uibModal, $scope) {
+    datePickerFilterController.$inject = [
+        '$rootScope', 'HeatMapSourceGenerator','$uibModal', '$scope'
+    ];
+    function datePickerFilterController(
+        $rootScope, HeatMapSourceGeneratorService, $uibModal, $scope) {
 
-            var vm = $scope;
+        var vm = $scope;
 
-            vm.initialDateOptions = {
-                minDate: new Date('2013-03-01'),
-                maxDate: new Date('2013-04-01')
-            };
+        vm.initialDateOptions = {
+            minDate: new Date('2013-03-01'),
+            maxDate: new Date('2013-04-01')
+        };
 
-            vm.dateOptions = {
-                minDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().minDate,
-                maxDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().maxDate,
-                startingDay: 1, // Monday
-                showWeeks: false
-            };
+        vm.dateOptions = {
+            minDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().minDate,
+            maxDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().maxDate,
+            startingDay: 1,
+            showWeeks: false
+        };
 
-            vm.dateString = getFormattedDateString(vm.dateOptions.minDate, vm.dateOptions.maxDate);
+        vm.dateString = getFormattedDateString(vm.dateOptions.minDate, vm.dateOptions.maxDate);
 
-            vm.startDate = {
-                opened: false
-            };
+        vm.startDate = {
+            opened: false
+        };
 
-            vm.endDate = {
-                opened: false
-            };
+        vm.endDate = {
+            opened: false
+        };
 
-            vm.onChangeDatepicker = onChangeDatepicker;
+        vm.onChangeDatepicker = onChangeDatepicker;
 
-            vm.showInfo = showInfo;
+        vm.showInfo = showInfo;
 
-            vm.openEndDate = openEndDate;
+        vm.openEndDate = openEndDate;
 
-            vm.openStartDate = openStartDate;
+        vm.openStartDate = openStartDate;
 
-            vm.onSubmitDateText = onSubmitDateText;
+        vm.onSubmitDateText = onSubmitDateText;
 
-            vm.slider = defaultSliderValue();
+        vm.slider = defaultSliderValue();
 
-            /**
-             * Set initial values for min and max dates in both of datepicker.
-             */
-            vm.setInitialDates = function(){
-                vm.dts = vm.dateOptions.minDate;
-                vm.dte = vm.dateOptions.maxDate;
-            };
+        /**
+         * Set initial values for min and max dates in both of datepicker.
+         */
+        vm.setInitialDates = function(){
+            vm.dts = vm.dateOptions.minDate;
+            vm.dte = vm.dateOptions.maxDate;
+        };
 
-            vm.setInitialDates();
+        vm.setInitialDates();
 
+        vm.$on('setHistogram', setHistogram);
 
-            /**
-             * Will be called on click on start datepicker.
-             * `minDate` will be reset to the initial value (e.g. 2000-01-01),
-             * `maxDate` will be adjusted with the `$scope.dte` value to
-             *  restrict it not to be below the `minDate`.
-             */
-            function openStartDate() {
-                vm.startDate.opened = true;
-                vm.dateOptions.minDate = vm.initialDateOptions.minDate;
-                vm.dateOptions.maxDate = vm.dte;
-            };
+        vm.$on('slideEnded', slideEnded);
 
-
-            /**
-             * Will be called on click on end datepicker.
-             * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
-             * `minDate` will be adjusted with the `$scope.dts` value to
-             *  restrict it not to be bigger than the `maxDate`.
-             */
-            function openEndDate() {
-                vm.endDate.opened = true;
-                vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
-                vm.dateOptions.minDate = vm.dts;
-            };
+        /**
+         * Will be called on click on start datepicker.
+         * `minDate` will be reset to the initial value (e.g. 2000-01-01),
+         * `maxDate` will be adjusted with the `$scope.dte` value to
+         *  restrict it not to be below the `minDate`.
+         */
+        function openStartDate() {
+            vm.startDate.opened = true;
+            vm.dateOptions.minDate = vm.initialDateOptions.minDate;
+            vm.dateOptions.maxDate = vm.dte;
+        }
 
 
-            /**
-             * Will be fired after the start and the end date was chosen.
-             */
-            function onChangeDatepicker(){
-                vm.dateString = getFormattedDateString(vm.dts, vm.dte);
-                performDateSearch();
-            };
+        /**
+         * Will be called on click on end datepicker.
+         * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
+         * `minDate` will be adjusted with the `$scope.dts` value to
+         *  restrict it not to be bigger than the `maxDate`.
+         */
+        function openEndDate() {
+            vm.endDate.opened = true;
+            vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
+            vm.dateOptions.minDate = vm.dts;
+        }
 
-            function getFormattedDateString(minDate, maxDate) {
-              return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
-                  maxDate.toISOString().replace('.000Z','') + ']';
-            }
+        /**
+         * Will be fired after the start and the end date was chosen.
+         */
+        function onChangeDatepicker(){
+            vm.dateString = getFormattedDateString(vm.dts, vm.dte);
+            performDateSearch();
+        }
 
-            function stringToDate(dateString) {
-                var dateArray = dateString.split(' TO ');
-                if (typeof(dateString) === 'string' && dateArray.length === 2) {
-                  dateArray[0] = new Date(dateArray[0].slice(1,11));
-                  dateArray[1] = new Date(dateArray[1].slice(0,10));
-                  if (dateArray[0] == 'Invalid Date' || dateArray[0] == 'Invalid Date') {
+        function getFormattedDateString(minDate, maxDate) {
+            return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+              maxDate.toISOString().replace('.000Z','') + ']';
+        }
+
+        function stringToDate(dateString) {
+            var dateArray = dateString.split(' TO ');
+            if (angular.isString(dateString) && dateArray.length === 2) {
+                dateArray[0] = new Date(dateArray[0].slice(1,11));
+                dateArray[1] = new Date(dateArray[1].slice(0,10));
+                if (dateArray[0] === 'Invalid Date' || dateArray[0] === 'Invalid Date') {
                     return null;
-                  }
-                  return dateArray;
                 }
-                return null;
+                return dateArray;
             }
+            return null;
+        }
 
-            function onSubmitDateText() {
-                var dateArray = stringToDate(vm.dateString);
-                if (dateArray !== null) {
-                  vm.dts = dateArray[0];
-                  vm.dte = dateArray[1];
-                  performDateSearch();
-                } else{
-                  vm.dateString = getFormattedDateString(vm.dts, vm.dte)
-                }
+        function onSubmitDateText() {
+            var dateArray = stringToDate(vm.dateString);
+            if (dateArray !== null) {
+                vm.dts = dateArray[0];
+                vm.dte = dateArray[1];
+                performDateSearch();
+            } else{
+                vm.dateString = getFormattedDateString(vm.dts, vm.dte);
             }
+        }
 
-            function showInfo(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.datepicker.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.datepicker.toolTitle;
-                        }
+        function showInfo(){
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'infoPopup.html',
+                controller: 'InfoWindowController',
+                size: 'lg',
+                resolve: {
+                    infoMsg: function(){
+                        return solrHeatmapApp.instructions.datepicker.instruction;
+                    },
+                    toolName: function(){
+                        return solrHeatmapApp.instructions.datepicker.toolTitle;
                     }
-                });
-            };
+                }
+            });
+        }
 
-            vm.$on('setHistogram', function(event, dataHistogram) {
-              if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
+        function setHistogram(event, dataHistogram) {
+            if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
                 vm.slider.counts = dataHistogram.counts;
                 vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
                 dataHistogram.slider = vm.slider;
                 $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-              }else{
+            }else{
                 vm.slider.changeTime = false;
                 $rootScope.$broadcast('changeSlider', vm.slider);
-              }
-            })
-
-            vm.$on('slideEnded', function() {
-              var minKey = vm.slider.minValue,
-                  maxKey = vm.slider.maxValue;
-              vm.dts =  new Date(vm.slider.counts[minKey].value);
-              vm.dte =  new Date(vm.slider.counts[maxKey].value);
-              vm.dateString = getFormattedDateString(vm.dts, vm.dte);
-              performDateSearch();
-            });
-
-            function performDateSearch() {
-              HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
-              vm.slider.changeTime = true;
-              HeatMapSourceGeneratorService.performSearch();
             }
+        }
 
-            function defaultSliderValue() {
-              return {
+        function slideEnded() {
+            var minKey = vm.slider.minValue;
+            var maxKey = vm.slider.maxValue;
+            vm.dts = new Date(vm.slider.counts[minKey].value);
+            vm.dte = new Date(vm.slider.counts[maxKey].value);
+            vm.dateString = getFormattedDateString(vm.dts, vm.dte);
+            performDateSearch();
+        }
+
+        function performDateSearch() {
+            HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
+            vm.slider.changeTime = true;
+            HeatMapSourceGeneratorService.performSearch();
+        }
+
+        function defaultSliderValue() {
+            return {
                 minValue: 0,
                 maxValue: 1,
                 changeTime: false,
                 options: {
-                  floor: 0,
-                  ceil: 1,
-                  step: 1,
-                  noSwitching: true, hideLimitLabels: true,
-                  getSelectionBarColor: function() {
-                    return '#3da9ca';
-                  },
-                  translate: function() {
-                    return '';
-                  }
+                    floor: 0,
+                    ceil: 1,
+                    step: 1,
+                    noSwitching: true, hideLimitLabels: true,
+                    getSelectionBarColor: function() {
+                        return '#3da9ca';
+                    },
+                    translate: function() {
+                        return '';
+                    }
                 }
-              };
             };
         }
+    }
+
+})();
+
+/*eslint angular/document-service: 0 */
+(function() {
+
+    angular
+    .module('search_timehistogram_component', [])
+    .directive('timeHistogram', timeHistogram);
+
+    function timeHistogram() {
+        var directive = {
+            template: '<div class="bar-graph" ' +
+                        'id="{{barId}}" style="min-width: 400px";>' +
+                      '</div>',
+            restrict: 'EA',
+            link: link
+        };
+        return directive;
+
+        function link(scope, element, attr) {
+            var renderSvgBars;
+            scope.barId = attr.barid;
+
+            scope.$on('setHistogramRangeSlider', function(even, histogram) {
+                renderSvgBars = makeHistogram(histogram);
+                renderSvgBars();
+            });
+
+            scope.$on('changeSlider', function(event, slider) {
+                renderSvgBars(slider.minValue, slider.maxValue);
+            });
+
+            /**
+             * Create histogram
+             */
+            function makeHistogram(histogram) {
+
+                findHistogramMaxValue();
+                return renderingSvgBars;
+
+                function findHistogramMaxValue() {
+                    histogram.maxValue = Math.max.apply(null,
+                        histogram.counts.map(function(obj) {
+                            return obj.count;
+                        })
+                    );
+                }
+
+                function renderingSvgBars(minValue, maxValue) {
+                    if (histogram.counts) {
+                        minValue = minValue || 0;
+                        maxValue = maxValue || histogram.counts.length - 1;
+                        histogram.bars = document.getElementById(scope.barId);
+                        var barsheight = 60;
+                        var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
+                        var svgRect = histogram.counts.map(renderSvgBar);
+                        histogram.bars.innerHTML = '<svg width="100%" height="' +
+                            barsheight + '">' + svgRect.join('') + '</svg>';
+                    }
+
+                    function renderSvgBar(bar, barKey) {
+                        var height = histogram.maxValue === 0 ?
+                            0 : barsheight * bar.count / histogram.maxValue;
+                        var y = barsheight - height;
+                        var translate = (rectWidth) * barKey;
+                        var color = getColor(barKey, minValue, maxValue);
+                        return '<g transform="translate(' + translate + ', 0)">' +
+                             '  <rect width="' + rectWidth + '" height="' + height +
+                             '" y="' + y + '" fill="' + color + '"></rect>' +
+                             '</g>';
+                    }
+
+                    function getColor(barkey, minvalue, maxvalue) {
+                        return barkey >= minvalue && barkey <= maxvalue ? '#2e6da4' : '#E3E3E3';
+                    }
+                }
+            }
+        }
+    }
 
 })();
 
 (function() {
-
-angular
-  .module('search_timehistogram_component', [])
-  .directive('timeHistogram', timeHistogram);
-
-function timeHistogram() {
-  var directive = {
-    template: '<div class="bar-graph" id="{{barId}}" style="width: 400px";></div>',
-    restrict: 'EA',
-    link: link
-  };
-  return directive;
-
-  function link(scope, element, attr) {
-    var renderingSvgBars;
-    scope.barId = attr.barid;
-
-    scope.$on('setHistogramRangeSlider', function(even, histogram) {
-      renderingSvgBars = makeHistogram(histogram);
-      renderingSvgBars();
-    });
-
-    scope.$on('changeSlider', function(event, slider) {
-      renderingSvgBars(slider.minValue, slider.maxValue);
-    });
-
-    /**
-     * Create histogram
-     */
-    function makeHistogram(histogram) {
-
-      findHistogramMaxValue();
-      return renderingSvgBars;
-
-      function findHistogramMaxValue() {
-        histogram.maxValue = Math.max.apply(null, histogram.counts.map(function(obj) {
-          return obj.count;
-        }));
-      }
-
-      function renderingSvgBars(minValue, maxValue) {
-        if (histogram.counts) {
-          minValue = minValue || 0;
-          maxValue = maxValue || histogram.counts.length - 1;
-
-          histogram.bars = document.getElementById(scope.barId);
-          var barsheight = 60;
-          var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
-          var svgRect = histogram.counts.map(renderSvgBar);
-          histogram.bars.innerHTML = '<svg width="100%" height="' + barsheight + '">' + svgRect.join('') + '</svg>';
-        }
-
-        function renderSvgBar(bar, barKey) {
-          var height = histogram.maxValue === 0 ? 0 : barsheight * bar.count / histogram.maxValue;
-          var y = barsheight - height;
-          var translate = (rectWidth) * barKey;
-          var color = getColor(barKey, minValue, maxValue);
-          return '<g transform="translate(' + translate + ', 0)">' +
-                 '  <rect width="' + rectWidth + '" height="' + height + '" y="' + y + '" fill="' + color + '"></rect>' +
-                 '</g>';
-        }
-
-        function getColor(barKey, minValue, maxValue) {
-          return barKey >= minValue && barKey <= maxValue  ? '#2e6da4' : '#E3E3E3';
-        }
-      }
-    }
-  }
-}
-
-}());
+    angular.module('search_components', [
+        'search_timehistogram_component',
+        'search_datepicker_component',
+        'search_tweetlist_component'
+    ]);
+})();
 
 (function() {
-  angular.module('search_components', [
-    'search_timehistogram_component',
-    'search_datepicker_component'
-  ]);
+    angular
+    .module('search_tweetlist_component', [])
+    .directive('tweetlist', tweetlist);
+
+    function tweetlist() {
+        return {
+            controller: tweetlistController,
+            restrict: 'EA',
+            templateUrl: 'app/components/tweetlist/tweetlist.html'
+        };
+    }
+
+    tweetlistController.$inject = ['$scope'];
+    function tweetlistController($scope) {
+        var vm = $scope;
+        vm.tweetList = [];
+        vm.tweetList.exist = false;
+        vm.$on('setTweetList', setTweetList);
+
+        function setTweetList(event, tweetList) {
+            vm.tweetList = tweetList;
+            vm.tweetList.exist = true;
+        }
+    }
 })();
 
 /*eslint angular/di: [2,"array"]*/
@@ -293,7 +333,7 @@ function timeHistogram() {
  * BackgroundLayer Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('BackgroundLayerController',
         ['MapService', '$scope', function(MapService, $scope) {
@@ -367,7 +407,7 @@ angular
  * Export Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
         function(HeatMapSourceGeneratorService, $uibModal, $scope) {
@@ -414,7 +454,7 @@ angular
  * Geospatial filter Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('GeospatialFilterController', ['$scope', '$uibModal',
         function($scope, $uibModal) {
@@ -452,7 +492,7 @@ angular
  * InfoWindowController
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('InfoWindowController',
         function ($scope, $uibModalInstance, infoMsg, toolName) {
@@ -473,76 +513,79 @@ angular
  * Main Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
         function(MapService, HeatMapSourceGeneratorService, $http, $scope, $rootScope) {
 
             var vm = this;
 
+            vm.response = function(data, status, headers, config) {
+                if (data && data.mapConfig) {
+                    var mapConf = data.mapConfig,
+                        appConf = data.appConfig,
+                        bopwsConfig = data.bopwsConfig,
+                        instructions = data.instructions;
+
+                    // create the map with the given config
+                    MapService.init({
+                        mapConfig: mapConf
+                    });
+                    solrHeatmapApp.appConfig = appConf;
+                    solrHeatmapApp.initMapConf = mapConf;
+                    solrHeatmapApp.bopwsConfig = bopwsConfig;
+                    solrHeatmapApp.instructions = instructions;
+
+                    // fire event mapReady
+                    $rootScope.$broadcast('mapReady', MapService.getMap());
+
+                    MapService.getMap().getView()
+                      .on('change:resolution', function(evt){
+                          var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
+                          if (existingHeatMapLayers &&
+                                  existingHeatMapLayers.length > 0){
+                              var radius = 500 * evt.target.getResolution();
+                              var hmLayer = existingHeatMapLayers[0];
+                              if (radius > 15) {
+                                  radius = 15;
+                              }
+                              hmLayer.setRadius(radius);
+                              hmLayer.setBlur(radius*2);
+                          }
+
+                          // check box of transform interaction
+                          MapService.checkBoxOfTransformInteraction();
+                      });
+                    /*
+                    * register some events
+                    */
+                    MapService.getMap().on('moveend', function(evt){
+                        HeatMapSourceGeneratorService.performSearch();
+                    });
+
+                    MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
+                      ['translateend', 'scaleend'], function (e) {
+                          HeatMapSourceGeneratorService.performSearch();
+                      });
+
+                // Prepared featureInfo (display number of elements)
+                //solrHeatmapApp.map.on('singleclick',
+                //                          MapService.displayFeatureInfo);
+
+                } else {
+                    throw new Error('Could not find the mapConfig');
+                }
+            };
+            vm.badResponse = function(data, status, headers, config) {
+                throw new Error('Error while loading the config.json');
+            };
+
             solrHeatmapApp = vm;
 
             //  get the app config
-            $http.get('./config/appConfig.json').
-                success(function(data, status, headers, config) {
-                    if (data && data.mapConfig) {
-                        var mapConf = data.mapConfig,
-                            appConf = data.appConfig,
-                            bopwsConfig = data.bopwsConfig,
-                            instructions = data.instructions;
-
-                        // create the map with the given config
-                        MapService.init({
-                            mapConfig: mapConf
-                        });
-                        solrHeatmapApp.appConfig = appConf;
-                        solrHeatmapApp.initMapConf = mapConf;
-                        solrHeatmapApp.bopwsConfig = bopwsConfig;
-                        solrHeatmapApp.instructions = instructions;
-
-                        // fire event mapReady
-                        $rootScope.$broadcast('mapReady', MapService.getMap());
-
-                        MapService.getMap().getView()
-                            .on('change:resolution', function(evt){
-                                var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
-                                if (existingHeatMapLayers &&
-                                        existingHeatMapLayers.length > 0){
-                                    var radius = 500 * evt.target.getResolution();
-                                    var hmLayer = existingHeatMapLayers[0];
-                                    if (radius > 15) {
-                                        radius = 15;
-                                    }
-                                    hmLayer.setRadius(radius);
-                                    hmLayer.setBlur(radius*2);
-                                }
-
-                                // check box of transform interaction
-                                MapService.checkBoxOfTransformInteraction();
-                            });
-                        /*
-                        * register some events
-                        */
-                        MapService.getMap().on('moveend', function(evt){
-                            HeatMapSourceGeneratorService.performSearch();
-                        });
-
-                        MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
-                            ['translateend', 'scaleend'], function (e) {
-                                HeatMapSourceGeneratorService.performSearch();
-                            });
-
-                      // Prepared featureInfo (display number of elements)
-                      //solrHeatmapApp.map.on('singleclick',
-                      //                          MapService.displayFeatureInfo);
-
-                    } else {
-                        throw 'Could not find the mapConfig';
-                    }
-                }).
-                error(function(data, status, headers, config) {
-                    throw 'Error while loading the config.json';
-                });
+            $http.get('./config/appConfig.json')
+                .success(solrHeatmapApp.response)
+                .error(solrHeatmapApp.badResponse);
         }]
 );
 })();
@@ -553,7 +596,7 @@ angular
  * ResultCounter Controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('ResultCounterController', ['$scope', function($scope) {
 
@@ -573,7 +616,7 @@ angular
  * Search Controller
  */
 (function() {
-angular.module('SolrHeatmapApp')
+    angular.module('SolrHeatmapApp')
     .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
         function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
 
@@ -654,7 +697,7 @@ angular.module('SolrHeatmapApp')
  * Filter by user controller
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
         function(HeatMapSourceGeneratorService, $scope, $uibModal) {
@@ -667,8 +710,8 @@ angular
              *
              */
             function userSearch() {
-              HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
-              HeatMapSourceGeneratorService.performSearch();
+                HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
+                HeatMapSourceGeneratorService.performSearch();
             }
 
             function showInfo(){
@@ -700,7 +743,7 @@ angular
  * HeatMapSourceGenerator Service
  */
 (function() {
-angular
+    angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
         function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
@@ -717,47 +760,46 @@ angular
 
             return methods;
 
-
             function filterMethods() {
-              var searchObj = {
-                  minDate: new Date('2013-03-10'),
-                  maxDate: new Date('2013-03-21'),
-                  textDate: null,
-                  searchText : null,
-                  user: null,
-                  histogramCount: []
-              };
-              /**
-               * Set keyword text
-               */
-              function setSearchText(val) {
-                  searchObj.searchText = val.length === 0 ? null : val;
-              }
+                var searchObj = {
+                    minDate: new Date('2013-03-10'),
+                    maxDate: new Date('2013-03-21'),
+                    textDate: null,
+                    searchText : null,
+                    user: null,
+                    histogramCount: []
+                };
+                /**
+                 * Set keyword text
+                 */
+                function setSearchText(val) {
+                    searchObj.searchText = val.length === 0 ? null : val;
+                }
 
-              function setUser(val) {
-                  searchObj.user = val.length === 0 ? null : val;
-              }
+                function setUser(val) {
+                    searchObj.user = val.length === 0 ? null : val;
+                }
 
-              function setTextDate(val) {
-                  searchObj.textDate = val.length === 0 ? null : val;
-              }
-              /**
-               * Returns the complete search object
-               */
-              function getSearchObj(){
-                  return searchObj;
-              }
+                function setTextDate(val) {
+                    searchObj.textDate = val.length === 0 ? null : val;
+                }
+                /**
+                * Returns the complete search object
+                */
+                function getSearchObj(){
+                    return searchObj;
+                }
 
-              function setHistogramCount(val) {
-                searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
-              }
-              return {
-                getSearchObj: getSearchObj,
-                setSearchText: setSearchText,
-                setUser: setUser,
-                setTextDate: setTextDate,
-                setHistogramCount: setHistogramCount
-              }
+                function setHistogramCount(val) {
+                    searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
+                }
+                return {
+                    getSearchObj: getSearchObj,
+                    setSearchText: setSearchText,
+                    setUser: setUser,
+                    setTextDate: setTextDate,
+                    setHistogramCount: setHistogramCount
+                };
             }
 
 
@@ -980,12 +1022,14 @@ angular
                             $rootScope.$broadcast('setCounter', data['a.matchDocs']);
 
                             $rootScope.$broadcast('setHistogram', data['a.time']);
+
+                            $rootScope.$broadcast('setTweetList', data['d.docs']);
+
                             methods.filterObj.setHistogramCount(data['a.time']['counts']);
                         }
                     }).
                     error(function(data, status, headers, cfg) {
                         // hide the loading mask
-                        //angular.element(document.querySelector('.waiting-modal')).modal('hide');
                         $window.alert('An error occured while reading heatmap data');
                     });
                 } else {
@@ -1058,7 +1102,8 @@ angular
                     'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
                     'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
                     'a.time.limit': '1',
-                    'a.time.gap': 'PT1H'
+                    'a.time.gap': 'PT1H',
+                    'd.docs.limit': '10'
                 };
 
                 return params;
@@ -1071,11 +1116,11 @@ angular
              * @return {String} formatted date as string (e.g. [2013-03-10T00:00:00 TO 2013-03-21T00:00:00])
              */
             function getFormattedDateString(minDate, maxDate){
-              return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
                   maxDate.toISOString().replace('.000Z','') + ']';
             }
             function timeTextFormat(textDate, minDate, maxDate) {
-              return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
+                return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
             }
 
 
@@ -1090,7 +1135,7 @@ angular
  * Map Service
  */
 (function() {
-angular.module('SolrHeatmapApp')
+    angular.module('SolrHeatmapApp')
     .factory('Map', ['$rootScope', '$filter', '$document',
         function($rootScope, $filter, $document) {
 

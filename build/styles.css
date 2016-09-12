@@ -1,0 +1,85 @@
+/*
+ * Slider
+ */
+rzslider {
+  width: 100%;
+  margin: 0;
+}
+rzslider .rz-pointer {
+  top: -6px;
+  width: 20px;
+  height: 20px;
+  background-color: #296294;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+rzslider .rz-pointer:focus {
+  outline: none;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  background-color: #204f77;
+}
+rzslider .rz-bar {
+  height: 6px;
+}
+rzslider .rz-pointer:after {
+  position: static;
+}
+rzslider .rz-pointer:hover:after {
+  background-color: rgba(255, 255, 255, 0);
+}
+rzslider .rz-pointer.rz-active:after {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.bar-graph svg {
+  margin-top: 9px;
+  margin-bottom: -14px;
+}
+
+.tweet:hover {
+  background-color: #f5f8fa;
+}
+.tweet {
+  border-bottom: 1px solid #e1e8ed;
+  cursor: pointer;
+  position: relative;
+  min-height: 51px;
+  padding: 9px 12px;
+}
+li .tweet {
+  list-style: none;
+}
+.list-item-text h3 {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: .01em;
+  margin: 0;
+  line-height: 1.2em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #292f33;
+}
+.list-item-text h4 {
+  font-size: 12px;
+  letter-spacing: .01em;
+  margin: 3px 0 1px;
+  font-weight: 400;
+  line-height: 18px;
+  overflow: hidden;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.list-item-text p {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  margin: 0;
+  line-height: 1.6em;
+  color: #8899a6;
+}
+.no-info {
+  font-size: 200%;
+  text-align: center;
+  color: #888;
+}
