@@ -27,7 +27,7 @@
     "Heatmap"
   ],
   "scripts": {
-    "js-lint": "eslint -c .eslintrc ./",
+    "js-lint": "eslint ./",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",
     "serve": "http-server -p 3001",

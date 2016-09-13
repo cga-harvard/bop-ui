@@ -11,14 +11,21 @@ describe( 'MainController', function() {
         MainCtrl = $controller( 'MainController', { $scope: $scope });
     }));
 
-    it( 'should exist', inject( function() {
-        expect( MainCtrl).toBeTruthy();
-    }));
-
     describe('#response', function() {
         describe('without a config', function() {
             it( 'throws error', function() {
                 expect(MainCtrl.response).toThrowError('Could not find the mapConfig');
+            });
+        });
+        describe('with a config', function() {
+            var mapServiceSpy, setupSpy;
+            beforeEach(function() {
+                mapServiceSpy = spyOn(MapService, 'init');
+                setupSpy = spyOn(MainCtrl, 'setupEvents');
+            });
+            it( 'calls MapService init', function() {
+                MainCtrl.response({mapConfig: {}});
+                expect(mapServiceSpy).toHaveBeenCalled();
             });
         });
     });

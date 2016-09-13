@@ -14,12 +14,13 @@
 
             $scope.showInfo = showInfo;
 
+            $scope.userfilterInput = '';
+
             /**
              *
              */
             function userSearch() {
-                HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
-                HeatMapSourceGeneratorService.performSearch();
+                HeatMapSourceGeneratorService.search($scope.userfilterInput);
             }
 
             function showInfo(){

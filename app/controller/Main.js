@@ -11,6 +11,33 @@
         function(MapService, HeatMapSourceGeneratorService, $http, $scope, $rootScope) {
 
             var vm = this;
+            vm.setupEvents = function() {
+                MapService.getMap().getView()
+                  .on('change:resolution', function(evt){
+                      var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
+                      if (existingHeatMapLayers &&
+                              existingHeatMapLayers.length > 0){
+                          var radius = 500 * evt.target.getResolution();
+                          var hmLayer = existingHeatMapLayers[0];
+                          if (radius > 15) {
+                              radius = 15;
+                          }
+                          hmLayer.setRadius(radius);
+                          hmLayer.setBlur(radius*2);
+                      }
+
+                      // check box of transform interaction
+                      MapService.checkBoxOfTransformInteraction();
+                  });
+                MapService.getMap().on('moveend', function(evt){
+                    HeatMapSourceGeneratorService.performSearch();
+                });
+
+                MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
+                  ['translateend', 'scaleend'], function (e) {
+                      HeatMapSourceGeneratorService.performSearch();
+                  });
+            };
 
             vm.response = function(data, status, headers, config) {
                 if (data && data.mapConfig) {
@@ -31,34 +58,10 @@
                     // fire event mapReady
                     $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                    MapService.getMap().getView()
-                      .on('change:resolution', function(evt){
-                          var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
-                          if (existingHeatMapLayers &&
-                                  existingHeatMapLayers.length > 0){
-                              var radius = 500 * evt.target.getResolution();
-                              var hmLayer = existingHeatMapLayers[0];
-                              if (radius > 15) {
-                                  radius = 15;
-                              }
-                              hmLayer.setRadius(radius);
-                              hmLayer.setBlur(radius*2);
-                          }
-
-                          // check box of transform interaction
-                          MapService.checkBoxOfTransformInteraction();
-                      });
+                    solrHeatmapApp.setupEvents();
                     /*
                     * register some events
                     */
-                    MapService.getMap().on('moveend', function(evt){
-                        HeatMapSourceGeneratorService.performSearch();
-                    });
-
-                    MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
-                      ['translateend', 'scaleend'], function (e) {
-                          HeatMapSourceGeneratorService.performSearch();
-                      });
 
                 // Prepared featureInfo (display number of elements)
                 //solrHeatmapApp.map.on('singleclick',

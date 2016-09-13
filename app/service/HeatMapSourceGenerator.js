@@ -14,6 +14,7 @@
             var methods = {
                 getGeospatialFilter: getGeospatialFilter,
                 getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
+                search: search,
                 performSearch: performSearch,
                 startCsvExport: startCsvExport,
                 getFormattedDateString: getFormattedDateString,
@@ -21,6 +22,11 @@
             };
 
             return methods;
+
+            function search(input) {
+                this.filterObj.setSearchText(input);
+                this.performSearch();
+            }
 
             function filterMethods() {
                 var searchObj = {

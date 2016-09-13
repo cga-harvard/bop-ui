@@ -39,23 +39,19 @@
                 // if ($scope.searchInput.length === 0) {
                 //    return false;
                 // }
+                HeatMapSourceGeneratorService.search($scope.searchInput);
 
-                HeatMapSourceGeneratorService.filterObj.setSearchText($scope.searchInput);
-                HeatMapSourceGeneratorService.performSearch();
             };
 
             $scope.resetSearchInput = function() {
                 $scope.searchInput = '';
-                HeatMapSourceGeneratorService.filterObj.setSearchText('');
-                HeatMapSourceGeneratorService.performSearch();
+                HeatMapSourceGeneratorService.search($scope.searchInput);
 
                 // Reset the map
                 MapService.resetMap();
 
-                // Reset the date fields
-                var ctrlViewModelNew = $scope.$new();
-                $controller('DatePickerController', {$scope : ctrlViewModelNew });
-                ctrlViewModelNew.setInitialDates();
+                //ToDo: Reset date fields
+                // DatePickerController does not exist anymore
             };
 
             $scope.showInfo = function(){
