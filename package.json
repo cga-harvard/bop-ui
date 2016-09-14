@@ -32,7 +32,7 @@
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",
     "serve": "http-server -p 3001",
     "live-reload": "live-reload --port 9091 ./",
-    "server": "parallelshell 'npm run live-reload -s' 'npm run serve -s'",
+    "server": "parallelshell 'npm run live-reload -s' 'npm run serve -s' 'grunt delta'",
     "deploy": "grunt deploy"
   },
   "dependencies": {},
@@ -48,16 +48,18 @@
     "grunt-cli": "1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-less": "^1.4.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-gh-pages": "1.1.0",
+    "http-server": "^0.9.0",
     "jasmine-core": "^2.5.0",
     "karma": "^1.2.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-spec-reporter": "0.0.26",
-    "http-server": "^0.9.0",
+    "less-plugin-clean-css": "^1.5.1",
     "live-reload": "^1.1.0",
     "parallelshell": "^2.0.0"
   }
