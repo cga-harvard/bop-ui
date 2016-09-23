@@ -16,13 +16,19 @@ module.exports = function ( config ) {
       'node_modules/angularjs-slider/dist/rzslider.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'app/**/*.js',
-      'tests/**/*.spec.js'
+      'tests/**/*.spec.js',
+      'app/**/*.tpl.html'
     ],
     exclude: [
     ],
     frameworks: [ 'jasmine' ],
     preprocessors: {
-      'app/**/*.js': ['coverage']
+      'app/**/*.js': ['coverage'],
+      'app/**/*.tpl.html': ['ng-html2js']
+    },
+    ngHtml2JsPreprocessor: {
+        stripPrefix: 'app/',
+        moduleName: 'templates-components'
     },
     reporters: ['spec','coverage'],
     port: 9018,

@@ -11,7 +11,8 @@
                         'id="{{barId}}" style="min-width: 400px";>' +
                       '</div>',
             restrict: 'EA',
-            link: link
+            link: link,
+            scope: {}
         };
         return directive;
 

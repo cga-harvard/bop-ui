@@ -8,11 +8,10 @@
     "inject": true
   },
   "rules": {
-    "camelcase": 0,
+    "camelcase": 2,
     "curly": 2,
     "quotes": [2, "single"],
     "semi": [2, "always"],
-    "max-len": 0,
-    "brace-style": 0
+    "max-len": 0
   }
 }

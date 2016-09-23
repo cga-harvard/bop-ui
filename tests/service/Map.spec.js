@@ -246,14 +246,14 @@ describe( 'HeatMapSourceGenerator', function() {
                 var called = 0;
                 strippedLayer = { getFilters: function() { return [{ setActive: function() {}}]; }, setSource: function() {}, getSource: function() { return { clear: function() {}, getFeatures: function() { return [];}}; }};
                 layerSpy = spyOn(subject, 'getLayersBy').and.callFake(function(key, value) {
-                   if(value === 'HeatMapLayer') {
+                    if(value === 'HeatMapLayer') {
                         if(called > 0) {
                             return [strippedLayer];
                         }
                         called++;
                         return [];
-                   }
-                   return [strippedLayer];
+                    }
+                    return [strippedLayer];
                 });
                 mapSpy = jasmine.createSpyObj('getMap', ['addLayer']);
                 spyOn(subject, 'getMap').and.returnValue(mapSpy);

@@ -2,7 +2,7 @@
 /*eslint angular/document-service: 2*/
 /*eslint max-len: [2,100]*/
 /**
- * Map Service
+ * Map service
  */
 (function() {
     angular.module('SolrHeatmapApp')

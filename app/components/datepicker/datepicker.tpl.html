@@ -4,7 +4,7 @@
                 <label class="control-label col-md-1">From:</label>
                 <div class="col-md-5">
                     <p class="input-group">
-                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="dts" is-open="startDate.opened"
+                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerStartDate" is-open="startDate.opened"
                             show-button-bar="false" datepicker-options="dateOptions" ng-required="true"
                             ng-model-options="{timezone: 'UTC'}" ng-change="onChangeDatepicker()" readonly/>
                         <span class="input-group-btn">
@@ -15,7 +15,7 @@
                 <label class="control-label col-md-1">To:</label>
                 <div class="col-md-5">
                     <p class="input-group">
-                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="dte" is-open="endDate.opened" show-button-bar="false"
+                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerEndDate" is-open="endDate.opened" show-button-bar="false"
                           datepicker-options="dateOptions" ng-required="true" ng-change="onChangeDatepicker()" readonly />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default btn-sm" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -32,7 +32,7 @@
               <form ng-submit="onSubmitDateText()">
                   <div class="form-group">
                       <span class="searchbtn">
-                          <a href="" class="infobtn" ng-click="showInfo()">
+                          <a href="" class="infobtn" ng-click="showDatepickerInfo()">
                                <span class="glyphicon glyphicon-info-sign"></span>
                           </a>
                       </span>
@@ -47,5 +47,5 @@
 
     <div class="col-md-12 component-padding">
         <time-histogram barId="inbar"></time-histogram>
-        <rzslider  rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
+        <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
     </div>

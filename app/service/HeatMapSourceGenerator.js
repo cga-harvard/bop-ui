@@ -1,4 +1,4 @@
-/*eslint angular/di: [2,'array']*/
+/*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
 /*eslint max-len: [2,150]*/
 /**

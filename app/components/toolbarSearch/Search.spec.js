@@ -1,18 +1,23 @@
-describe( 'SearchController', function() {
-    var SearchController, $scope, rootScope, HeatMapSourceGeneratorService, MapService, uibModal;
+describe( 'SearchDirective', function() {
+    var $scope, scope, rootScope, HeatMapSourceGeneratorService, MapService, InfoService, element, compiledElement;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( $controller, $rootScope, _HeatMapSourceGenerator_, _Map_, _$uibModal_) {
+    beforeEach( inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _Map_, _InfoService_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
+
+        element = angular.element('<toolbar-search></toolbar-search>');
+        compiledElement = $compile(element)($scope);
+        $scope.$digest();
+        scope = compiledElement.isolateScope();
+
         HeatMapSourceGeneratorService = _HeatMapSourceGenerator_;
         MapService = _Map_;
-        uibModal = _$uibModal_;
-        SearchController = $controller( 'SearchController', { $scope: $scope });
+        InfoService = _InfoService_;
     }));
     it( 'searchInput is empty string', function() {
-        expect($scope.searchInput).toEqual('');
+        expect(scope.searchInput).toEqual('');
     });
     describe('#doSearch', function() {
         var searchSpy;
@@ -21,12 +26,12 @@ describe( 'SearchController', function() {
         });
         describe('calls search on HeatMapSourceGeneratorService', function() {
             it('once', function() {
-                $scope.doSearch();
+                scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
             it('with searchInput', function() {
-                $scope.searchInput = 'San Diego';
-                $scope.doSearch();
+                scope.searchInput = 'San Diego';
+                scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledWith('San Diego');
             });
         });
@@ -36,35 +41,35 @@ describe( 'SearchController', function() {
         beforeEach(function() {
             searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
             mapSpy = spyOn(MapService, 'resetMap');
-            $scope.searchInput = 'San Diego';
+            scope.searchInput = 'San Diego';
         });
         describe('calls search on HeatMapSourceGeneratorService', function() {
             it('once', function() {
-                $scope.resetSearchInput();
+                scope.resetSearchInput();
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
             it('with searchInput', function() {
-                $scope.resetSearchInput();
+                scope.resetSearchInput();
                 expect(searchSpy).toHaveBeenCalledWith('');
             });
         });
     });
     describe('#onKeyPress', function() {
         it('search on enter key pressed', function() {
-            var searchSpy = spyOn($scope, 'doSearch');
-            $scope.onKeyPress({which: 13});
+            var searchSpy = spyOn(scope, 'doSearch');
+            scope.onKeyPress({which: 13});
             expect(searchSpy).toHaveBeenCalledTimes(1);
         });
         it('does not search on all other keys', function() {
-            var searchSpy = spyOn($scope, 'doSearch');
-            $scope.onKeyPress({which: 14});
+            var searchSpy = spyOn(scope, 'doSearch');
+            scope.onKeyPress({which: 14});
             expect(searchSpy).not.toHaveBeenCalledTimes(1);
         });
     });
     describe('#showInfo', function() {
         it('opens the modal info', function() {
-            var modalSpy = spyOn(uibModal, 'open');
-            $scope.showInfo();
+            var modalSpy = spyOn(InfoService, 'showInfoPopup');
+            scope.showtoolbarSearchInfo();
             expect(modalSpy).toHaveBeenCalledTimes(1);
         });
     });
