@@ -70,7 +70,7 @@
                     }
 
                     function getColor(barkey, minvalue, maxvalue) {
-                        return barkey >= minvalue && barkey <= maxvalue ? '#2e6da4' : '#E3E3E3';
+                        return barkey >= minvalue && barkey <= maxvalue ? '#88b5dd' : '#E3E3E3';
                     }
                 }
             }

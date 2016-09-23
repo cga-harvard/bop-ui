@@ -28,7 +28,7 @@
 
     <div class="col-md-12 component-padding">
         <div class="row">
-          <div class="col-md-12">
+          <div class="date-picker-input">
               <form ng-submit="onSubmitDateText()">
                   <div class="form-group">
                       <span class="searchbtn">
@@ -36,8 +36,10 @@
                                <span class="glyphicon glyphicon-info-sign"></span>
                           </a>
                       </span>
-                      <label for="focusedInput" class="control-label">Date:</label>
-                      <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString">
+                      <label for="focusedInput" class="control-label col-md-1">Date:</label>
+                      <div class="col-md-10">
+                         <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString">
+                      </div>
                   </div>
               </form>
 

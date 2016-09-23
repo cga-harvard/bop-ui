@@ -173,7 +173,7 @@
                             step: 1,
                             noSwitching: true, hideLimitLabels: true,
                             getSelectionBarColor: function() {
-                                return '#3da9ca';
+                                return '#609dd2';
                             },
                             translate: function() {
                                 return '';
