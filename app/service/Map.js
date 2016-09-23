@@ -6,9 +6,10 @@
  */
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('Map', ['$rootScope', '$filter', '$document',
-        function($rootScope, $filter, $document) {
-
+    .factory('Map', ['$rootScope', '$filter', '$document', 'Normalize', '$controller',
+        function($rootScope, $filter, $document, Normalize, $controller) {
+            var NormalizeService = Normalize;
+            var service = {};
             var map = {},
                 defaults = {
                     renderer: 'canvas',
@@ -77,106 +78,75 @@
             /**
             *
             */
-            function getMap() {
+            service.getMap = function() {
                 return map;
-            }
+            };
 
-            /**
-             *
-             */
-            function getLayersBy(key, value) {
-                var layers = getMap().getLayers().getArray();
+            service.getMapView = function() {
+                return service.getMap().getView();
+            };
+
+            service.getMapZoom = function() {
+                return service.getMapView().getZoom();
+            };
+
+            service.getMapSize = function() {
+                return service.getMap().getSize();
+            };
+
+            service.getMapProjection = function() {
+                return service.getMapView().getProjection().getCode();
+            };
+
+            service.getLayers = function() {
+                return service.getMap().getLayers().getArray();
+            };
+
+            service.getInteractions = function () {
+                return service.getMap().getInteractions().getArray();
+            };
+
+            service.getLayersBy = function(key, value) {
+                var layers = service.getLayers();
                 return $filter('filter')(layers, function(layer) {
                     return layer.get(key) === value;
                 });
-            }
+            };
 
             /**
              *
              */
-            function getInteractionsByClass(value) {
-                var interactions = getMap().getInteractions().getArray();
+            service.getInteractionsByClass = function(value) {
+                var interactions = service.getInteractions();
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction instanceof value;
                 });
-            }
+            };
 
             /**
              *
              */
-            function getInteractionsByType(interactions, type) {
+            service.getInteractionsByType = function(interactions, type) {
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction.type_ === type;
                 });
-            }
-
-            /**
-             *
-             */
-            function displayFeatureInfo(evt) {
-                var coord = evt.coordinate,
-                    feature = map.forEachFeatureAtPixel(evt.pixel,
-                            function(feat, layer) {
-                                return feat;
-                            }),
-                    msg = '',
-                    evtCnt = 0,
-                    lyrCnt = 0,
-                    container = $document[0].getElementById('popup'),
-                    content = $document[0].getElementById('popup-content'),
-                    closer = $document[0].getElementById('popup-closer'),
-                    overlay = new ol.Overlay({
-                        element: container,
-                        autoPan: true,
-                        autoPanAnimation: {
-                            duration: 250
-                        }
-                    });
-
-                closer.onclick = function() {
-                    overlay.setPosition(undefined);
-                    closer.blur();
-                    return false;
-                };
-
-                // remove any existing overlay before adding a new one
-                map.getOverlays().clear();
-                map.addOverlay(overlay);
-
-                if (feature) {
-                    var data = feature.get('origVal');
-                    if (data) {
-                        $rootScope.$broadcast('featureInfoLoaded', data);
-                    }
-                }
-
-                rs.$on('featureInfoLoaded', function(event, dta) {
-                    msg += '<h5>Number of elements: </h5>' + data;
-                    content.innerHTML = msg;
-                    var overlayFi = solrHeatmapApp.
-                                map.getOverlays().getArray()[0];
-                    if (overlayFi) {
-                        overlayFi.setPosition(coord);
-                    }
-                });
-
-            }
+            };
 
             /**
             * Helper method to change active mode of masks for backgroundLayer and
             * heatmap layer
             */
-            function switchMasks(hmAvailable) {
-                var heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0],
+            var _switchMasks = function(hmAvailable) {
+                var heatMapLayer = service.getLayersBy('name', 'HeatMapLayer')[0],
                     heatMapMask = heatMapLayer.getFilters()[0],
-                    backgroundLayer = getLayersBy('backgroundLayer', true)[0],
+                    backgroundLayer = service.getLayersBy('backgroundLayer', true)[0],
                     backgroundLayerMask = backgroundLayer.getFilters()[0];
 
                 // disable mask of backgroundLayer if heatmap is available and vice versa
                 backgroundLayerMask.setActive(!hmAvailable);
                 // enable mask of heatMapLayer if heatmap is available and vice versa
                 heatMapMask.setActive(hmAvailable);
-            }
+            };
 
             function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
                 var max = -1;
@@ -287,11 +257,12 @@
                 return olVecSrc;
             }
 
-            function createOrUpdateHeatMapLayer(data) {
-                var olVecSrc = createHeatMapSource(data),
-                    existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
-                    transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0],
-                    newHeatMapLayer;
+            service.createOrUpdateHeatMapLayer = function(data) {
+                var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
+                existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
+                transformInteractionLayer = service.getLayersBy('name',
+                                                                "TransformInteractionLayer")[0];
+                olVecSrc = createHeatMapSource(data);
 
                 if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                     var currHeatmapLayer = existingHeatMapLayers[0];
@@ -308,7 +279,7 @@
                         radius: 10
                     });
 
-                    map.addLayer(newHeatMapLayer);
+                    service.getMap().addLayer(newHeatMapLayer);
 
                     // Add Mask to HeatMapLayer
                     var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
@@ -322,41 +293,21 @@
                     });
                     newHeatMapLayer.addFilter(mask);
                 }
-
-                switchMasks(olVecSrc !== null);
-            }
-
-
-            function setTransactionBBox(extent) {
-                var transformationLayer = getLayersBy('name','TransformInteractionLayer')[0],
-                    vectorSrc = transformationLayer.getSource(),
-                    currentBbox = vectorSrc.getFeatures()[0],
-                    polyNew;
-
-                polyNew = ol.geom.Polygon.fromExtent(extent);
-                currentBbox.setGeometry(polyNew);
-
-                // update interaction
-                map.getInteractions().getArray().forEach(function(interaction){
-                    if(interaction instanceof ol.interaction.Transform){
-                        interaction.dispatchEvent('propertychange');
-                    }
-                });
-            }
+                _switchMasks(olVecSrc !== null);
+            };
 
             /**
              * This method adds a transfrom interaction to the mapand a mask to background layer
              * The area outer the feature which can be modified by the transfrom interaction
              * will have a white shadow
              */
-            function generateMaskAndAssociatedInteraction (bboxFeature, fromSrs) {
+            function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
                 var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
-                    backGroundLayer = getLayersBy('backgroundLayer', true)[0],
-                    heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0];
+                    backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
 
-                if (fromSrs !== map.getView().getProjection().getCode()){
+                if (fromSrs !== service.getMapProjection()){
                     var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                                    map.getView().getProjection().getCode());
+                                                    service.getMapProjection());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
@@ -371,7 +322,7 @@
                         })
                     })
                 });
-                map.addLayer(vector);
+                service.getMap().addLayer(vector);
                 vector.getSource().addFeature(polygon);
 
                 var transformInteraction = new ol.interaction.Transform({
@@ -381,7 +332,7 @@
                     rotate: false,
                     stretch: false
                 });
-                map.addInteraction(transformInteraction);
+                service.getMap().addInteraction(transformInteraction);
 
                 var mask = new ol.filter.Mask({
                     feature: polygon,
@@ -393,14 +344,33 @@
                 backGroundLayer.addFilter(mask);
             }
 
+            function setTransactionBBox(extent) {
+                var transformationLayer = service.getLayersBy('name',
+                                                              'TransformInteractionLayer')[0],
+                    vectorSrc = transformationLayer.getSource(),
+                    currentBbox = vectorSrc.getFeatures()[0],
+                    polyNew;
+
+                polyNew = ol.geom.Polygon.fromExtent(extent);
+                currentBbox.setGeometry(polyNew);
+
+                // update interaction
+                service.getInteractions().forEach(function(interaction){
+                    if(interaction instanceof ol.interaction.Transform){
+                        interaction.dispatchEvent('propertychange');
+                    }
+                });
+            }
+
             /*
              * For change:resolution event (zoom in map):
              * If bounding of transform interaction is grater than the map extent
              * the transform box will be resized to 90%
              */
-            function checkBoxOfTransformInteraction () {
-                var transformInteractionLayer = getLayersBy('name', 'TransformInteractionLayer')[0],
-                    mapExtent = map.getView().calculateExtent(map.getSize()),
+            service.checkBoxOfTransformInteraction = function() {
+                var transformInteractionLayer = service.getLayersBy('name',
+                                                                    'TransformInteractionLayer')[0],
+                    mapExtent = service.getMapView().calculateExtent(service.getMapSize()),
                     vectorSrc = transformInteractionLayer.getSource(),
                     currentBbox = vectorSrc.getFeatures()[0],
                     needsUpdate = false,
@@ -430,32 +400,93 @@
                     setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
                 }
 
-            }
+            };
 
             /**
              * Helper method to reset the map
              */
-            function resetMap() {
+            service.resetMap = function() {
                 // Reset view
                 var intitalCenter = solrHeatmapApp.initMapConf.view.center,
                     intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
-                    var vw = map.getView();
+                    var vw = service.getMapView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
 
                     setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
-            }
+            };
+            /**
+             * Builds geospatial filter depending on the current map extent.
+             * This filter will be used later for `q.geo` parameter of the API
+             * search or export request.
+             */
+            service.getCurrentExtent = function(){
+                var viewProj = service.getMapProjection(),
+                    extent = service.getMapView().calculateExtent(service.getMapSize()),
+                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
+                    transformInteractionLayer = service.
+                                    getLayersBy('name', 'TransformInteractionLayer')[0],
+                    currentBbox,
+                    currentBboxExtentWgs84,
+                    currentExtent = {};
+
+                if (!transformInteractionLayer) {
+                    return null;
+                }
+                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
+                currentBboxExtentWgs84 = ol.proj.transformExtent(
+                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
+
+                // default: Zoom level <= 1 query whole world
+                if (service.getMapZoom() <= 1) {
+                    extentWgs84 = [-180, -90 ,180, 90];
+                }
+
+                if (extent && extentWgs84){
+                    var normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84),
+                        normalizedExtentBox =
+                            NormalizeService.normalizeExtent(currentBboxExtentWgs84),
+                        minX = normalizedExtentMap[1],
+                        maxX = normalizedExtentMap[3],
+                        minY = normalizedExtentMap[0],
+                        maxY = normalizedExtentMap[2];
+
+                    minX = normalizedExtentBox[1];
+                    maxX = normalizedExtentBox[3];
+                    minY = normalizedExtentBox[0];
+                    maxY = normalizedExtentBox[2];
+
+                    currentExtent = {
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY,
+                        maxY: maxY
+                    };
+
+                    var roundToFixed = function(value){
+                        return parseFloat(Math.round(value* 100) / 100).toFixed(2);
+                    };
+                    // Reset the date fields
+                    $rootScope.$broadcast('geoFilterUpdated', '[' +
+                                            roundToFixed(minX) + ',' +
+                                            roundToFixed(minY) + ' TO ' +
+                                            roundToFixed(maxX) + ',' +
+                                            roundToFixed(maxY) + ']');
+                }
+
+                return currentExtent;
+            };
 
             /**
              *
              */
-            function init(config) {
+            service.init = function(config) {
                 var viewConfig = angular.extend(defaults.view,
                                                     config.mapConfig.view),
-                    rendererConfig = angular.extend(defaults.renderer,
-                                                    config.mapConfig.renderer),
+                    rendererConfig = config.mapConfig.renderer ?
+                        config.mapConfig.renderer : defaults.renderer,
                     layerConfig = config.mapConfig.layers;
 
                 map = new ol.Map({
@@ -495,26 +526,8 @@
                     vw.set('extent', viewConfig.extent);
                     generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
                 }
-            }
-
-            var ms = {
-                init: init,
-                getMap: getMap,
-                getLayersBy: getLayersBy,
-                getInteractionsByClass: getInteractionsByClass,
-                getInteractionsByType: getInteractionsByType,
-                displayFeatureInfo: displayFeatureInfo,
-                createOrUpdateHeatMapLayer: createOrUpdateHeatMapLayer,
-                generateMaskAndAssociatedInteraction: generateMaskAndAssociatedInteraction,
-                checkBoxOfTransformInteraction: checkBoxOfTransformInteraction,
-                setTransactionBBox: setTransactionBBox,
-                createHeatMapSource: createHeatMapSource,
-                heatmapMinMax: heatmapMinMax,
-                rescaleHeatmapValue: rescaleHeatmapValue,
-                resetMap: resetMap
             };
-
-            return ms;
+            return service;
         }]
 );
 })();

@@ -29,6 +29,9 @@
                     }
                 });
             };
+            $scope.$on('geoFilterUpdated', function(event, filter) {
+                $scope.filterString = filter;
+            });
 
             $scope.updateFilterString = function(str) {
                 $scope.filterString = str;

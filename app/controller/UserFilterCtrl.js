@@ -8,8 +8,9 @@
     angular
     .module('SolrHeatmapApp')
     .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
-        function(HeatMapSourceGeneratorService, $scope, $uibModal) {
+        function(HeatMapSourceGenerator, $scope, $uibModal) {
 
+            var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
             $scope.userSearch = userSearch;
 
             $scope.showInfo = showInfo;

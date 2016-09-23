@@ -7,8 +7,9 @@
 (function() {
     angular.module('SolrHeatmapApp')
     .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
-
+        function(Map, HeatMapSourceGenerator, $scope, $uibModal, $controller, $window) {
+            var MapService = Map,
+                HeatMapSourceGeneratorService = HeatMapSourceGenerator;
             /**
              *
              */

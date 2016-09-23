@@ -8,7 +8,7 @@
     angular
     .module('SolrHeatmapApp')
     .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
-        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
+        function(HeatMapSourceGenerator, $uibModal, $scope) {
 
             $scope.export = {
                 numDocuments: 1,
@@ -22,7 +22,7 @@
             $scope.startExport = function() {
                 var numDocs = $scope.export.numDocuments;
 
-                HeatMapSourceGeneratorService.startCsvExport(numDocs);
+                HeatMapSourceGenerator.startCsvExport(numDocs);
             };
 
             $scope.showInfo = function(){

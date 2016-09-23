@@ -8,7 +8,9 @@
     angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
-        function(MapService, HeatMapSourceGeneratorService, $http, $scope, $rootScope) {
+        function(Map, HeatMapSourceGenerator, $http, $scope, $rootScope) {
+            var MapService = Map;
+            var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
 
             var vm = this;
             vm.setupEvents = function() {
