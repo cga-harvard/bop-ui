@@ -23,8 +23,7 @@
 
     <!-- APP CSS -->
     <link rel="stylesheet" href="./assets/css/app.css">
-    <link rel="stylesheet" href="./app/components/datepicker/datepicker.css">
-    <link rel="stylesheet" href="./app/components/histogram/histogram.css">
+    <link rel="stylesheet" href="./build/styles.min.css">
 
     <!-- Minified client -->
     <script src="./build/hm-client.min.js"></script>
@@ -37,17 +36,17 @@
             <div class="col-md-4 container">
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
-                        <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
+                        <toolbar-search></toolbar-search>
                     </div>
                 </div>
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
-                        <ng-include src="'./app/view/geospatialFilter.html'"></ng-include>
+                        <geospatial-filter></geospatial-filter>
                     </div>
                 </div>
                 <div class="row component-padding">
                     <div class="col-md-12 row-box">
-                      <div class="row">
+                      <div class="row tweetlist-box">
                         <tweetlist></tweetlist>
                       </div>
                     </div>
@@ -65,22 +64,20 @@
                     </div>
                     <div class="col-md-5">
                         <div class="row component-padding">
-                            <div class="col-xs-12 row-box" row-box>
-                                <ng-include src="'./app/view/userFilter.html'"></ng-include>
+                            <div class="col-xs-12 row-box">
+                                <user-filter></user-filter>
                             </div>
                         </div>
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                                <ng-include src="'./app/view/exportButton.html'"></ng-include>
+                                <export-button></exportButton>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                              <ng-include src="'./app/view/resultCounterText.html'"></ng-include>
-                              <!-- the ol3 map -->
-                              <div class="map" id="map"></div>
+                              <heatmap></heatmap>
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-xs-11">
+        <form ng-submit="userSearch()">
+            <div class="input-group searchinputfield" id="userfilterinput">
+                <input class="form-control input-sm" type="text" placeholder="@user"
+                  ng-model="userfilterInput" ng-click="onFocus()" ng-blur="onBlur()">
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-1 searchbtn pull-left padding-search">
+        <a href="" class="infobtn" ng-click="showUserFilterInfo()">
+             <span class="glyphicon glyphicon-info-sign"></span>
+        </a>
+    </div>
+</div>

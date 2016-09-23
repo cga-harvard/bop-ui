@@ -1,4 +1,4 @@
-<div class="row" ng-controller="ExportController">
+<div class="row">
     <div class="col-sm-4 col-xs-3 export-slider">
         <input type="number" class="form-control input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
     </div>
@@ -13,7 +13,7 @@
                 </label>
                 <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
                 <span class="searchbtn">
-                    <a href="" class="infobtn" ng-click="showInfo()">
+                    <a href="" class="infobtn" ng-click="showExportInfo()">
                          <span class="glyphicon glyphicon-info-sign"></span>
                     </a>
                 </span>

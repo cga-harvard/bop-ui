@@ -3,6 +3,7 @@
  */
 (function() {
     angular.module('SolrHeatmapApp', [
+        'templates-components',
         'ui.bootstrap',
         'rzModule',
         'search_components'
@@ -18,199 +19,293 @@
 
     angular
     .module('search_datepicker_component', [])
-    .directive('datePicker', datePicker);
+    .directive('datePicker', ['$rootScope', 'HeatMapSourceGenerator', 'InfoService',
+        function($rootScope, HeatMapSourceGenerator, InfoService) {
+            return {
+                link: datePickerFilterLink,
+                templateUrl: 'components/datepicker/datepicker.tpl.html',
+                restrict: 'EA',
+                scope: {}
+            };
 
-    function datePicker() {
-        return {
-            controller: datePickerFilterController,
-            templateUrl: 'app/components/datepicker/datepicker.html',
-            restrict: 'EA'
-        };
-    }
+            function datePickerFilterLink(scope) {
 
-    datePickerFilterController.$inject = [
-        '$rootScope', 'HeatMapSourceGenerator','$uibModal', '$scope'
-    ];
-    function datePickerFilterController(
-        $rootScope, HeatMapSourceGeneratorService, $uibModal, $scope) {
+                var vm = scope;
 
-        var vm = $scope;
+                vm.initialDateOptions = {
+                    minDate: new Date('2013-03-01'),
+                    maxDate: new Date('2013-04-01')
+                };
 
-        vm.initialDateOptions = {
-            minDate: new Date('2013-03-01'),
-            maxDate: new Date('2013-04-01')
-        };
+                vm.dateOptions = {
+                    minDate: HeatMapSourceGenerator.filterObj.getSearchObj().minDate,
+                    maxDate: HeatMapSourceGenerator.filterObj.getSearchObj().maxDate,
+                    startingDay: 1,
+                    showWeeks: false
+                };
 
-        vm.dateOptions = {
-            minDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().minDate,
-            maxDate: HeatMapSourceGeneratorService.filterObj.getSearchObj().maxDate,
-            startingDay: 1,
-            showWeeks: false
-        };
+                vm.dateString = getFormattedDateString(vm.dateOptions.minDate,
+                                                        vm.dateOptions.maxDate);
 
-        vm.dateString = getFormattedDateString(vm.dateOptions.minDate, vm.dateOptions.maxDate);
+                vm.startDate = {
+                    opened: false
+                };
 
-        vm.startDate = {
-            opened: false
-        };
+                vm.endDate = {
+                    opened: false
+                };
 
-        vm.endDate = {
-            opened: false
-        };
+                /**
+                 * Set initial values for min and max dates in both of datepicker.
+                 */
+                vm.datepickerStartDate = vm.dateOptions.minDate;
+                vm.datepickerEndDate = vm.dateOptions.maxDate;
 
-        vm.onChangeDatepicker = onChangeDatepicker;
+                vm.onChangeDatepicker = onChangeDatepicker;
 
-        vm.showInfo = showInfo;
+                vm.showDatepickerInfo = showDatepickerInfo;
 
-        vm.openEndDate = openEndDate;
+                vm.openEndDate = openEndDate;
 
-        vm.openStartDate = openStartDate;
+                vm.openStartDate = openStartDate;
 
-        vm.onSubmitDateText = onSubmitDateText;
+                vm.onSubmitDateText = onSubmitDateText;
 
-        vm.slider = defaultSliderValue();
+                vm.slider = defaultSliderValue();
 
-        /**
-         * Set initial values for min and max dates in both of datepicker.
-         */
-        vm.setInitialDates = function(){
-            vm.dts = vm.dateOptions.minDate;
-            vm.dte = vm.dateOptions.maxDate;
-        };
+                scope.$on('setHistogram', setHistogram);
 
-        vm.setInitialDates();
+                scope.$on('slideEnded', slideEnded);
 
-        vm.$on('setHistogram', setHistogram);
-
-        vm.$on('slideEnded', slideEnded);
-
-        /**
-         * Will be called on click on start datepicker.
-         * `minDate` will be reset to the initial value (e.g. 2000-01-01),
-         * `maxDate` will be adjusted with the `$scope.dte` value to
-         *  restrict it not to be below the `minDate`.
-         */
-        function openStartDate() {
-            vm.startDate.opened = true;
-            vm.dateOptions.minDate = vm.initialDateOptions.minDate;
-            vm.dateOptions.maxDate = vm.dte;
-        }
+                /**
+                 * Will be called on click on start datepicker.
+                 * `minDate` will be reset to the initial value (e.g. 2000-01-01),
+                 * `maxDate` will be adjusted with the `scope.datepickerEndDate` value to
+                 *  restrict it not to be below the `minDate`.
+                 */
+                function openStartDate() {
+                    vm.startDate.opened = true;
+                    vm.dateOptions.minDate = vm.initialDateOptions.minDate;
+                    vm.dateOptions.maxDate = vm.datepickerEndDate;
+                }
 
 
-        /**
-         * Will be called on click on end datepicker.
-         * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
-         * `minDate` will be adjusted with the `$scope.dts` value to
-         *  restrict it not to be bigger than the `maxDate`.
-         */
-        function openEndDate() {
-            vm.endDate.opened = true;
-            vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
-            vm.dateOptions.minDate = vm.dts;
-        }
+                /**
+                 * Will be called on click on end datepicker.
+                 * `maxDate` will be reset to the initial value (e.g. 2016-12-31),
+                 * `minDate` will be adjusted with the `scope.datepickerStartDate` value to
+                 *  restrict it not to be bigger than the `maxDate`.
+                 */
+                function openEndDate() {
+                    vm.endDate.opened = true;
+                    vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
+                    vm.dateOptions.minDate = vm.datepickerStartDate;
+                }
 
-        /**
-         * Will be fired after the start and the end date was chosen.
-         */
-        function onChangeDatepicker(){
-            vm.dateString = getFormattedDateString(vm.dts, vm.dte);
-            performDateSearch();
-        }
+                /**
+                 * Will be fired after the start and the end date was chosen.
+                 */
+                function onChangeDatepicker(){
+                    vm.dateString = getFormattedDateString(vm.datepickerStartDate,
+                                                            vm.datepickerEndDate);
+                    performDateSearch();
+                }
 
-        function getFormattedDateString(minDate, maxDate) {
-            return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
-              maxDate.toISOString().replace('.000Z','') + ']';
-        }
+                function getFormattedDateString(minDate, maxDate) {
+                    return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
+                      maxDate.toISOString().replace('.000Z','') + ']';
+                }
 
-        function stringToDate(dateString) {
-            var dateArray = dateString.split(' TO ');
-            if (angular.isString(dateString) && dateArray.length === 2) {
-                dateArray[0] = new Date(dateArray[0].slice(1,11));
-                dateArray[1] = new Date(dateArray[1].slice(0,10));
-                if (dateArray[0] === 'Invalid Date' || dateArray[0] === 'Invalid Date') {
+                function stringToStartEndDateArray(dateString) {
+                    var dateArray = dateString.split(' TO ');
+                    if (angular.isString(dateString) && dateArray.length === 2) {
+                        dateArray[0] = new Date(dateArray[0].slice(1,11));
+                        dateArray[1] = new Date(dateArray[1].slice(0,10));
+                        if (dateArray[0] === 'Invalid Date' || dateArray[0] === 'Invalid Date') {
+                            return null;
+                        }
+                        return dateArray;
+                    }
                     return null;
                 }
-                return dateArray;
-            }
-            return null;
-        }
 
-        function onSubmitDateText() {
-            var dateArray = stringToDate(vm.dateString);
-            if (dateArray !== null) {
-                vm.dts = dateArray[0];
-                vm.dte = dateArray[1];
-                performDateSearch();
-            } else{
-                vm.dateString = getFormattedDateString(vm.dts, vm.dte);
-            }
-        }
-
-        function showInfo(){
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'infoPopup.html',
-                controller: 'InfoWindowController',
-                size: 'lg',
-                resolve: {
-                    infoMsg: function(){
-                        return solrHeatmapApp.instructions.datepicker.instruction;
-                    },
-                    toolName: function(){
-                        return solrHeatmapApp.instructions.datepicker.toolTitle;
+                function onSubmitDateText() {
+                    var dateArray = stringToStartEndDateArray(vm.dateString);
+                    if (dateArray !== null) {
+                        vm.datepickerStartDate = dateArray[0];
+                        vm.datepickerEndDate = dateArray[1];
+                        performDateSearch();
+                    } else{
+                        vm.dateString = getFormattedDateString(vm.datepickerStartDate,
+                                                                vm.datepickerEndDate);
                     }
                 }
+
+                function showDatepickerInfo() {
+                    InfoService.showInfoPopup('datepicker');
+                }
+
+                function setHistogram(event, dataHistogram) {
+                    if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
+                        vm.slider.counts = dataHistogram.counts;
+                        vm.slider.options.ceil = dataHistogram.counts.length - 1;
+                        vm.slider.maxValue = vm.slider.options.ceil;
+                        dataHistogram.slider = vm.slider;
+                        $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
+                    }else{
+                        vm.slider.changeTime = false;
+                        $rootScope.$broadcast('changeSlider', vm.slider);
+                    }
+                }
+
+                function slideEnded() {
+                    var minKey = vm.slider.minValue;
+                    var maxKey = vm.slider.maxValue;
+                    vm.datepickerStartDate = new Date(vm.slider.counts[minKey].value);
+                    vm.datepickerEndDate = new Date(vm.slider.counts[maxKey].value);
+                    vm.dateString = getFormattedDateString(vm.datepickerStartDate,
+                                                            vm.datepickerEndDate);
+                    performDateSearch();
+                }
+
+                function performDateSearch() {
+                    HeatMapSourceGenerator.filterObj.setTextDate(vm.dateString);
+                    vm.slider.changeTime = true;
+                    HeatMapSourceGenerator.performSearch();
+                }
+
+                function defaultSliderValue() {
+                    return {
+                        minValue: 0,
+                        maxValue: 1,
+                        changeTime: false,
+                        options: {
+                            floor: 0,
+                            ceil: 1,
+                            step: 1,
+                            noSwitching: true, hideLimitLabels: true,
+                            getSelectionBarColor: function() {
+                                return '#609dd2';
+                            },
+                            translate: function() {
+                                return '';
+                            }
+                        }
+                    };
+                }
+            }
+        }]);
+
+
+
+})();
+
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,90]*/
+/**
+ * Export Directive
+ */
+(function() {
+    angular
+    .module('search_exportButton_component', [])
+    .directive('exportButton', ['HeatMapSourceGenerator', 'InfoService',
+        function(HeatMapSourceGenerator, InfoService) {
+            return {
+                link: ExportLink,
+                restrict: 'EA',
+                templateUrl: 'components/exportButton/exportButton.tpl.html',
+                scope: {}
+            };
+
+            function ExportLink(scope) {
+
+                scope.export = {
+                    numDocuments: 1,
+                    options: {
+                        floor: 1,
+                        ceil: 10000,
+                        step: 1
+                    }
+                };
+
+                scope.startExport = function() {
+                    var numDocs = scope.export.numDocuments;
+
+                    HeatMapSourceGenerator.startCsvExport(numDocs);
+                };
+
+                scope.showExportInfo = function() {
+                    InfoService.showInfoPopup('export');
+                };
+            }
+        }]);
+})();
+
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/**
+ * Geospatial filter Directive
+ */
+(function() {
+    angular
+    .module('search_geospatialFilter_component', [])
+    .directive('geospatialFilter', ['InfoService', function(InfoService) {
+        return {
+            link: GeospatialFilterLink,
+            restrict: 'EA',
+            templateUrl: 'components/geospatialFilter/geospatialFilter.tpl.html',
+            scope: {}
+        };
+
+        function GeospatialFilterLink(scope) {
+
+            scope.filterString = '[-90,-180 TO 90,180]';
+
+            scope.showGeospatialInfo = function() {
+                InfoService.showInfoPopup('geospatialsearch');
+            };
+
+            scope.$on('geoFilterUpdated', function(event, filter) {
+                scope.filterString = filter;
+            });
+
+            scope.updateFilterString = function(str) {
+                scope.filterString = str;
+            };
+
+        }
+    }]);
+})();
+
+/*eslint angular/di: [2,"array"]*/
+/*eslint angular/controller-as: 0*/
+/**
+ * ResultCounter Controller
+ */
+
+(function() {
+    angular
+    .module('search_heatmap_component', [])
+    .directive('heatmap', heatmap);
+
+    function heatmap() {
+        return {
+            link: ResultCounterLink,
+            restrict: 'EA',
+            templateUrl: 'components/heatmap/heatmap.tpl.html',
+            scope: {}
+        };
+
+        function ResultCounterLink(scope) {
+            scope.$on('setCounter', function(e, data){
+                if (data < 1 || !data) {
+                    data = 'No results found';
+                }
+                scope.counter = data;
             });
         }
-
-        function setHistogram(event, dataHistogram) {
-            if (vm.slider.options.ceil === 1 || vm.slider.changeTime === false) {
-                vm.slider.counts = dataHistogram.counts;
-                vm.slider.options.ceil = vm.slider.maxValue = dataHistogram.counts.length - 1;
-                dataHistogram.slider = vm.slider;
-                $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-            }else{
-                vm.slider.changeTime = false;
-                $rootScope.$broadcast('changeSlider', vm.slider);
-            }
-        }
-
-        function slideEnded() {
-            var minKey = vm.slider.minValue;
-            var maxKey = vm.slider.maxValue;
-            vm.dts = new Date(vm.slider.counts[minKey].value);
-            vm.dte = new Date(vm.slider.counts[maxKey].value);
-            vm.dateString = getFormattedDateString(vm.dts, vm.dte);
-            performDateSearch();
-        }
-
-        function performDateSearch() {
-            HeatMapSourceGeneratorService.filterObj.setTextDate(vm.dateString);
-            vm.slider.changeTime = true;
-            HeatMapSourceGeneratorService.performSearch();
-        }
-
-        function defaultSliderValue() {
-            return {
-                minValue: 0,
-                maxValue: 1,
-                changeTime: false,
-                options: {
-                    floor: 0,
-                    ceil: 1,
-                    step: 1,
-                    noSwitching: true, hideLimitLabels: true,
-                    getSelectionBarColor: function() {
-                        return '#3da9ca';
-                    },
-                    translate: function() {
-                        return '';
-                    }
-                }
-            };
-        }
     }
-
 })();
 
 /*eslint angular/document-service: 0 */
@@ -226,7 +321,8 @@
                         'id="{{barId}}" style="min-width: 400px";>' +
                       '</div>',
             restrict: 'EA',
-            link: link
+            link: link,
+            scope: {}
         };
         return directive;
 
@@ -284,7 +380,7 @@
                     }
 
                     function getColor(barkey, minvalue, maxvalue) {
-                        return barkey >= minvalue && barkey <= maxvalue ? '#2e6da4' : '#E3E3E3';
+                        return barkey >= minvalue && barkey <= maxvalue ? '#88b5dd' : '#E3E3E3';
                     }
                 }
             }
@@ -297,8 +393,87 @@
     angular.module('search_components', [
         'search_timehistogram_component',
         'search_datepicker_component',
-        'search_tweetlist_component'
+        'search_tweetlist_component',
+        'search_toolbarsearch_component',
+        'search_userFilter_component',
+        'search_geospatialFilter_component',
+        'search_exportButton_component',
+        'search_heatmap_component'
     ]);
+})();
+
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,120]*/
+/**
+ * Search Directive
+ */
+(function() {
+    angular
+    .module('search_toolbarsearch_component', [])
+    .directive('toolbarSearch', ['Map', 'HeatMapSourceGenerator', '$window', 'InfoService',
+        function toolbarSearch(Map, HeatMapSourceGenerator, $window, InfoService) {
+            var MapService = Map;
+
+            return {
+                link: toolbarSearchLink,
+                restrict: 'EA',
+                templateUrl: 'components/toolbarSearch/toolbarSearchField.tpl.html',
+                scope: {}
+            };
+
+            function toolbarSearchLink(scope) {
+
+                var vm = scope;
+                /**
+                 *
+                 */
+                vm.searchInput = '';
+
+                /**
+                 *
+                 */
+                function getKeyboardCodeFromEvent(keyEvt) {
+                    return $window.event ? keyEvt.keyCode : keyEvt.which;
+                }
+
+                /**
+                 *
+                 */
+                vm.onKeyPress = function($event) {
+                    // only fire the search if Enter-key (13) is pressed
+                    if (getKeyboardCodeFromEvent($event) === 13) {
+                        vm.doSearch();
+                    }
+                };
+
+                /**
+                 *
+                 */
+                vm.doSearch = function() {
+                    // if no input is given
+                    // if (vm.searchInput.length === 0) {
+                    //    return false;
+                    // }
+                    HeatMapSourceGenerator.search(vm.searchInput);
+                };
+
+                vm.resetSearchInput = function() {
+                    vm.searchInput = '';
+                    HeatMapSourceGenerator.search(vm.searchInput);
+
+                    // Reset the map
+                    MapService.resetMap();
+
+                    // Reset the date fields
+                    //ToDo: Reset date fields
+                };
+
+                vm.showtoolbarSearchInfo = function() {
+                    InfoService.showInfoPopup('textsearch');
+                };
+            }
+        }]);
 })();
 
 (function() {
@@ -308,24 +483,65 @@
 
     function tweetlist() {
         return {
-            controller: tweetlistController,
+            link: tweetlistLink,
             restrict: 'EA',
-            templateUrl: 'app/components/tweetlist/tweetlist.html'
+            templateUrl: 'components/tweetlist/tweetlist.tpl.html',
+            scope: {}
         };
-    }
 
-    tweetlistController.$inject = ['$scope'];
-    function tweetlistController($scope) {
-        var vm = $scope;
-        vm.tweetList = [];
-        vm.tweetList.exist = false;
-        vm.$on('setTweetList', setTweetList);
+        function tweetlistLink(scope) {
+            var vm = scope;
+            vm.tweetList = [];
+            vm.tweetList.exist = false;
+            vm.$on('setTweetList', setTweetList);
 
-        function setTweetList(event, tweetList) {
-            vm.tweetList = tweetList;
-            vm.tweetList.exist = true;
+            function setTweetList(event, tweetList) {
+                vm.tweetList = tweetList;
+                vm.tweetList.exist = true;
+            }
         }
     }
+
+})();
+
+/*eslint angular/controller-as: 0*/
+/*eslint angular/di: [2,"array"]*/
+/*eslint max-len: [2,90]*/
+/**
+ * Filter by user directive
+ */
+(function() {
+    angular
+    .module('search_userFilter_component', [])
+    .directive('userFilter', ['HeatMapSourceGenerator', 'InfoService', '$uibModal',
+        function(HeatMapSourceGenerator, InfoService, $uibModal) {
+            return {
+                link: UserFilterLink,
+                restrict: 'EA',
+                templateUrl: 'components/userFilter/userFilter.tpl.html',
+                scope: {}
+            };
+
+            function UserFilterLink(scope) {
+
+                scope.userSearch = userSearch;
+
+                scope.showUserFilterInfo = showUserFilterInfo;
+
+                scope.userfilterInput = '';
+
+                /**
+                 *
+                 */
+                function userSearch() {
+                    HeatMapSourceGenerator.search(scope.userfilterInput);
+                }
+
+                function showUserFilterInfo() {
+                    InfoService.showInfoPopup('userfilter');
+                }
+            }
+        }]);
 })();
 
 /*eslint angular/di: [2,"array"]*/
@@ -401,93 +617,6 @@
 })();
 
 /*eslint angular/controller-as: 0*/
-/*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,90]*/
-/**
- * Export Controller
- */
-(function() {
-    angular
-    .module('SolrHeatmapApp')
-    .controller('ExportController', ['HeatMapSourceGenerator', '$uibModal', '$scope',
-        function(HeatMapSourceGeneratorService, $uibModal, $scope) {
-
-            $scope.export = {
-                numDocuments: 1,
-                options: {
-                    floor: 1,
-                    ceil: 10000,
-                    step: 1
-                }
-            };
-
-            $scope.startExport = function() {
-                var numDocs = $scope.export.numDocuments;
-
-                HeatMapSourceGeneratorService.startCsvExport(numDocs);
-            };
-
-            $scope.showInfo = function(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.export.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.export.toolTitle;
-                        }
-                    }
-                });
-            };
-
-        }]
-);
-})();
-
-/*eslint angular/controller-as: 0*/
-/*eslint angular/di: [2,"array"]*/
-/**
- * Geospatial filter Controller
- */
-(function() {
-    angular
-    .module('SolrHeatmapApp')
-    .controller('GeospatialFilterController', ['$scope', '$uibModal',
-        function($scope, $uibModal) {
-
-            $scope.filterString = '[-90,-180 TO 90,180]';
-
-            $scope.showInfo = function(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.
-                                            geospatialsearch.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.
-                                            geospatialsearch.toolTitle;
-                        }
-                    }
-                });
-            };
-
-            $scope.updateFilterString = function(str) {
-                $scope.filterString = str;
-            };
-        }]
-);
-})();
-
-/*eslint angular/controller-as: 0*/
 /**
  * InfoWindowController
  */
@@ -516,9 +645,38 @@
     angular
     .module('SolrHeatmapApp')
     .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
-        function(MapService, HeatMapSourceGeneratorService, $http, $scope, $rootScope) {
+        function(Map, HeatMapSourceGenerator, $http, $scope, $rootScope) {
+            var MapService = Map;
+            var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
 
             var vm = this;
+            vm.setupEvents = function() {
+                MapService.getMap().getView()
+                  .on('change:resolution', function(evt){
+                      var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
+                      if (existingHeatMapLayers &&
+                              existingHeatMapLayers.length > 0){
+                          var radius = 500 * evt.target.getResolution();
+                          var hmLayer = existingHeatMapLayers[0];
+                          if (radius > 15) {
+                              radius = 15;
+                          }
+                          hmLayer.setRadius(radius);
+                          hmLayer.setBlur(radius*2);
+                      }
+
+                      // check box of transform interaction
+                      MapService.checkBoxOfTransformInteraction();
+                  });
+                MapService.getMap().on('moveend', function(evt){
+                    HeatMapSourceGeneratorService.performSearch();
+                });
+
+                MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
+                  ['translateend', 'scaleend'], function (e) {
+                      HeatMapSourceGeneratorService.performSearch();
+                  });
+            };
 
             vm.response = function(data, status, headers, config) {
                 if (data && data.mapConfig) {
@@ -539,34 +697,10 @@
                     // fire event mapReady
                     $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                    MapService.getMap().getView()
-                      .on('change:resolution', function(evt){
-                          var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
-                          if (existingHeatMapLayers &&
-                                  existingHeatMapLayers.length > 0){
-                              var radius = 500 * evt.target.getResolution();
-                              var hmLayer = existingHeatMapLayers[0];
-                              if (radius > 15) {
-                                  radius = 15;
-                              }
-                              hmLayer.setRadius(radius);
-                              hmLayer.setBlur(radius*2);
-                          }
-
-                          // check box of transform interaction
-                          MapService.checkBoxOfTransformInteraction();
-                      });
+                    solrHeatmapApp.setupEvents();
                     /*
                     * register some events
                     */
-                    MapService.getMap().on('moveend', function(evt){
-                        HeatMapSourceGeneratorService.performSearch();
-                    });
-
-                    MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
-                      ['translateend', 'scaleend'], function (e) {
-                          HeatMapSourceGeneratorService.performSearch();
-                      });
 
                 // Prepared featureInfo (display number of elements)
                 //solrHeatmapApp.map.on('singleclick',
@@ -591,152 +725,6 @@
 })();
 
 /*eslint angular/di: [2,"array"]*/
-/*eslint angular/controller-as: 0*/
-/**
- * ResultCounter Controller
- */
-(function() {
-    angular
-    .module('SolrHeatmapApp')
-    .controller('ResultCounterController', ['$scope', function($scope) {
-
-        $scope.$on('setCounter', function(e, data){
-            if (data < 1) {
-                data = "No results found";
-            }
-            $scope.counter = data;
-        });
-    }]);
-})();
-
-/*eslint angular/controller-as: 0*/
-/*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,120]*/
-/**
- * Search Controller
- */
-(function() {
-    angular.module('SolrHeatmapApp')
-    .controller('SearchController', ['Map', 'HeatMapSourceGenerator', '$scope', '$uibModal', '$controller', '$window',
-        function(MapService, HeatMapSourceGeneratorService, $scope, $uibModal, $controller, $window) {
-
-            /**
-             *
-             */
-            $scope.searchInput = '';
-
-            /**
-             *
-             */
-            function getKeyboardCodeFromEvent(keyEvt) {
-                return $window.event ? keyEvt.keyCode : keyEvt.which;
-            }
-
-            /**
-             *
-             */
-            $scope.onKeyPress = function($event) {
-                // only fire the search if Enter-key (13) is pressed
-                if (getKeyboardCodeFromEvent($event) === 13) {
-                    $scope.doSearch();
-                }
-            };
-
-            /**
-             *
-             */
-            $scope.doSearch = function() {
-                // if no input is given
-                // if ($scope.searchInput.length === 0) {
-                //    return false;
-                // }
-
-                HeatMapSourceGeneratorService.filterObj.setSearchText($scope.searchInput);
-                HeatMapSourceGeneratorService.performSearch();
-            };
-
-            $scope.resetSearchInput = function() {
-                $scope.searchInput = '';
-                HeatMapSourceGeneratorService.filterObj.setSearchText('');
-                HeatMapSourceGeneratorService.performSearch();
-
-                // Reset the map
-                MapService.resetMap();
-
-                // Reset the date fields
-                var ctrlViewModelNew = $scope.$new();
-                $controller('DatePickerController', {$scope : ctrlViewModelNew });
-                ctrlViewModelNew.setInitialDates();
-            };
-
-            $scope.showInfo = function(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.textsearch.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.textsearch.toolTitle;
-                        }
-                    }
-                });
-            };
-
-        }]
-);
-})();
-
-/*eslint angular/controller-as: 0*/
-/*eslint angular/di: [2,"array"]*/
-/*eslint max-len: [2,90]*/
-/**
- * Filter by user controller
- */
-(function() {
-    angular
-    .module('SolrHeatmapApp')
-    .controller('UserFilterController', ['HeatMapSourceGenerator', '$scope', '$uibModal',
-        function(HeatMapSourceGeneratorService, $scope, $uibModal) {
-
-            $scope.userSearch = userSearch;
-
-            $scope.showInfo = showInfo;
-
-            /**
-             *
-             */
-            function userSearch() {
-                HeatMapSourceGeneratorService.filterObj.setUser($scope.userfilterInput);
-                HeatMapSourceGeneratorService.performSearch();
-            }
-
-            function showInfo(){
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'infoPopup.html',
-                    controller: 'InfoWindowController',
-                    size: 'lg',
-                    resolve: {
-                        infoMsg: function(){
-                            return solrHeatmapApp.instructions.
-                                                    userfilter.instruction;
-                        },
-                        toolName: function(){
-                            return solrHeatmapApp.instructions.
-                                                    userfilter.toolTitle;
-                        }
-                    }
-                });
-            }
-        }]
-);
-})();
-
-/*eslint angular/di: [2,'array']*/
 /*eslint angular/document-service: 2*/
 /*eslint max-len: [2,150]*/
 /**
@@ -746,19 +734,59 @@
     angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
-        function(MapService, $rootScope, $controller, $filter, $window, $document , $http) {
-
+        function(Map, $rootScope, $controller, $filter, $window, $document , $http) {
+            var MapService= Map;
 
             var methods = {
-                getGeospatialFilter: getGeospatialFilter,
-                getTweetsSearchQueryParameters: getTweetsSearchQueryParameters,
+                search: search,
                 performSearch: performSearch,
                 startCsvExport: startCsvExport,
                 getFormattedDateString: getFormattedDateString,
                 filterObj: filterMethods()
             };
+            /**
+             *
+             */
+            function getTweetsSearchQueryParameters (bounds) {
+
+                var reqParamsUi = methods.filterObj.getSearchObj();
+
+                // calculate reduced bounding box
+                var dx = bounds.maxX - bounds.minX,
+                    dy = bounds.maxY - bounds.minY,
+                    minInnerX = bounds.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    maxInnerX = bounds.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                    minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                    maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+
+                var params = {
+                    'q.text': reqParamsUi.searchText,
+                    'q.user': reqParamsUi.user,
+                    'q.time': timeTextFormat(reqParamsUi.textDate, reqParamsUi.minDate, reqParamsUi.maxDate),
+                    'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
+                    'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
+                    'a.time.limit': '1',
+                    'a.time.gap': 'PT1H',
+                    'd.docs.limit': '10'
+                };
+
+                return params;
+            }
+            var createParamsForGeospatialSearch = function() {
+                var spatialFilters = MapService.getCurrentExtent(), params;
+                if(spatialFilters) {
+                    params = getTweetsSearchQueryParameters(
+                                        spatialFilters);
+                }
+                return params;
+            };
 
             return methods;
+
+            function search(input) {
+                this.filterObj.setSearchText(input);
+                this.performSearch();
+            }
 
             function filterMethods() {
                 var searchObj = {
@@ -802,210 +830,14 @@
                 };
             }
 
-
-            /**
-             * Clamps given number `num` to be inside the allowed range from `min`
-             * to `max`.
-             * Will also work as expected if `max` and `min` are accidently swapped.
-             *
-             * @param {number} num The number to clamp.
-             * @param {number} min The minimum allowed number.
-             * @param {number} max The maximim allowed number.
-             * @return {number} The clamped number.
-             */
-            function clamp(num, min, max) {
-                if (max < min) {
-                    var tmp = min;
-                    min = max;
-                    max = tmp;
-                }
-                return Math.min(Math.max(min, num), max);
-            }
-
-            /**
-             * Determines whether passed longitude is outside of the range `-180`
-             * and `+180`.
-             *
-             * @param {number} lon The longitude to check.
-             * @return {boolean} Whether the longitude is outside of the range
-             *  -180` and `+180`.
-             */
-            function outsideLonRange(lon) {
-                return lon < -180 || lon > 180;
-            }
-
-            /**
-             * Determines whether passed latitude is outside of the range `-90` and
-             * `+90`.
-             * @param {number} lat The longitude to check.
-             * @return {boolean} Whether the latitude is outside of the range `-90`
-             *  and `+90`.
-             */
-            function outsideLatRange(lat) {
-                return lat < -90 || lat > 90;
-            }
-
-            /**
-             * Clamps given longitude to be inside the allowed range from `-180` to
-             * `+180`.
-             * @param {number} lon The longitude to fit / clamp.
-             * @return {number} The fitted / clamped longitude.
-             */
-            function clampLon(lon) {
-                return clamp(lon, -180, 180);
-            }
-
-            /**
-             * Clamps given latitude to be inside the allowed range from `-90` to
-             * `+90`.
-             * @param {number} lat The latitude to fit / clamp.
-             * @return {number} The fitted / clamped latitude.
-             */
-            function clampLat(lat) {
-                return clamp(lat, -90, 90);
-            }
-
-            /**
-             * Normalizes an `EPSG:4326` extent which may stem from multiple worlds
-             * so that the returned extent always is within the bounds of the one
-             * true `EPSG:4326` world extent `[-180, -90, 180, 90]`.
-             *
-             * Examples:
-             *
-             *     // valid world in, returned as-is:
-             *     normalize([-180, -90, 180, 90])  // => [-180, -90, 180, 90]
-             *
-             *     // valid extent in world in, returned as-is:
-             *     normalize([-160, -70, 150, 70])  // => [-160, -70, 150, 70]
-             *
-             *     // shifted one degree westwards, returns one-true world:
-             *     normalize([-181, -90, 179, 90])  // => [-180, -90, 180, 90]
-             *
-             *     // shifted one degree eastwards, returns one-true world:
-             *     normalize([-179, -90, 181, 90])  // => [-180, -90, 180, 90]);
-             *
-             *     // shifted more than one world westwards, returns one-true world:
-             *     normalize([-720, -90, -360, 90]) // => [-180, -90, 180, 90]);
-             *
-             *     // shifted to the south, returns one-true world:
-             *     normalize([-180, -91, 180, 89])  // =>   [-180, -90, 180, 90]);
-             *
-             *     // multiple worlds, returns one-true world:
-             *     normalize([-360, -90, 180, 90])  // =>   [-180, -90, 180, 90]);
-             *
-             *     // multiple worlds, returns one-true world:
-             *     normalize([-360, -180, 180, 90]) // =>  [-180, -90, 180, 90]);
-             *
-             * @param {Array<number>} Extent to normalize: [minx, miny, maxx, maxy].
-             * @return {Array<number>} Normalized extent: [minx, miny, maxx, maxy].
-             */
-            function normalize(extent) {
-                var minX = extent[0];
-                var minY = extent[1];
-                var maxX = extent[2];
-                var maxY = extent[3];
-                var width = Math.min(maxX - minX, 360);
-                var height = Math.min(maxY - minY, 180);
-
-                if (outsideLonRange(minX)) {
-                    minX = clampLon(minX);
-                    maxX = minX + width;
-                } else if (outsideLonRange(maxX)) {
-                    maxX = clampLon(maxX);
-                    minX = maxX - width;
-                }
-
-                if (outsideLatRange(minY)) {
-                    minY = clampLat(minY);
-                    maxY = minY + height;
-                } else if (outsideLatRange(maxY)) {
-                    maxY = clampLat(maxY);
-                    minY = maxY - height;
-                }
-
-                return [minX, minY, maxX, maxY];
-            }
-
-            /**
-             * Builds geospatial filter depending on the current map extent.
-             * This filter will be used later for `q.geo` parameter of the API
-             * search or export request.
-             */
-            function getGeospatialFilter(){
-                var map = MapService.getMap(),
-                    viewProj = map.getView().getProjection().getCode(),
-                    extent = map.getView().calculateExtent(map.getSize()),
-                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
-                    transformInteractionLayer = MapService.
-                                    getLayersBy('name', 'TransformInteractionLayer')[0],
-                    currentBbox,
-                    currentBboxExtentWgs84,
-                    geoFilter = {};
-
-                if (!transformInteractionLayer) {
-                    return null;
-                }
-                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
-                currentBboxExtentWgs84 = ol.proj.transformExtent(
-                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
-
-                // default: Zoom level <= 1 query whole world
-                if (map.getView().getZoom() <= 1) {
-                    extentWgs84 = [-180, -90 ,180, 90];
-                }
-
-                if (extent && extentWgs84){
-                    var normalizedExtentMap = normalize(extentWgs84),
-                        normalizedExtentBox = normalize(currentBboxExtentWgs84),
-                        minX = normalizedExtentMap[1],
-                        maxX = normalizedExtentMap[3],
-                        minY = normalizedExtentMap[0],
-                        maxY = normalizedExtentMap[2];
-
-                    geoFilter.hmFilter = {
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY
-                    };
-
-                    minX = normalizedExtentBox[1];
-                    maxX = normalizedExtentBox[3];
-                    minY = normalizedExtentBox[0];
-                    maxY = normalizedExtentBox[2];
-
-                    geoFilter.queryGeo = {
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY
-                    };
-
-                    // Reset the date fields
-                    // TODO get rid of angular.element
-                    var ctrlViewModelNew = angular.element('[ng-controller=GeospatialFilterController]').scope();
-                    $controller('GeospatialFilterController', {$scope : ctrlViewModelNew });
-                    ctrlViewModelNew.updateFilterString('[' + parseFloat(Math.round(minX * 100) / 100).toFixed(2) + ',' +
-                                            parseFloat(Math.round(minY * 100) / 100).toFixed(2) + ' TO ' +
-                                            parseFloat(Math.round(maxX * 100) / 100).toFixed(2) + ',' +
-                                            parseFloat(Math.round(maxY * 100) / 100).toFixed(2) + ']');
-                }
-
-                return geoFilter;
-            }
-
             /**
              * Performs search with the given full configuration / search object.
              */
             function performSearch(){
-                var config = {},
-                    spatialFilters = this.getGeospatialFilter(),
-                    params = this.getTweetsSearchQueryParameters(
-                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
-
-                // add additional parameter for the soft maximum of the heatmap grid
-                params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
-                if (params && spatialFilters !== null) {
+                var config,
+                    params = createParamsForGeospatialSearch();
+                if (params) {
+                    params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
 
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
@@ -1013,9 +845,10 @@
                         params: params
                     };
                     //load the data
-                    $http(config).
-                    success(function(data, status, headers, cfg) {
+                    $http(config)
+                    .then(function successCallback(response) {
                         // check if we have a heatmap facet and update the map with it
+                        var data = response.data;
                         if (data && data['a.hm']) {
                             MapService.createOrUpdateHeatMapLayer(data['a.hm']);
                             // get the count of matches
@@ -1025,11 +858,12 @@
 
                             $rootScope.$broadcast('setTweetList', data['d.docs']);
 
-                            methods.filterObj.setHistogramCount(data['a.time']['counts']);
+                            methods.filterObj.setHistogramCount(data['a.time'].counts);
                         }
-                    }).
-                    error(function(data, status, headers, cfg) {
-                        // hide the loading mask
+                    }, function errorCallback(response) {
+                        $window.alert('An error occured while reading heatmap data');
+                    })
+                    .catch(function() {
                         $window.alert('An error occured while reading heatmap data');
                     });
                 } else {
@@ -1043,16 +877,11 @@
              * the API requests.
              */
             function startCsvExport(numberOfDocuments){
-                var config = {},
-                    spatialFilters = this.getGeospatialFilter(),
-                    params = this.getTweetsSearchQueryParameters(
-                                    spatialFilters.queryGeo, spatialFilters.hmFilter);
-
-                // add additional parameter for the number of documents to return
-                params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
-                        numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
-
-                if (params && spatialFilters !== null) {
+                var config,
+                    params = createParamsForGeospatialSearch();
+                if (params) {
+                    params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
+                            numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
                         method: 'GET',
@@ -1060,19 +889,21 @@
                     };
 
                     //start the export
-                    $http(config).
-                    success(function(data, status, headers, cfg) {
+                    $http(config)
+                    .then(function successCallback(response) {
                         var anchor = angular.element('<a/>');
                         anchor.css({display: 'none'}); // Make sure it's not visible
                         angular.element($document.body).append(anchor); // Attach to document
                         anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
                             target: '_blank',
                             download: 'bop_export.csv'
                         })[0].click();
                         anchor.remove(); // Clean it up afterwards
-                    }).
-                    error(function(data, status, headers, cfg) {
+                    }, function errorCallback(response) {
+                        $window.alert('An error occured while exporting csv data');
+                    })
+                    .catch(function() {
                         $window.alert('An error occured while exporting csv data');
                     });
                 } else {
@@ -1080,34 +911,6 @@
                 }
             }
 
-            /**
-             *
-             */
-            function getTweetsSearchQueryParameters(bounds) {
-
-                var reqParamsUi = methods.filterObj.getSearchObj();
-
-                // calculate reduced bounding box
-                var dx = bounds.maxX - bounds.minX,
-                    dy = bounds.maxY - bounds.minY,
-                    minInnerX = bounds.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                    maxInnerX = bounds.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                    minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
-                    maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
-
-                var params = {
-                    'q.text': reqParamsUi.searchText,
-                    'q.user': reqParamsUi.user,
-                    'q.time': timeTextFormat(reqParamsUi.textDate, reqParamsUi.minDate, reqParamsUi.maxDate),
-                    'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
-                    'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
-                    'a.time.limit': '1',
-                    'a.time.gap': 'PT1H',
-                    'd.docs.limit': '10'
-                };
-
-                return params;
-            }
 
             /**
              * Returns the formatted date object that can be parsed by API.
@@ -1128,17 +931,57 @@
 );
 })();
 
+/*eslint angular/di: [2, "array"]*/
+/*eslint angular/document-service: 2*/
+/*eslint max-len: [2,150]*/
+/**
+ * HeatMapSourceGenerator Service
+ */
+(function() {
+    angular
+    .module('SolrHeatmapApp')
+    .factory('InfoService', ['$uibModal', function($uibModal) {
+
+        return {
+            showInfoPopup: showInfoPopup
+        };
+
+        function showInfoPopup(instructionsKey){
+            var instructionTopic = solrHeatmapApp.instructions[instructionsKey];
+            if (instructionTopic) {
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'infoPopup.html',
+                    controller: 'InfoWindowController',
+                    size: 'lg',
+                    resolve: {
+                        infoMsg: function(){
+                            return instructionTopic.instruction;
+                        },
+                        toolName: function(){
+                            return instructionTopic.toolTitle;
+                        }
+                    }
+                });
+            }
+
+        }
+    }]);
+
+})();
+
 /*eslint angular/di: [2,"array"]*/
 /*eslint angular/document-service: 2*/
 /*eslint max-len: [2,100]*/
 /**
- * Map Service
+ * Map service
  */
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('Map', ['$rootScope', '$filter', '$document',
-        function($rootScope, $filter, $document) {
-
+    .factory('Map', ['$rootScope', '$filter', '$document', 'Normalize', '$controller',
+        function($rootScope, $filter, $document, Normalize, $controller) {
+            var NormalizeService = Normalize;
+            var service = {};
             var map = {},
                 defaults = {
                     renderer: 'canvas',
@@ -1207,106 +1050,75 @@
             /**
             *
             */
-            function getMap() {
+            service.getMap = function() {
                 return map;
-            }
+            };
 
-            /**
-             *
-             */
-            function getLayersBy(key, value) {
-                var layers = getMap().getLayers().getArray();
+            service.getMapView = function() {
+                return service.getMap().getView();
+            };
+
+            service.getMapZoom = function() {
+                return service.getMapView().getZoom();
+            };
+
+            service.getMapSize = function() {
+                return service.getMap().getSize();
+            };
+
+            service.getMapProjection = function() {
+                return service.getMapView().getProjection().getCode();
+            };
+
+            service.getLayers = function() {
+                return service.getMap().getLayers().getArray();
+            };
+
+            service.getInteractions = function () {
+                return service.getMap().getInteractions().getArray();
+            };
+
+            service.getLayersBy = function(key, value) {
+                var layers = service.getLayers();
                 return $filter('filter')(layers, function(layer) {
                     return layer.get(key) === value;
                 });
-            }
+            };
 
             /**
              *
              */
-            function getInteractionsByClass(value) {
-                var interactions = getMap().getInteractions().getArray();
+            service.getInteractionsByClass = function(value) {
+                var interactions = service.getInteractions();
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction instanceof value;
                 });
-            }
+            };
 
             /**
              *
              */
-            function getInteractionsByType(interactions, type) {
+            service.getInteractionsByType = function(interactions, type) {
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction.type_ === type;
                 });
-            }
-
-            /**
-             *
-             */
-            function displayFeatureInfo(evt) {
-                var coord = evt.coordinate,
-                    feature = map.forEachFeatureAtPixel(evt.pixel,
-                            function(feat, layer) {
-                                return feat;
-                            }),
-                    msg = '',
-                    evtCnt = 0,
-                    lyrCnt = 0,
-                    container = $document[0].getElementById('popup'),
-                    content = $document[0].getElementById('popup-content'),
-                    closer = $document[0].getElementById('popup-closer'),
-                    overlay = new ol.Overlay({
-                        element: container,
-                        autoPan: true,
-                        autoPanAnimation: {
-                            duration: 250
-                        }
-                    });
-
-                closer.onclick = function() {
-                    overlay.setPosition(undefined);
-                    closer.blur();
-                    return false;
-                };
-
-                // remove any existing overlay before adding a new one
-                map.getOverlays().clear();
-                map.addOverlay(overlay);
-
-                if (feature) {
-                    var data = feature.get('origVal');
-                    if (data) {
-                        $rootScope.$broadcast('featureInfoLoaded', data);
-                    }
-                }
-
-                rs.$on('featureInfoLoaded', function(event, dta) {
-                    msg += '<h5>Number of elements: </h5>' + data;
-                    content.innerHTML = msg;
-                    var overlayFi = solrHeatmapApp.
-                                map.getOverlays().getArray()[0];
-                    if (overlayFi) {
-                        overlayFi.setPosition(coord);
-                    }
-                });
-
-            }
+            };
 
             /**
             * Helper method to change active mode of masks for backgroundLayer and
             * heatmap layer
             */
-            function switchMasks(hmAvailable) {
-                var heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0],
+            var _switchMasks = function(hmAvailable) {
+                var heatMapLayer = service.getLayersBy('name', 'HeatMapLayer')[0],
                     heatMapMask = heatMapLayer.getFilters()[0],
-                    backgroundLayer = getLayersBy('backgroundLayer', true)[0],
+                    backgroundLayer = service.getLayersBy('backgroundLayer', true)[0],
                     backgroundLayerMask = backgroundLayer.getFilters()[0];
 
                 // disable mask of backgroundLayer if heatmap is available and vice versa
                 backgroundLayerMask.setActive(!hmAvailable);
                 // enable mask of heatMapLayer if heatmap is available and vice versa
                 heatMapMask.setActive(hmAvailable);
-            }
+            };
 
             function heatmapMinMax(heatmap, stepsLatitude, stepsLongitude){
                 var max = -1;
@@ -1417,11 +1229,12 @@
                 return olVecSrc;
             }
 
-            function createOrUpdateHeatMapLayer(data) {
-                var olVecSrc = createHeatMapSource(data),
-                    existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer'),
-                    transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0],
-                    newHeatMapLayer;
+            service.createOrUpdateHeatMapLayer = function(data) {
+                var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
+                existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
+                transformInteractionLayer = service.getLayersBy('name',
+                                                                "TransformInteractionLayer")[0];
+                olVecSrc = createHeatMapSource(data);
 
                 if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                     var currHeatmapLayer = existingHeatMapLayers[0];
@@ -1438,7 +1251,7 @@
                         radius: 10
                     });
 
-                    map.addLayer(newHeatMapLayer);
+                    service.getMap().addLayer(newHeatMapLayer);
 
                     // Add Mask to HeatMapLayer
                     var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
@@ -1452,41 +1265,21 @@
                     });
                     newHeatMapLayer.addFilter(mask);
                 }
-
-                switchMasks(olVecSrc !== null);
-            }
-
-
-            function setTransactionBBox(extent) {
-                var transformationLayer = getLayersBy('name','TransformInteractionLayer')[0],
-                    vectorSrc = transformationLayer.getSource(),
-                    currentBbox = vectorSrc.getFeatures()[0],
-                    polyNew;
-
-                polyNew = ol.geom.Polygon.fromExtent(extent);
-                currentBbox.setGeometry(polyNew);
-
-                // update interaction
-                map.getInteractions().getArray().forEach(function(interaction){
-                    if(interaction instanceof ol.interaction.Transform){
-                        interaction.dispatchEvent('propertychange');
-                    }
-                });
-            }
+                _switchMasks(olVecSrc !== null);
+            };
 
             /**
              * This method adds a transfrom interaction to the mapand a mask to background layer
              * The area outer the feature which can be modified by the transfrom interaction
              * will have a white shadow
              */
-            function generateMaskAndAssociatedInteraction (bboxFeature, fromSrs) {
+            function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
                 var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
-                    backGroundLayer = getLayersBy('backgroundLayer', true)[0],
-                    heatMapLayer = getLayersBy('name', 'HeatMapLayer')[0];
+                    backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
 
-                if (fromSrs !== map.getView().getProjection().getCode()){
+                if (fromSrs !== service.getMapProjection()){
                     var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                                    map.getView().getProjection().getCode());
+                                                    service.getMapProjection());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
@@ -1501,7 +1294,7 @@
                         })
                     })
                 });
-                map.addLayer(vector);
+                service.getMap().addLayer(vector);
                 vector.getSource().addFeature(polygon);
 
                 var transformInteraction = new ol.interaction.Transform({
@@ -1511,7 +1304,7 @@
                     rotate: false,
                     stretch: false
                 });
-                map.addInteraction(transformInteraction);
+                service.getMap().addInteraction(transformInteraction);
 
                 var mask = new ol.filter.Mask({
                     feature: polygon,
@@ -1523,14 +1316,33 @@
                 backGroundLayer.addFilter(mask);
             }
 
+            function setTransactionBBox(extent) {
+                var transformationLayer = service.getLayersBy('name',
+                                                              'TransformInteractionLayer')[0],
+                    vectorSrc = transformationLayer.getSource(),
+                    currentBbox = vectorSrc.getFeatures()[0],
+                    polyNew;
+
+                polyNew = ol.geom.Polygon.fromExtent(extent);
+                currentBbox.setGeometry(polyNew);
+
+                // update interaction
+                service.getInteractions().forEach(function(interaction){
+                    if(interaction instanceof ol.interaction.Transform){
+                        interaction.dispatchEvent('propertychange');
+                    }
+                });
+            }
+
             /*
              * For change:resolution event (zoom in map):
              * If bounding of transform interaction is grater than the map extent
              * the transform box will be resized to 90%
              */
-            function checkBoxOfTransformInteraction () {
-                var transformInteractionLayer = getLayersBy('name', 'TransformInteractionLayer')[0],
-                    mapExtent = map.getView().calculateExtent(map.getSize()),
+            service.checkBoxOfTransformInteraction = function() {
+                var transformInteractionLayer = service.getLayersBy('name',
+                                                                    'TransformInteractionLayer')[0],
+                    mapExtent = service.getMapView().calculateExtent(service.getMapSize()),
                     vectorSrc = transformInteractionLayer.getSource(),
                     currentBbox = vectorSrc.getFeatures()[0],
                     needsUpdate = false,
@@ -1560,32 +1372,93 @@
                     setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
                 }
 
-            }
+            };
 
             /**
              * Helper method to reset the map
              */
-            function resetMap() {
+            service.resetMap = function() {
                 // Reset view
                 var intitalCenter = solrHeatmapApp.initMapConf.view.center,
                     intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
-                    var vw = map.getView();
+                    var vw = service.getMapView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
 
                     setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
-            }
+            };
+            /**
+             * Builds geospatial filter depending on the current map extent.
+             * This filter will be used later for `q.geo` parameter of the API
+             * search or export request.
+             */
+            service.getCurrentExtent = function(){
+                var viewProj = service.getMapProjection(),
+                    extent = service.getMapView().calculateExtent(service.getMapSize()),
+                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
+                    transformInteractionLayer = service.
+                                    getLayersBy('name', 'TransformInteractionLayer')[0],
+                    currentBbox,
+                    currentBboxExtentWgs84,
+                    currentExtent = {};
+
+                if (!transformInteractionLayer) {
+                    return null;
+                }
+                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
+                currentBboxExtentWgs84 = ol.proj.transformExtent(
+                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
+
+                // default: Zoom level <= 1 query whole world
+                if (service.getMapZoom() <= 1) {
+                    extentWgs84 = [-180, -90 ,180, 90];
+                }
+
+                if (extent && extentWgs84){
+                    var normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84),
+                        normalizedExtentBox =
+                            NormalizeService.normalizeExtent(currentBboxExtentWgs84),
+                        minX = normalizedExtentMap[1],
+                        maxX = normalizedExtentMap[3],
+                        minY = normalizedExtentMap[0],
+                        maxY = normalizedExtentMap[2];
+
+                    minX = normalizedExtentBox[1];
+                    maxX = normalizedExtentBox[3];
+                    minY = normalizedExtentBox[0];
+                    maxY = normalizedExtentBox[2];
+
+                    currentExtent = {
+                        minX: minX,
+                        maxX: maxX,
+                        minY: minY,
+                        maxY: maxY
+                    };
+
+                    var roundToFixed = function(value){
+                        return parseFloat(Math.round(value* 100) / 100).toFixed(2);
+                    };
+                    // Reset the date fields
+                    $rootScope.$broadcast('geoFilterUpdated', '[' +
+                                            roundToFixed(minX) + ',' +
+                                            roundToFixed(minY) + ' TO ' +
+                                            roundToFixed(maxX) + ',' +
+                                            roundToFixed(maxY) + ']');
+                }
+
+                return currentExtent;
+            };
 
             /**
              *
              */
-            function init(config) {
+            service.init = function(config) {
                 var viewConfig = angular.extend(defaults.view,
                                                     config.mapConfig.view),
-                    rendererConfig = angular.extend(defaults.renderer,
-                                                    config.mapConfig.renderer),
+                    rendererConfig = config.mapConfig.renderer ?
+                        config.mapConfig.renderer : defaults.renderer,
                     layerConfig = config.mapConfig.layers;
 
                 map = new ol.Map({
@@ -1625,28 +1498,146 @@
                     vw.set('extent', viewConfig.extent);
                     generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
                 }
-            }
-
-            var ms = {
-                init: init,
-                getMap: getMap,
-                getLayersBy: getLayersBy,
-                getInteractionsByClass: getInteractionsByClass,
-                getInteractionsByType: getInteractionsByType,
-                displayFeatureInfo: displayFeatureInfo,
-                createOrUpdateHeatMapLayer: createOrUpdateHeatMapLayer,
-                generateMaskAndAssociatedInteraction: generateMaskAndAssociatedInteraction,
-                checkBoxOfTransformInteraction: checkBoxOfTransformInteraction,
-                setTransactionBBox: setTransactionBBox,
-                createHeatMapSource: createHeatMapSource,
-                heatmapMinMax: heatmapMinMax,
-                rescaleHeatmapValue: rescaleHeatmapValue,
-                resetMap: resetMap
             };
-
-            return ms;
+            return service;
         }]
 );
+})();
+
+(function() {
+    angular
+    .module('SolrHeatmapApp')
+    .factory('Normalize', function() {
+
+        return {
+            normalizeExtent: normalize
+        };
+
+        /**
+         * Clamps given number `num` to be inside the allowed range from `min`
+         * to `max`.
+         * Will also work as expected if `max` and `min` are accidently swapped.
+         *
+         * @param {number} num The number to clamp.
+         * @param {number} min The minimum allowed number.
+         * @param {number} max The maximim allowed number.
+         * @return {number} The clamped number.
+         */
+        function clamp(num, min, max) {
+            if (max < min) {
+                var tmp = min;
+                min = max;
+                max = tmp;
+            }
+            return Math.min(Math.max(min, num), max);
+        }
+
+        /**
+         * Determines whether passed longitude is outside of the range `-180`
+         * and `+180`.
+         *
+         * @param {number} lon The longitude to check.
+         * @return {boolean} Whether the longitude is outside of the range
+         *  -180` and `+180`.
+         */
+        function outsideLonRange(lon) {
+            return lon < -180 || lon > 180;
+        }
+
+        /**
+         * Determines whether passed latitude is outside of the range `-90` and
+         * `+90`.
+         * @param {number} lat The longitude to check.
+         * @return {boolean} Whether the latitude is outside of the range `-90`
+         *  and `+90`.
+         */
+        function outsideLatRange(lat) {
+            return lat < -90 || lat > 90;
+        }
+
+        /**
+         * Clamps given longitude to be inside the allowed range from `-180` to
+         * `+180`.
+         * @param {number} lon The longitude to fit / clamp.
+         * @return {number} The fitted / clamped longitude.
+         */
+        function clampLon(lon) {
+            return clamp(lon, -180, 180);
+        }
+
+        /**
+         * Clamps given latitude to be inside the allowed range from `-90` to
+         * `+90`.
+         * @param {number} lat The latitude to fit / clamp.
+         * @return {number} The fitted / clamped latitude.
+         */
+        function clampLat(lat) {
+            return clamp(lat, -90, 90);
+        }
+
+        /**
+         * Normalizes an `EPSG:4326` extent which may stem from multiple worlds
+         * so that the returned extent always is within the bounds of the one
+         * true `EPSG:4326` world extent `[-180, -90, 180, 90]`.
+         *
+         * Examples:
+         *
+         *     // valid world in, returned as-is:
+         *     normalize([-180, -90, 180, 90])  // => [-180, -90, 180, 90]
+         *
+         *     // valid extent in world in, returned as-is:
+         *     normalize([-160, -70, 150, 70])  // => [-160, -70, 150, 70]
+         *
+         *     // shifted one degree westwards, returns one-true world:
+         *     normalize([-181, -90, 179, 90])  // => [-180, -90, 180, 90]
+         *
+         *     // shifted one degree eastwards, returns one-true world:
+         *     normalize([-179, -90, 181, 90])  // => [-180, -90, 180, 90]);
+         *
+         *     // shifted more than one world westwards, returns one-true world:
+         *     normalize([-720, -90, -360, 90]) // => [-180, -90, 180, 90]);
+         *
+         *     // shifted to the south, returns one-true world:
+         *     normalize([-180, -91, 180, 89])  // =>   [-180, -90, 180, 90]);
+         *
+         *     // multiple worlds, returns one-true world:
+         *     normalize([-360, -90, 180, 90])  // =>   [-180, -90, 180, 90]);
+         *
+         *     // multiple worlds, returns one-true world:
+         *     normalize([-360, -180, 180, 90]) // =>  [-180, -90, 180, 90]);
+         *
+         * @param {Array<number>} Extent to normalize: [minx, miny, maxx, maxy].
+         * @return {Array<number>} Normalized extent: [minx, miny, maxx, maxy].
+         */
+        function normalize(extent) {
+            var minX = extent[0];
+            var minY = extent[1];
+            var maxX = extent[2];
+            var maxY = extent[3];
+            var width = Math.min(maxX - minX, 360);
+            var height = Math.min(maxY - minY, 180);
+
+            var rangeCheck = function(min,max, rangeFunc, clampFunc, extra) {
+                if (rangeFunc(min)) {
+                    min = clampFunc(min);
+                    max = min + extra;
+                } else if (rangeFunc(max)) {
+                    max = clampFunc(max);
+                    min = max - extra;
+                }
+                return [min,max];
+            };
+
+            var x = rangeCheck(minX, maxX, outsideLonRange, clampLon, width);
+            minX = x[0];
+            maxX = x[1];
+            var y = rangeCheck(minY, maxY, outsideLatRange, clampLat, height);
+            minY = y[0];
+            maxY = y[1];
+
+            return [minX, minY, maxX, maxY];
+        }
+    });
 })();
 
 /** Interaction rotate
@@ -2244,3 +2235,193 @@ ol.filter.Mask.prototype.postcompose = function(e)
 		ctx.fill("evenodd");
 	ctx.restore();
 }
+
+angular.module('templates-components', ['components/datepicker/datepicker.tpl.html', 'components/exportButton/exportButton.tpl.html', 'components/geospatialFilter/geospatialFilter.tpl.html', 'components/heatmap/heatmap.tpl.html', 'components/toolbarSearch/toolbarSearchField.tpl.html', 'components/tweetlist/tweetlist.tpl.html', 'components/userFilter/userFilter.tpl.html']);
+
+angular.module("components/datepicker/datepicker.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/datepicker/datepicker.tpl.html",
+    "<div class=\"col-md-12 component-padding\">\n" +
+    "        <div class=\"form-horizontal\">\n" +
+    "            <div class=\"row\">\n" +
+    "                <label class=\"control-label col-md-1\">From:</label>\n" +
+    "                <div class=\"col-md-5\">\n" +
+    "                    <p class=\"input-group\">\n" +
+    "                        <input type=\"text\" class=\"form-control input-sm\" uib-datepicker-popup ng-model=\"datepickerStartDate\" is-open=\"startDate.opened\"\n" +
+    "                            show-button-bar=\"false\" datepicker-options=\"dateOptions\" ng-required=\"true\"\n" +
+    "                            ng-model-options=\"{timezone: 'UTC'}\" ng-change=\"onChangeDatepicker()\" readonly/>\n" +
+    "                        <span class=\"input-group-btn\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"openStartDate()\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
+    "                        </span>\n" +
+    "                    </p>\n" +
+    "                </div>\n" +
+    "                <label class=\"control-label col-md-1\">To:</label>\n" +
+    "                <div class=\"col-md-5\">\n" +
+    "                    <p class=\"input-group\">\n" +
+    "                        <input type=\"text\" class=\"form-control input-sm\" uib-datepicker-popup ng-model=\"datepickerEndDate\" is-open=\"endDate.opened\" show-button-bar=\"false\"\n" +
+    "                          datepicker-options=\"dateOptions\" ng-required=\"true\" ng-change=\"onChangeDatepicker()\" readonly />\n" +
+    "                        <span class=\"input-group-btn\">\n" +
+    "                            <button type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"openEndDate()\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
+    "                        </span>\n" +
+    "                    </p>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-md-12 component-padding\">\n" +
+    "        <div class=\"row\">\n" +
+    "          <div class=\"date-picker-input\">\n" +
+    "              <form ng-submit=\"onSubmitDateText()\">\n" +
+    "                  <div class=\"form-group\">\n" +
+    "                      <span class=\"searchbtn\">\n" +
+    "                          <a href=\"\" class=\"infobtn\" ng-click=\"showDatepickerInfo()\">\n" +
+    "                               <span class=\"glyphicon glyphicon-info-sign\"></span>\n" +
+    "                          </a>\n" +
+    "                      </span>\n" +
+    "                      <label for=\"focusedInput\" class=\"control-label col-md-1\">Date:</label>\n" +
+    "                      <div class=\"col-md-10\">\n" +
+    "                         <input id=\"focusedInput\" class=\"form-control input-sm\" type=\"text\" ng-model=\"dateString\">\n" +
+    "                      </div>\n" +
+    "                  </div>\n" +
+    "              </form>\n" +
+    "\n" +
+    "          </div>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-md-12 component-padding\">\n" +
+    "        <time-histogram barId=\"inbar\"></time-histogram>\n" +
+    "        <rzslider rz-slider-model=\"slider.minValue\" rz-slider-high=\"slider.maxValue\" rz-slider-options=\"slider.options\"></rzslider>\n" +
+    "    </div>\n" +
+    "");
+}]);
+
+angular.module("components/exportButton/exportButton.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/exportButton/exportButton.tpl.html",
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-sm-4 col-xs-3 export-slider\">\n" +
+    "        <input type=\"number\" class=\"form-control input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched\" ng-model=\"export.numDocuments\">\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-sm-8 col-xs-9 export-slider\">\n" +
+    "        <rzslider rz-slider-model=\"export.numDocuments\" rz-slider-options=\"export.options\"></rzslider>\n" +
+    "    </div>\n" +
+    "    <div class=\"col-md-12\">\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <label for=\"focusedInput\" class=\"control-label\">\n" +
+    "                    Results: <span ng-bind=\"export.numDocuments\"></span> of <span ng-bind=\"export.options.ceil\"></span>\n" +
+    "                </label>\n" +
+    "                <button class=\"btn btn-primary\" id=\"exportbtn\" title=\"EXPORT\" type=\"button\" ng-click=\"startExport()\">EXPORT</button>\n" +
+    "                <span class=\"searchbtn\">\n" +
+    "                    <a href=\"\" class=\"infobtn\" ng-click=\"showExportInfo()\">\n" +
+    "                         <span class=\"glyphicon glyphicon-info-sign\"></span>\n" +
+    "                    </a>\n" +
+    "                </span>\n" +
+    "            </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/geospatialFilter/geospatialFilter.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/geospatialFilter/geospatialFilter.tpl.html",
+    "<div class=\"col-xs-8 padding-search\">\n" +
+    "    <div class=\"input-group searchinputfield\" id=\"geospatialfilterinput\">\n" +
+    "        <input class=\"form-control input-sm\" type=\"text\" ng-model=\"filterString\" ng-keypress=\"onKeyPress($event)\" ng-model=\"geospatialfilterInput\" ng-click=\"onFocus()\" ng-blur=\"onBlur()\">\n" +
+    "        <span class=\"input-group-addon\">\n" +
+    "            <i class=\"glyphicon glyphicon-search\"></i>\n" +
+    "        </span>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "<div class=\"col-xs-4 padding-search\">\n" +
+    "    <span class=\"searchbtn pull-left\">\n" +
+    "        <button class=\"btn btn-primary btn-sm\" type=\"button\">Search</button>\n" +
+    "    </span>\n" +
+    "    <span class=\"searchbtn padding-search\">\n" +
+    "        <a href=\"\" class=\"infobtn\" ng-click=\"showGeospatialInfo()\">\n" +
+    "            <span class=\"glyphicon glyphicon-info-sign\"></span>\n" +
+    "        </a>\n" +
+    "    </span>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/heatmap/heatmap.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/heatmap/heatmap.tpl.html",
+    "<div id=\"resultCounterText\">\n" +
+    "    <form class=\"form-inline\">\n" +
+    "        <div class=\"form-group\">\n" +
+    "            <p ng-show=\"counter\">Results for keyword: {{counter}}</p>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>\n" +
+    "<!-- the ol3 map -->\n" +
+    "<div class=\"map\" id=\"map\"></div>\n" +
+    "");
+}]);
+
+angular.module("components/toolbarSearch/toolbarSearchField.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/toolbarSearch/toolbarSearchField.tpl.html",
+    "<div class=\"col-xs-7 padding-search\">\n" +
+    "    <div class=\"input-group searchinputfield\" id=\"searchinput\">\n" +
+    "        <input class=\"form-control input-sm\" type=\"text\" placeholder=\"Enter keyword\" ng-keypress=\"onKeyPress($event)\"\n" +
+    "          ng-model=\"searchInput\" ng-click=\"onFocus()\" ng-blur=\"onBlur()\">\n" +
+    "        <span class=\"input-group-addon\">\n" +
+    "            <i class=\"glyphicon glyphicon-search\"></i>\n" +
+    "        </span>\n" +
+    "     </div>\n" +
+    "</div>\n" +
+    "<div class=\"col-xs-5 padding-search\">\n" +
+    "    <span class=\"searchbtn\">\n" +
+    "       <button class=\"btn btn-primary btn-sm\" type=\"button\" ng-click=\"doSearch()\">Search</button>\n" +
+    "    </span>\n" +
+    "    <span class=\"searchbtn\">\n" +
+    "        <button class=\"btn btn-primary btn-sm\" type=\"button\" ng-click=\"resetSearchInput()\">Reset</button>\n" +
+    "    </span>\n" +
+    "\n" +
+    "    <span class=\"searchbtn\">\n" +
+    "        <a href=\"\" class=\"infobtn\" ng-click=\"showtoolbarSearchInfo()\">\n" +
+    "             <span class=\"glyphicon glyphicon-info-sign\"></span>\n" +
+    "        </a>\n" +
+    "    </span>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/tweetlist/tweetlist.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/tweetlist/tweetlist.tpl.html",
+    "<li ng-repeat=\"tweet in tweetList\" class=\"tweet\" style=\"list-style: none;\">\n" +
+    "  <div class=\"list-item-text\">\n" +
+    "    <h3>@{{tweet.user_name}}</h3>\n" +
+    "    <h4>{{tweet.text}}</h4>\n" +
+    "    <p>{{tweet.created_at | date:'medium'}}</p>\n" +
+    "  </div>\n" +
+    "</li>\n" +
+    "<div ng-if=\"!tweetList.length && tweetList.exist\" class=\"no-info\">\n" +
+    "    No Tweets Available\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/userFilter/userFilter.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/userFilter/userFilter.tpl.html",
+    "<div class=\"row\">\n" +
+    "    <div class=\"col-xs-11\">\n" +
+    "        <form ng-submit=\"userSearch()\">\n" +
+    "            <div class=\"input-group searchinputfield\" id=\"userfilterinput\">\n" +
+    "                <input class=\"form-control input-sm\" type=\"text\" placeholder=\"@user\"\n" +
+    "                  ng-model=\"userfilterInput\" ng-click=\"onFocus()\" ng-blur=\"onBlur()\">\n" +
+    "                <span class=\"input-group-addon\">\n" +
+    "                    <i class=\"glyphicon glyphicon-search\"></i>\n" +
+    "                </span>\n" +
+    "            </div>\n" +
+    "        </form>\n" +
+    "    </div>\n" +
+    "    <div class=\"col-xs-1 searchbtn pull-left padding-search\">\n" +
+    "        <a href=\"\" class=\"infobtn\" ng-click=\"showUserFilterInfo()\">\n" +
+    "             <span class=\"glyphicon glyphicon-info-sign\"></span>\n" +
+    "        </a>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);

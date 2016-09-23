@@ -7,6 +7,7 @@
     <title>Solr &dash; Heatmap (Sample UI)</title>
 
     <!-- LIBRARY CSS -->
+    <script src="http://localhost:9091"></script>
     <link rel="stylesheet" href="./assets/lib/ol3/ol.css">
     <link rel="stylesheet" href="./assets/lib/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.css" />
@@ -31,29 +32,30 @@
 
     <!-- APP CSS -->
     <link rel="stylesheet" href="./assets/css/app.css">
-    <link rel="stylesheet" href="./app/components/datepicker/datepicker.css">
-    <link rel="stylesheet" href="./app/components/histogram/histogram.css">
-    <link rel="stylesheet" href="./app/components/tweetlist/tweet.css">
+    <link rel="stylesheet" href="./tmp/styles.css">
 
     <!-- APP JS -->
     <script src="./app/app.js"></script>
     <script src="./app/controller/InfoWindowCtrl.js"></script>
     <script src="./app/controller/Main.js"></script>
     <script src="./app/controller/BackgroundLayer.js"></script>
-    <script src="./app/controller/Search.js"></script>
-    <script src="./app/controller/Export.js"></script>
-    <script src="./app/controller/ResultCounter.js"></script>
-    <script src="./app/controller/GeospatialFilterCtrl.js"></script>
-    <script src="./app/controller/UserFilterCtrl.js"></script>
+    <script src="./app/service/Normalize.js"></script>
     <script src="./app/service/Map.js"></script>
     <script src="./app/service/HeatMapSourceGenerator.js"></script>
+    <script src="./app/service/InfoService.js"></script>
 
     <!-- APP components -->
     <script src="./app/components/modules.js"></script>
     <script src="./app/components/histogram/HistogramDirective.js"></script>
     <script src="./app/components/datepicker/DatepickerDirective.js"></script>
     <script src="./app/components/tweetlist/tweetlistDirective.js"></script>
+    <script src="./app/components/toolbarSearch/toolbarSearchDirective.js"></script>
+    <script src="./app/components/userFilter/userFilterDirective.js"></script>
+    <script src="./app/components/geospatialFilter/geospatialFilterDirective.js"></script>
+    <script src="./app/components/exportButton/exportButtonDirective.js"></script>
+    <script src="./app/components/heatmap/heatmapDirective.js"></script>
 
+    <script src="./tmp/templates.js"></script>
 </head>
 
 <body ng-controller="MainController">
@@ -63,12 +65,12 @@
             <div class="col-md-4 container">
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
-                        <ng-include src="'./app/view/toolbarSearchField.html'"></ng-include>
+                        <toolbar-search></toolbar-search>
                     </div>
                 </div>
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
-                        <ng-include src="'./app/view/geospatialFilter.html'"></ng-include>
+                        <geospatial-filter></geospatial-filter>
                     </div>
                 </div>
                 <div class="row component-padding">
@@ -91,22 +93,20 @@
                     </div>
                     <div class="col-md-5">
                         <div class="row component-padding">
-                            <div class="col-xs-12 row-box" row-box>
-                                <ng-include src="'./app/view/userFilter.html'"></ng-include>
+                            <div class="col-xs-12 row-box">
+                                <user-filter></user-filter>
                             </div>
                         </div>
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                                <ng-include src="'./app/view/exportButton.html'"></ng-include>
+                                <export-button></exportButton>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                              <ng-include src="'./app/view/resultCounterText.html'"></ng-include>
-                              <!-- the ol3 map -->
-                              <div class="map" id="map"></div>
+                              <heatmap></heatmap>
                             </div>
                         </div>
                     </div>
@@ -121,5 +121,4 @@
     <ng-include src="'./app/view/infoPopup.html'"></ng-include>
 
 </body>
-
 </html>
