@@ -19,7 +19,7 @@ Install dependencies with
 `npm install`
 
 Local environment:
-- node serve
+- `npm run server`
 - http://localhost:3000/index-dev.html
 
 _Used libraries_:
