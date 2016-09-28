@@ -7,8 +7,9 @@
 (function() {
     angular
     .module('search_userFilter_component', [])
-    .directive('userFilter', ['HeatMapSourceGenerator', 'InfoService', '$uibModal',
-        function(HeatMapSourceGenerator, InfoService, $uibModal) {
+    .directive('userFilter', [
+        'HeatMapSourceGenerator', 'InfoService', '$uibModal', 'searchFilter',
+        function(HeatMapSourceGenerator, InfoService, $uibModal, searchFilter) {
             return {
                 link: UserFilterLink,
                 restrict: 'EA',
@@ -22,13 +23,13 @@
 
                 scope.showUserFilterInfo = showUserFilterInfo;
 
-                scope.userfilterInput = '';
+                scope.filter = searchFilter;
 
                 /**
                  *
                  */
                 function userSearch() {
-                    HeatMapSourceGenerator.search(scope.userfilterInput);
+                    HeatMapSourceGenerator.search();
                 }
 
                 function showUserFilterInfo() {

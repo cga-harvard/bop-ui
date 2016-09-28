@@ -1,13 +1,14 @@
 describe( 'MainController', function() {
-    var MainCtrl, $location, $httpBackend, $scope, MapService;
+    var MainCtrl, $location, $httpBackend, $scope, MapService, state;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( $controller, _$location_, $rootScope, _$httpBackend_, _Map_) {
+    beforeEach( inject( function( $controller, _$location_, $rootScope, _$httpBackend_, _Map_, _$state_) {
         $location = _$location_;
         $httpBackend = _$httpBackend_;
         $scope = $rootScope.$new();
         MapService = _Map_;
+        state = _$state_;
         MainCtrl = $controller( 'MainController', { $scope: $scope });
     }));
 
@@ -24,8 +25,19 @@ describe( 'MainController', function() {
                 setupSpy = spyOn(MainCtrl, 'setupEvents');
             });
             it( 'calls MapService init', function() {
-                MainCtrl.response({mapConfig: {}});
+                MainCtrl.response({mapConfig: { view: { projection: 'EPSG:4326'}}});
                 expect(mapServiceSpy).toHaveBeenCalled();
+            });
+            describe('with a geo state', function() {
+                var serviceSpy;
+                beforeEach(function() {
+                    serviceSpy = spyOn(MapService, 'getExtentForProjectionFromQuery');
+                    MainCtrl.$state = { geo: '[1,1 TO 1,1]'};
+                });
+                it( 'calls MapService getExtentForProjectionFromQuery', function() {
+                    MainCtrl.response({mapConfig: { view: { projection: 'EPSG:4326'}}});
+                    expect(serviceSpy).toHaveBeenCalled();
+                });
             });
         });
     });

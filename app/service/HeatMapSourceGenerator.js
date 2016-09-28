@@ -7,107 +7,58 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http',
-        function(Map, $rootScope, $controller, $filter, $window, $document , $http) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http', '$state', 'searchFilter',
+        function(Map, $rootScope, $controller, $filter, $window, $document , $http, $state, searchFilter) {
             var MapService= Map;
 
             var methods = {
                 search: search,
-                performSearch: performSearch,
                 startCsvExport: startCsvExport,
-                getFormattedDateString: getFormattedDateString,
-                filterObj: filterMethods()
+                getFormattedDateString: getFormattedDateString
             };
             /**
              *
              */
             function getTweetsSearchQueryParameters (bounds) {
+                var params,
+                    reqParamsUi = searchFilter;
 
-                var reqParamsUi = methods.filterObj.getSearchObj();
-
+                /*
                 // calculate reduced bounding box
-                var dx = bounds.maxX - bounds.minX,
-                    dy = bounds.maxY - bounds.minY,
-                    minInnerX = bounds.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                    maxInnerX = bounds.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                    minInnerY = bounds.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
-                    maxInnerY = bounds.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
-
-                var params = {
-                    'q.text': reqParamsUi.searchText,
+                */
+                params = {
+                    'q.text': reqParamsUi.text,
                     'q.user': reqParamsUi.user,
-                    'q.time': timeTextFormat(reqParamsUi.textDate, reqParamsUi.minDate, reqParamsUi.maxDate),
-                    'q.geo': '[' + bounds.minX + ',' + bounds.minY + ' TO ' + bounds.maxX + ',' + bounds.maxY + ']',
-                    'a.hm.filter': '[' + minInnerX + ',' + minInnerY + ' TO ' + maxInnerX + ',' + maxInnerY + ']',
+                    'q.time': timeTextFormat(reqParamsUi.time, reqParamsUi.minDate, reqParamsUi.maxDate),
+                    'q.geo': reqParamsUi.geo,
+                    'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
                     'd.docs.limit': '10'
                 };
+                $state.go('search', {
+                    text: params['q.text'],
+                    user: params['q.user'],
+                    time: params['q.time'],
+                    geo: params['q.geo']
+                }, {notify: false, location: "replace"}
+                );
 
                 return params;
             }
             var createParamsForGeospatialSearch = function() {
-                var spatialFilters = MapService.getCurrentExtent(), params;
-                if(spatialFilters) {
-                    params = getTweetsSearchQueryParameters(
-                                        spatialFilters);
-                }
-                return params;
+                //var spatialFilters = MapService.getCurrentExtent(), params;
+                return getTweetsSearchQueryParameters();
             };
 
             return methods;
 
-            function search(input) {
-                this.filterObj.setSearchText(input);
-                this.performSearch();
-            }
 
-            function filterMethods() {
-                var searchObj = {
-                    minDate: new Date('2013-03-10'),
-                    maxDate: new Date('2013-03-21'),
-                    textDate: null,
-                    searchText : null,
-                    user: null,
-                    histogramCount: []
-                };
-                /**
-                 * Set keyword text
-                 */
-                function setSearchText(val) {
-                    searchObj.searchText = val.length === 0 ? null : val;
-                }
-
-                function setUser(val) {
-                    searchObj.user = val.length === 0 ? null : val;
-                }
-
-                function setTextDate(val) {
-                    searchObj.textDate = val.length === 0 ? null : val;
-                }
-                /**
-                * Returns the complete search object
-                */
-                function getSearchObj(){
-                    return searchObj;
-                }
-
-                function setHistogramCount(val) {
-                    searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
-                }
-                return {
-                    getSearchObj: getSearchObj,
-                    setSearchText: setSearchText,
-                    setUser: setUser,
-                    setTextDate: setTextDate,
-                    setHistogramCount: setHistogramCount
-                };
-            }
 
             /**
              * Performs search with the given full configuration / search object.
              */
-            function performSearch(){
+            function search(){
                 var config,
                     params = createParamsForGeospatialSearch();
                 if (params) {
@@ -132,7 +83,7 @@
 
                             $rootScope.$broadcast('setTweetList', data['d.docs']);
 
-                            methods.filterObj.setHistogramCount(data['a.time'].counts);
+                            searchFilter.histogramCount = data['a.time'].counts;
                         }
                     }, function errorCallback(response) {
                         $window.alert('An error occured while reading heatmap data');
@@ -184,7 +135,6 @@
                     $window.alert('Spatial filter could not be computed.');
                 }
             }
-
 
             /**
              * Returns the formatted date object that can be parsed by API.

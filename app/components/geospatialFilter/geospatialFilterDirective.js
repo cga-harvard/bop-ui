@@ -6,7 +6,7 @@
 (function() {
     angular
     .module('search_geospatialFilter_component', [])
-    .directive('geospatialFilter', ['InfoService', function(InfoService) {
+    .directive('geospatialFilter', ['InfoService', 'searchFilter', function(InfoService, searchFilter) {
         return {
             link: GeospatialFilterLink,
             restrict: 'EA',
@@ -16,18 +16,14 @@
 
         function GeospatialFilterLink(scope) {
 
-            scope.filterString = '[-90,-180 TO 90,180]';
+            scope.filter = searchFilter;
 
             scope.showGeospatialInfo = function() {
                 InfoService.showInfoPopup('geospatialsearch');
             };
 
-            scope.$on('geoFilterUpdated', function(event, filter) {
-                scope.filterString = filter;
-            });
-
             scope.updateFilterString = function(str) {
-                scope.filterString = str;
+                scope.filter.geo = str;
             };
 
         }

@@ -7,6 +7,7 @@ module.exports = function ( config ) {
       "assets/lib/jquery/jquery-2.1.3.min.js",
       "assets/lib/bootstrap/js/bootstrap.min.js",
       "assets/lib/ui-bootstrap/ui-bootstrap-tpls-1.3.3.min.js",
+      "assets/lib/angularjs/angular-ui-router.js",
       "assets/lib/proj4js/proj4.js",
       "config/3857.js",
       "assets/lib/ol3/ol.js",

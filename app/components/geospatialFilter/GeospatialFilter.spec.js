@@ -14,12 +14,12 @@ describe( 'GeospatialFilterDirective', function() {
         InfoService = _InfoService_;
     }));
     it( 'filterString has default', function() {
-        expect(scope.filterString).toEqual('[-90,-180 TO 90,180]');
+        expect(scope.filter.geo).toEqual('[-90,-180 TO 90,180]');
     });
     describe('#updateFilterString', function() {
         it('updates the string', function() {
             scope.updateFilterString('[1,1 TO 1,1]');
-            expect(scope.filterString).toEqual('[1,1 TO 1,1]');
+            expect(scope.filter.geo).toEqual('[1,1 TO 1,1]');
         });
     });
     describe('#showInfo', function() {

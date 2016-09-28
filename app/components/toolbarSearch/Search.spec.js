@@ -17,7 +17,7 @@ describe( 'SearchDirective', function() {
         InfoService = _InfoService_;
     }));
     it( 'searchInput is empty string', function() {
-        expect(scope.searchInput).toEqual('');
+        expect(scope.filter.text).toEqual(null);
     });
     describe('#doSearch', function() {
         var searchSpy;
@@ -30,7 +30,7 @@ describe( 'SearchDirective', function() {
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
             it('with searchInput', function() {
-                scope.searchInput = 'San Diego';
+                scope.filter.text = 'San Diego';
                 scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledWith('San Diego');
             });

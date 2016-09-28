@@ -309,4 +309,47 @@ describe( 'HeatMapSourceGenerator', function() {
             expect(setGeometrySpy).not.toHaveBeenCalled();
         });
     });
+    describe('#createQueryFromExtent', function() {
+        it('returns query string', function() {
+            expect(subject.createQueryFromExtent({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual('[0,2 TO 1,3]');
+        });
+    });
+    describe('#calculateReducedBoundingBox', function() {
+        beforeEach(function() {
+            solrHeatmapApp.appConfig.ratioInnerBbox = 2;
+        });
+        it('returns boundingbox', function() {
+            expect(subject.calculateReducedBoundingBox({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: -1, minY: 1, maxX: 2, maxY: 4});
+        });
+    });
+    describe('#getExtentFromQuery', function() {
+        it('returns extent object', function() {
+            expect(subject.getExtentFromQuery('[0,2 TO 1,3]')).toEqual({minX: 0, minY: 2, maxX: 1, maxY: 3});
+        });
+    });
+    describe('#reducedQueryForExtent', function() {
+        it('returns extent query', function() {
+            expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[-1,1 TO 2,4]');
+        });
+    });
+    describe('#getCurrentExtentQuery', function() {
+        var view, layerSpy, mapZoomSpy;
+        beforeEach(function() {
+            layer = { getSource: function() { return { getFeatures: function() { return [{getGeometry: function() { return { getExtent: function() { return [0,0,0,0];}};}}];}}; }};
+            view = { calculateExtent: function(size) { return [0,0]; }};
+            spyOn(subject, 'getMapView').and.returnValue(view);
+            mapZoomSpy = spyOn(subject, 'getMapZoom').and.returnValue(10);
+            spyOn(subject, 'getMapSize').and.returnValue(10);
+            layerSpy = spyOn(subject, 'getLayersBy').and.returnValue([layer]);
+            spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
+        });
+        it('returns extent query', function() {
+            expect(subject.getCurrentExtentQuery()).toEqual('[0,0 TO 0,0]');
+        });
+    });
+    describe('#getExtentForProjectionFromQuery', function() {
+        it('returns extent query', function() {
+            expect(subject.getExtentForProjectionFromQuery('[0,2 TO 1,3]', 'EPSG:3857')).toEqual([222638.98158654716, -7.081154551613622e-10, 333958.4723798207, 111325.14286638486]);
+        });
+    });
 });

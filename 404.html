@@ -7,6 +7,7 @@
     <title>Solr &dash; Heatmap (Sample UI)</title>
 
     <!-- LIBRARY CSS -->
+    <script src="http://localhost:9091"></script>
     <link rel="stylesheet" href="./assets/lib/ol3/ol.css">
     <link rel="stylesheet" href="./assets/lib/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/2.13.0/rzslider.min.css" />
@@ -22,11 +23,42 @@
     <script src="./config/3857.js"></script>
     <script src="./assets/lib/ol3/ol.js"></script>
 
+    <!-- additional ol3 features -->
+    <!-- filters -->
+    <script type="text/javascript" src="./assets/lib/ol3-ext/filter/filter.js"></script>
+    <script type="text/javascript" src="./assets/lib/ol3-ext/filter/maskfilter.js"></script>
+
+    <!-- interaction -->
+    <script src="./assets/lib/ol3-ext/interaction/transforminteraction.js"></script>
+
     <!-- APP CSS -->
     <link rel="stylesheet" href="./assets/css/app.css">
-    <link rel="stylesheet" href="./build/styles.min.css">
+    <link rel="stylesheet" href="./tmp/styles.css">
 
-    <script src="./build/hm-client.min.js"></script>
+    <!-- APP JS -->
+    <script src="./app/app.js"></script>
+    <script src="./app/controller/InfoWindowCtrl.js"></script>
+    <script src="./app/controller/Main.js"></script>
+    <script src="./app/controller/BackgroundLayer.js"></script>
+    <script src="./app/service/Map.js"></script>
+    <script src="./app/service/Normalize.js"></script>
+    <script src="./app/service/HeatMapSourceGenerator.js"></script>
+    <script src="./app/service/InfoService.js"></script>
+    <script src="./app/service/searchFilter.js"></script>
+
+    <!-- APP components -->
+    <script src="./app/components/modules.js"></script>
+    <script src="./app/components/histogram/HistogramDirective.js"></script>
+    <script src="./app/components/datepicker/DatepickerDirective.js"></script>
+    <script src="./app/components/tweetlist/tweetlistDirective.js"></script>
+    <script src="./app/components/toolbarSearch/toolbarSearchDirective.js"></script>
+    <script src="./app/components/userFilter/userFilterDirective.js"></script>
+    <script src="./app/components/geospatialFilter/geospatialFilterDirective.js"></script>
+    <script src="./app/components/exportButton/exportButtonDirective.js"></script>
+    <script src="./app/components/heatmap/heatmapDirective.js"></script>
+    <script src="./app/components/search/search.js"></script>
+
+    <script src="./tmp/templates.js"></script>
 
 </head>
 
@@ -48,7 +80,7 @@
                 </div>
                 <div class="row component-padding">
                     <div class="col-md-12 row-box">
-                      <div class="row tweetlist-box">
+                      <div class="row">
                         <tweetlist></tweetlist>
                       </div>
                     </div>
@@ -66,7 +98,7 @@
                     </div>
                     <div class="col-md-5">
                         <div class="row component-padding">
-                            <div class="col-xs-12 row-box">
+                            <div class="col-xs-12 row-box" row-box>
                                 <user-filter></user-filter>
                             </div>
                         </div>

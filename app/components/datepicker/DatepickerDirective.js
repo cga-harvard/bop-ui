@@ -7,8 +7,8 @@
 
     angular
     .module('search_datepicker_component', [])
-    .directive('datePicker', ['$rootScope', 'HeatMapSourceGenerator', 'InfoService',
-        function($rootScope, HeatMapSourceGenerator, InfoService) {
+    .directive('datePicker', ['$rootScope', 'HeatMapSourceGenerator', 'InfoService', 'searchFilter',
+        function($rootScope, HeatMapSourceGenerator, InfoService, searchFilter) {
             return {
                 link: datePickerFilterLink,
                 templateUrl: 'components/datepicker/datepicker.tpl.html',
@@ -25,12 +25,9 @@
                     maxDate: new Date('2013-04-01')
                 };
 
-                vm.dateOptions = {
-                    minDate: HeatMapSourceGenerator.filterObj.getSearchObj().minDate,
-                    maxDate: HeatMapSourceGenerator.filterObj.getSearchObj().maxDate,
-                    startingDay: 1,
-                    showWeeks: false
-                };
+                vm.dateOptions = searchFilter;
+                vm.dateOptions.startingDate = 1;
+                vm.dateOptions.showWeeks= false;
 
                 vm.dateString = getFormattedDateString(vm.dateOptions.minDate,
                                                         vm.dateOptions.maxDate);
@@ -157,9 +154,9 @@
                 }
 
                 function performDateSearch() {
-                    HeatMapSourceGenerator.filterObj.setTextDate(vm.dateString);
+                    searchFilter.time = vm.dateString;
                     vm.slider.changeTime = true;
-                    HeatMapSourceGenerator.performSearch();
+                    HeatMapSourceGenerator.search();
                 }
 
                 function defaultSliderValue() {

@@ -417,6 +417,62 @@
                     setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
             };
+
+            service.createQueryFromExtent = function(extent) {
+                return '[' + extent.minX +
+                    ',' + extent.minY +
+                    ' TO ' + extent.maxX +
+                    ',' + extent.maxY + ']';
+            };
+
+            service.getExtentFromQuery = function(query) {
+                var extent, min, max,
+                    extentSplit = function(extentString) {
+                        return extentString.split(',');
+                    };
+                extent = query.replace(/\[|\]/g,'').split(' TO ');
+                min = extentSplit(extent[0]);
+                max = extentSplit(extent[1]);
+                return {
+                    minX: parseInt(min[0], 10),
+                    minY: parseInt(min[1], 10),
+                    maxX: parseInt(max[0], 10),
+                    maxY: parseInt(max[1], 10)};
+            };
+
+            service.calculateReducedBoundingBox = function(extent) {
+                if(solrHeatmapApp.appConfig) {
+                    var dx = extent.maxX - extent.minX,
+                        dy = extent.maxY - extent.minY,
+                        minX = extent.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        maxX = extent.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        minY = extent.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                        maxY = extent.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+                    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+                }
+                return extent;
+            };
+
+            service.getReducedQueryFromExtent = function(extentQuery) {
+                var extent = service.getExtentFromQuery(extentQuery);
+                return service.createQueryFromExtent(service.calculateReducedBoundingBox(extent));
+            };
+
+            service.getCurrentExtentQuery = function(){
+                return service.createQueryFromExtent(service.getCurrentExtent());
+            };
+
+            service.getExtentForProjectionFromQuery = function(query, projection) {
+                var extentObj = service.getExtentFromQuery(query);
+                var extent = NormalizeService.normalizeExtent([
+                    extentObj.minY,
+                    extentObj.minX,
+                    extentObj.maxY,
+                    extentObj.maxX]);
+                return ol.proj.transformExtent(extent, 'EPSG:4326', projection);
+
+            };
+
             /**
              * Builds geospatial filter depending on the current map extent.
              * This filter will be used later for `q.geo` parameter of the API

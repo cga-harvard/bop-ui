@@ -6,6 +6,25 @@
         'templates-components',
         'ui.bootstrap',
         'rzModule',
-        'search_components'
+        'search_components',
+        'ui.router'
     ]);
+    angular.module('SolrHeatmapApp')
+    .config(function($locationProvider, $stateProvider, $urlRouterProvider) {
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+        $urlRouterProvider.otherwise('/search');
+        $stateProvider.state({
+            name: 'search',
+            url: '/search?time&geo&text&user',
+            component: 'search',
+            resolve: {
+                search: function($stateParams,HeatMapSourceGenerator,searchFilter) {
+                    searchFilter.setFilter($stateParams);
+                }
+            }
+        });
+    });
 })();
