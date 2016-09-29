@@ -10,10 +10,10 @@ html, body {
 }
 
 .map {
-  width: 100%;
   max-height: 600px;
-  margin: 10px;
-  border: solid 1px #337AB7;
+  margin: 4px;
+  border: solid 1px #b3b3b3;
+  border-radius: 4px;
 }
 
 .map-row {
@@ -31,16 +31,20 @@ html, body {
 }
 
 #exportbtn {
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 #resultCounterText {
-  margin-top: 20px;
-  margin-left: 10px;
+  margin-top: 0px;
+  margin-left: 5px;
 }
 
 #resultCounterText label {
   font-weight: normal;
+}
+
+#resultCounterText .form-group {
+  margin-top: 0;
 }
 
 .col-md-6 label {
@@ -93,13 +97,20 @@ code {
 .row-box {
     background-color: #fff;
     border-radius: 2px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
 }
 
 .export-slider {
-  padding-top:30px;
+  padding-top:0px;
+  height: 40px;
+  font-size: 10px;
+}
+
+.results-display .control-label {
+  margin-top: 8px;
+  font-weight: 400;
 }
 
 /*

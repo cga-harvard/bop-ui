@@ -6,12 +6,12 @@
     <div class="col-sm-8 col-xs-9 export-slider">
         <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
     </div>
-    <div class="col-md-12">
-            <div class="pull-right">
+    <div class="col-md-12 results-display">
+            <div>
                 <label for="focusedInput" class="control-label">
                     Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
                 </label>
-                <button class="btn btn-primary" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+                <button class="btn btn-primary pull-right" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
                 <span class="searchbtn">
                     <a href="" class="infobtn" ng-click="showExportInfo()">
                          <span class="glyphicon glyphicon-info-sign"></span>
