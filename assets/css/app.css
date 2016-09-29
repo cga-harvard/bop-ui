@@ -117,15 +117,48 @@ code {
  * CSS properties of search fields
  */
 .searchinputfield span{
-    background-color: #FFF
+    background-color: transparent;
 }
 
 .searchinputfield input{
     border-right-style:none;
 }
 
-.input-group-addon {
+.input-group-btn .btn{
     border-left-style:none;
+    padding: 6px 12px 5px 12px;
+    background-color: transparent;
+}
+
+.input-group-btn .btn .glyphicon{
+    color: #2e6da4;
+}
+
+.input-group-btn .btn:hover {
+    background-color: #eee;
+    color: #fff;
+    border-color: #ccc;
+}
+
+.searchinputfield .reset-btn .btn {
+    border-right-style: none;
+    border-radius: 0px;
+}
+
+.searchinputfield .reset-btn .glyphicon-remove {
+    color: #b3b3b3;
+    font-size: 10px;
+    font-weight: lighter;
+    border-style: none;
+}
+
+.searchinputfield .form-control {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0);
+}
+
+.input-group-addon {
+    line-height: normal;
 }
 
 .infobtn {
