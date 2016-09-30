@@ -34,6 +34,12 @@
                 service.hm = MapService.getReducedQueryFromExtent(filter.geo);
             }
         };
+        service.resetFilter = function() {
+            service.time = null;
+            service.text = null;
+            service.user = null;
+            service.geo = '[-90,-180 TO 90,180]';
+        };
         return service;
     }]);
 })();

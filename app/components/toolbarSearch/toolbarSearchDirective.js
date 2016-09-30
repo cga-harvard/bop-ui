@@ -54,15 +54,11 @@
                     HeatMapSourceGenerator.search(vm.filter.text);
                 };
 
-                vm.resetSearchInput = function() {
-                    vm.filter.text = '';
-                    HeatMapSourceGenerator.search(vm.filter.text);
-
+                vm.reset = function() {
+                    searchFilter.resetFilter();
+                    HeatMapSourceGenerator.search();
                     // Reset the map
                     MapService.resetMap();
-
-                    // Reset the date fields
-                    //ToDo: Reset date fields
                 };
 
                 vm.showtoolbarSearchInfo = function() {

@@ -1,9 +1,9 @@
 describe( 'SearchDirective', function() {
-    var $scope, scope, rootScope, HeatMapSourceGeneratorService, MapService, InfoService, element, compiledElement;
+    var $scope, scope, rootScope, HeatMapSourceGeneratorService, MapService, InfoService, element, compiledElement, searchFilter;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _Map_, _InfoService_) {
+    beforeEach( inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _Map_, _InfoService_, _searchFilter_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
 
@@ -15,6 +15,7 @@ describe( 'SearchDirective', function() {
         HeatMapSourceGeneratorService = _HeatMapSourceGenerator_;
         MapService = _Map_;
         InfoService = _InfoService_;
+        searchFilter = _searchFilter_;
     }));
     it( 'searchInput is empty string', function() {
         expect(scope.filter.text).toEqual(null);
@@ -36,22 +37,25 @@ describe( 'SearchDirective', function() {
             });
         });
     });
-    describe('#resetSearchInput', function() {
-        var searchSpy, mapSpy;
+    describe('#reset', function() {
+        var searchSpy, mapSpy, filterSpy;
         beforeEach(function() {
             searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
             mapSpy = spyOn(MapService, 'resetMap');
+            filterSpy = spyOn(searchFilter, 'resetFilter');
             scope.searchInput = 'San Diego';
         });
-        describe('calls search on HeatMapSourceGeneratorService', function() {
-            it('once', function() {
-                scope.resetSearchInput();
-                expect(searchSpy).toHaveBeenCalledTimes(1);
-            });
-            it('with searchInput', function() {
-                scope.resetSearchInput();
-                expect(searchSpy).toHaveBeenCalledWith('');
-            });
+        it('calls search on HeatMapSourceGeneratorService once', function() {
+            scope.reset();
+            expect(searchSpy).toHaveBeenCalledTimes(1);
+        });
+        it('calls restMap on MapService once', function() {
+            scope.reset();
+            expect(mapSpy).toHaveBeenCalledTimes(1);
+        });
+        it('calls resetFilter on searchFilter once', function() {
+            scope.reset();
+            expect(filterSpy).toHaveBeenCalledTimes(1);
         });
     });
     describe('#onKeyPress', function() {

@@ -30,4 +30,21 @@ describe( 'searchFilter', function() {
             expect(subject.geo).toEqual('[2,1 TO 2,1]');
         });
     });
+    describe('#resetFilter', function() {
+        it('resets the user', function() {
+            subject.setFilter({user: 'Diego'});
+            subject.resetFilter();
+            expect(subject.user).toEqual(null);
+        });
+        it('resets the text', function() {
+            subject.setFilter({text: 'San Diego'});
+            subject.resetFilter();
+            expect(subject.text).toEqual(null);
+        });
+        it('resets the geo', function() {
+            subject.setFilter({geo: '[2,1 TO 2,1]'});
+            subject.resetFilter();
+            expect(subject.geo).toEqual('[-90,-180 TO 90,180]');
+        });
+    });
 });
