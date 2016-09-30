@@ -6,8 +6,9 @@
  */
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('Map', ['$rootScope', '$filter', '$document', 'Normalize', '$controller',
-        function($rootScope, $filter, $document, Normalize, $controller) {
+    .factory('Map',
+             ['$rootScope', '$filter', '$document', 'Normalize', '$controller', 'queryService',
+        function($rootScope, $filter, $document, Normalize, $controller, queryService) {
             var NormalizeService = Normalize;
             var service = {};
             var map = {},
@@ -130,6 +131,13 @@
                 return $filter('filter')(interactions, function(interaction) {
                     return interaction.type_ === type;
                 });
+            };
+
+            service.updateTransformationLayerFromQueryForMap = function(query) {
+                var extent = queryService.
+                    getExtentForProjectionFromQuery(query,
+                                                    service.getMapProjection());
+                setTransactionBBox(extent);
             };
 
             /**
@@ -417,6 +425,30 @@
                     setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
             };
+
+            service.calculateReducedBoundingBox = function(extent) {
+                if(solrHeatmapApp.appConfig) {
+                    var dx = extent.maxX - extent.minX,
+                        dy = extent.maxY - extent.minY,
+                        minX = extent.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        maxX = extent.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        minY = extent.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                        maxY = extent.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+                    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+                }
+                return extent;
+            };
+
+            service.getReducedQueryFromExtent = function(extentQuery) {
+                var extent = queryService.getExtentFromQuery(extentQuery);
+                return queryService.
+                    createQueryFromExtent(service.calculateReducedBoundingBox(extent));
+            };
+
+            service.getCurrentExtentQuery = function(){
+                return queryService.createQueryFromExtent(service.getCurrentExtent());
+            };
+
             /**
              * Builds geospatial filter depending on the current map extent.
              * This filter will be used later for `q.geo` parameter of the API

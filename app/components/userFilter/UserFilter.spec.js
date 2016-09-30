@@ -15,8 +15,8 @@ describe( 'UserFilterDirective', function() {
         HeatMapSourceGeneratorService = _HeatMapSourceGenerator_;
         InfoService = _InfoService_;
     }));
-    it( 'searchInput is empty string', function() {
-        expect(scope.userfilterInput).toEqual('');
+    it( 'searchInput is null', function() {
+        expect(scope.filter.user).toEqual(null);
     });
     describe('#userSearch', function() {
         var searchSpy;
@@ -27,11 +27,6 @@ describe( 'UserFilterDirective', function() {
             it('once', function() {
                 scope.userSearch();
                 expect(searchSpy).toHaveBeenCalledTimes(1);
-            });
-            it('with searchInput', function() {
-                scope.userfilterInput= 'San Diego';
-                scope.userSearch();
-                expect(searchSpy).toHaveBeenCalledWith('San Diego');
             });
         });
     });

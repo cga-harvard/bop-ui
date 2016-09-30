@@ -6,30 +6,32 @@
 (function() {
     angular
     .module('search_geospatialFilter_component', [])
-    .directive('geospatialFilter', ['InfoService', function(InfoService) {
-        return {
-            link: GeospatialFilterLink,
-            restrict: 'EA',
-            templateUrl: 'components/geospatialFilter/geospatialFilter.tpl.html',
-            scope: {}
-        };
-
-        function GeospatialFilterLink(scope) {
-
-            scope.filterString = '[-90,-180 TO 90,180]';
-
-            scope.showGeospatialInfo = function() {
-                InfoService.showInfoPopup('geospatialsearch');
+    .directive('geospatialFilter', ['InfoService', 'searchFilter', 'HeatMapSourceGenerator', 'Map',
+        function(InfoService, searchFilter, HeatMapSourceGenerator, Map) {
+            return {
+                link: GeospatialFilterLink,
+                restrict: 'EA',
+                templateUrl: 'components/geospatialFilter/geospatialFilter.tpl.html',
+                scope: {}
             };
 
-            scope.$on('geoFilterUpdated', function(event, filter) {
-                scope.filterString = filter;
-            });
+            function GeospatialFilterLink(scope) {
 
-            scope.updateFilterString = function(str) {
-                scope.filterString = str;
-            };
+                scope.filter = searchFilter;
 
-        }
-    }]);
+                scope.showGeospatialInfo = function() {
+                    InfoService.showInfoPopup('geospatialsearch');
+                };
+
+                scope.updateFilterString = function(str) {
+                    scope.filter.geo = str;
+                };
+
+                scope.search = function() {
+                    Map.updateTransformationLayerFromQueryForMap(this.filter.geo);
+                    HeatMapSourceGenerator.search();
+                };
+
+            }
+        }]);
 })();

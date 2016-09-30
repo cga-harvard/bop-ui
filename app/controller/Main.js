@@ -7,12 +7,16 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .controller('MainController', ['Map', 'HeatMapSourceGenerator' , '$http', '$scope', '$rootScope',
-        function(Map, HeatMapSourceGenerator, $http, $scope, $rootScope) {
+    .controller('MainController',
+                ['Map', 'HeatMapSourceGenerator', '$http', '$scope',
+                    '$rootScope', '$stateParams', 'searchFilter', 'queryService',
+        function(Map, HeatMapSourceGenerator, $http, $scope,
+                 $rootScope, $stateParams, searchFilter, queryService) {
             var MapService = Map;
             var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
 
             var vm = this;
+            vm.$state = $stateParams;
             vm.setupEvents = function() {
                 MapService.getMap().getView()
                   .on('change:resolution', function(evt){
@@ -32,13 +36,15 @@
                       MapService.checkBoxOfTransformInteraction();
                   });
                 MapService.getMap().on('moveend', function(evt){
-                    HeatMapSourceGeneratorService.performSearch();
+                    searchFilter.setFilter({geo: MapService.getCurrentExtentQuery() });
+                    HeatMapSourceGeneratorService.search();
                 });
 
                 MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
-                  ['translateend', 'scaleend'], function (e) {
-                      HeatMapSourceGeneratorService.performSearch();
-                  });
+                    ['translateend', 'scaleend'], function (e) {
+                        searchFilter.setFilter({geo: MapService.getCurrentExtentQuery() });
+                        HeatMapSourceGeneratorService.search();
+                    });
             };
 
             vm.response = function(data, status, headers, config) {
@@ -48,7 +54,11 @@
                         bopwsConfig = data.bopwsConfig,
                         instructions = data.instructions;
 
-                    // create the map with the given config
+                    if(solrHeatmapApp.$state.geo) {
+                        mapConf.view.extent = queryService.
+                          getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
+                                                          mapConf.view.projection);
+                    }
                     MapService.init({
                         mapConfig: mapConf
                     });

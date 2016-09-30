@@ -10,10 +10,10 @@ html, body {
 }
 
 .map {
-  width: 100%;
   max-height: 600px;
-  margin: 10px;
-  border: solid 1px #337AB7;
+  margin: 4px;
+  border: solid 1px #b3b3b3;
+  border-radius: 4px;
 }
 
 .map-row {
@@ -31,16 +31,20 @@ html, body {
 }
 
 #exportbtn {
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 #resultCounterText {
-  margin-top: 20px;
-  margin-left: 10px;
+  margin-top: 0px;
+  margin-left: 5px;
 }
 
 #resultCounterText label {
   font-weight: normal;
+}
+
+#resultCounterText .form-group {
+  margin-top: 0;
 }
 
 .col-md-6 label {
@@ -93,28 +97,68 @@ code {
 .row-box {
     background-color: #fff;
     border-radius: 2px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
 }
 
 .export-slider {
-  padding-top:30px;
+  padding-top:0px;
+  height: 40px;
+  font-size: 10px;
+}
+
+.results-display .control-label {
+  margin-top: 8px;
+  font-weight: 400;
 }
 
 /*
  * CSS properties of search fields
  */
 .searchinputfield span{
-    background-color: #FFF
+    background-color: transparent;
 }
 
 .searchinputfield input{
     border-right-style:none;
 }
 
-.input-group-addon {
+.input-group-btn .btn{
     border-left-style:none;
+    padding: 6px 12px 5px 12px;
+    background-color: transparent;
+}
+
+.input-group-btn .btn .glyphicon{
+    color: #2e6da4;
+}
+
+.input-group-btn .btn:hover {
+    background-color: #eee;
+    color: #fff;
+    border-color: #ccc;
+}
+
+.searchinputfield .reset-btn .btn {
+    border-right-style: none;
+    border-radius: 0px;
+}
+
+.searchinputfield .reset-btn .glyphicon-remove {
+    color: #b3b3b3;
+    font-size: 10px;
+    font-weight: lighter;
+    border-style: none;
+}
+
+.searchinputfield .form-control {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0);
+}
+
+.input-group-addon {
+    line-height: normal;
 }
 
 .infobtn {
