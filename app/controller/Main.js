@@ -9,8 +9,9 @@
     .module('SolrHeatmapApp')
     .controller('MainController',
                 ['Map', 'HeatMapSourceGenerator', '$http', '$scope',
-                    '$rootScope', '$stateParams', 'searchFilter',
-        function(Map, HeatMapSourceGenerator, $http, $scope, $rootScope, $stateParams, searchFilter) {
+                    '$rootScope', '$stateParams', 'searchFilter', 'queryService',
+        function(Map, HeatMapSourceGenerator, $http, $scope,
+                 $rootScope, $stateParams, searchFilter, queryService) {
             var MapService = Map;
             var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
 
@@ -54,7 +55,7 @@
                         instructions = data.instructions;
 
                     if(solrHeatmapApp.$state.geo) {
-                        mapConf.view.extent = MapService.
+                        mapConf.view.extent = queryService.
                           getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
                     }

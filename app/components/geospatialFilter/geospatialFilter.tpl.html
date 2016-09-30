@@ -2,7 +2,7 @@
     <div class="input-group searchinputfield" id="geospatialfilterinput">
         <input class="form-control input-sm" type="text" ng-model="filter.geo" ng-keypress="onKeyPress($event)" ng-click="onFocus()" ng-blur="onBlur()">
         <span class="input-group-btn">
-            <button class="btn btn-default btn-sm" type="button" ><i class="glyphicon glyphicon-search"></i></button>
+            <button class="btn btn-default btn-sm" type="button" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button>
         </span>
     </div>
 </div>

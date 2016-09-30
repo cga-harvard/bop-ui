@@ -1,14 +1,15 @@
 describe( 'MainController', function() {
-    var MainCtrl, $location, $httpBackend, $scope, MapService, state;
+    var MainCtrl, $location, $httpBackend, $scope, MapService, state, queryService;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( $controller, _$location_, $rootScope, _$httpBackend_, _Map_, _$state_) {
+    beforeEach( inject( function( $controller, _$location_, $rootScope, _$httpBackend_, _Map_, _$state_, _queryService_) {
         $location = _$location_;
         $httpBackend = _$httpBackend_;
         $scope = $rootScope.$new();
         MapService = _Map_;
         state = _$state_;
+        queryService = _queryService_;
         MainCtrl = $controller( 'MainController', { $scope: $scope });
     }));
 
@@ -31,7 +32,7 @@ describe( 'MainController', function() {
             describe('with a geo state', function() {
                 var serviceSpy;
                 beforeEach(function() {
-                    serviceSpy = spyOn(MapService, 'getExtentForProjectionFromQuery');
+                    serviceSpy = spyOn(queryService, 'getExtentForProjectionFromQuery');
                     MainCtrl.$state = { geo: '[1,1 TO 1,1]'};
                 });
                 it( 'calls MapService getExtentForProjectionFromQuery', function() {

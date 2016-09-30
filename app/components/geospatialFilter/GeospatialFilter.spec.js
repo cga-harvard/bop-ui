@@ -1,10 +1,10 @@
 describe( 'GeospatialFilterDirective', function() {
-    var $scope, scope, rootScope, InfoService, element, compiledElement;
+    var $scope, scope, rootScope, Map, HeatMapSourceGenerator, InfoService, element, compiledElement;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
     beforeEach( module( 'search_geospatialFilter_component' ) );
 
-    beforeEach( inject( function($compile, $controller, $rootScope, _InfoService_) {
+    beforeEach( inject( function($compile, $controller, $rootScope, _InfoService_, _Map_, _HeatMapSourceGenerator_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
         element = angular.element('<geospatial-filter></geospatial-filter>');
@@ -12,6 +12,8 @@ describe( 'GeospatialFilterDirective', function() {
         $scope.$digest();
         scope = compiledElement.isolateScope();
         InfoService = _InfoService_;
+        Map = _Map_;
+        HeatMapSourceGenerator = _HeatMapSourceGenerator_;
     }));
     it( 'filterString has default', function() {
         expect(scope.filter.geo).toEqual('[-90,-180 TO 90,180]');
@@ -27,6 +29,23 @@ describe( 'GeospatialFilterDirective', function() {
             var modalSpy = spyOn(InfoService, 'showInfoPopup');
             scope.showGeospatialInfo();
             expect(modalSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+    describe('#search', function() {
+        var mapSpy, heatMapSourceGeneratorSpy;
+        beforeEach(function() {
+            mapSpy = spyOn(Map, 'updateTransformationLayerFromQueryForMap');
+            heatMapSourceGeneratorSpy = spyOn(HeatMapSourceGenerator, 'search');
+        });
+        it('updates TransformationLayer', function() {
+            scope.filter.geo = '[1,1 TO 1,1]';
+            scope.search();
+            expect(mapSpy).toHaveBeenCalledTimes(1);
+            expect(mapSpy).toHaveBeenCalledWith('[1,1 TO 1,1]');
+        });
+        it('searches with current state', function() {
+            scope.search();
+            expect(heatMapSourceGeneratorSpy).toHaveBeenCalledTimes(1);
         });
     });
 });

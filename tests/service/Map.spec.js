@@ -309,22 +309,12 @@ describe( 'HeatMapSourceGenerator', function() {
             expect(setGeometrySpy).not.toHaveBeenCalled();
         });
     });
-    describe('#createQueryFromExtent', function() {
-        it('returns query string', function() {
-            expect(subject.createQueryFromExtent({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual('[0,2 TO 1,3]');
-        });
-    });
     describe('#calculateReducedBoundingBox', function() {
         beforeEach(function() {
             solrHeatmapApp.appConfig.ratioInnerBbox = 2;
         });
         it('returns boundingbox', function() {
             expect(subject.calculateReducedBoundingBox({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: -1, minY: 1, maxX: 2, maxY: 4});
-        });
-    });
-    describe('#getExtentFromQuery', function() {
-        it('returns extent object', function() {
-            expect(subject.getExtentFromQuery('[0,2 TO 1,3]')).toEqual({minX: 0, minY: 2, maxX: 1, maxY: 3});
         });
     });
     describe('#reducedQueryForExtent', function() {
@@ -347,9 +337,13 @@ describe( 'HeatMapSourceGenerator', function() {
             expect(subject.getCurrentExtentQuery()).toEqual('[0,0 TO 0,0]');
         });
     });
-    describe('#getExtentForProjectionFromQuery', function() {
-        it('returns extent query', function() {
-            expect(subject.getExtentForProjectionFromQuery('[0,2 TO 1,3]', 'EPSG:3857')).toEqual([222638.98158654716, -7.081154551613622e-10, 333958.4723798207, 111325.14286638486]);
+    describe('#updateTransformationLayerFromQueryForMap', function() {
+        it('sets new extent', function() {
+            layer = { getSource: function() { return { clear: function() {}, getFeatures: function() { return [{setGeometry: function() { }}];}}; }};
+            spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
+            spyOn(subject, 'getInteractions').and.returnValue([]);
+            var layerSpy = spyOn(subject, 'getLayersBy').and.returnValue([layer]);
+            subject.updateTransformationLayerFromQueryForMap('[0,2 TO 1,3]', 'EPSG:3857');
         });
     });
 });
