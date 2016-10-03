@@ -30,11 +30,29 @@ describe( 'SearchDirective', function() {
                 scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
-            it('with searchInput', function() {
+            it('with searchInput and clean textSearchInput', function() {
                 scope.filter.text = 'San Diego';
                 scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledWith('San Diego');
             });
+            it('with a previous value in scope.filter.text and new value in the input', function() {
+                scope.textSearchInput.value = 'california';
+                scope.filter.text = '"San Diego"';
+                scope.doSearch();
+                expect(searchSpy).toHaveBeenCalledWith('"San Diego" "california"');
+            });
+        });
+    });
+    describe('#watch filter.text', function() {
+        it('watch filter.text to change keyWordStringToArray', function() {
+            scope.filter.text = 'San Diego';
+            scope.$digest();
+            expect(scope.filterArray).toEqual(['San Diego']);
+        });
+        it('watch composite filter.text to change keyWordStringToArray', function() {
+            scope.filter.text = '"San Diego" "houston" "San Francisco"';
+            scope.$digest();
+            expect(scope.filterArray).toEqual(['San Diego', 'houston', 'San Francisco']);
         });
     });
     describe('#reset', function() {
@@ -70,6 +88,38 @@ describe( 'SearchDirective', function() {
             expect(searchSpy).not.toHaveBeenCalledTimes(1);
         });
     });
+
+    describe('#removeKeyWord', function() {
+        var searchSpy;
+        beforeEach(function() {
+            scope.filterArray = ['test1', 'test2', 'test3'];
+            searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
+        });
+        it('remove keyword on backspace key pressed', function() {
+            scope.onKeyPress({which: 8});
+            expect(searchSpy).toHaveBeenCalledWith('"test1" "test2"');
+        });
+        it('remove keyword from tag in input', function() {
+            scope.removeKeyWord('test2');
+            expect(searchSpy).toHaveBeenCalledWith('"test1" "test3"');
+        });
+    });
+
+    describe('#listenSuggestWords', function() {
+        it('Should populate with suggest key word', function() {
+            var dataRawKeywords = [
+                {value: 'test1', count: 300},
+                {value: 'te2', count: 200},
+                {value: 't3', count: 100}
+            ];
+            rootScope.$broadcast('setSuggestWords', dataRawKeywords);
+            expect(scope.suggestedKeywords).toEqual([
+                {value: 'test1', count: 300},
+                {value: 'te2', count: 200}
+            ]);
+        });
+    });
+
     describe('#showInfo', function() {
         it('opens the modal info', function() {
             var modalSpy = spyOn(InfoService, 'showInfoPopup');

@@ -34,7 +34,8 @@
                     'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
-                    'd.docs.limit': '10'
+                    'd.docs.limit': '10',
+                    'a.text.limit': '5'
                 };
                 $state.go('search', {
                     text: params['q.text'],
@@ -82,6 +83,8 @@
                             $rootScope.$broadcast('setHistogram', data['a.time']);
 
                             $rootScope.$broadcast('setTweetList', data['d.docs']);
+
+                            $rootScope.$broadcast('setSuggestWords', data['a.text']);
 
                             searchFilter.histogramCount = data['a.time'].counts;
                         }
