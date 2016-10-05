@@ -38,7 +38,14 @@
                       </span>
                       <label for="focusedInput" class="control-label col-md-1">Date:</label>
                       <div class="col-md-10">
-                         <input id="focusedInput" class="form-control input-sm" type="text" ng-model="dateString">
+                         <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
+                             <span class="input-group searchinputfield" id="searchinput">
+                                 <input class="md-input" type="text" ng-keyup="onKeyPress($event)" ng-model="dateString" ng-blur="focus=false" ng-focus="focus=true">
+                                 <span ng-click="doSearch()" class="input-group-addon border-search">
+                                     <i class="glyphicon glyphicon-search"></i>
+                                 </span>
+                             </span>
+                          </div>
                       </div>
                   </div>
               </form>

@@ -296,3 +296,17 @@ code {
    margin-top: -10px;
    margin-bottom: -10px;
 }
+
+.searchtext {
+    border-color: rgba(0,0,0,0.12);
+    padding-bottom: 0;
+    border-width: 0 0 1px;
+    border-style: solid;
+    margin-right: 6px;
+    margin-left: 0px;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.searchtext-focus {
+    border-color: rgba(0,0,0,0);
+    box-shadow: 0 2px #337ab7;
+}
