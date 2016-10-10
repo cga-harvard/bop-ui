@@ -89,6 +89,22 @@ describe( 'SearchDirective', function() {
         });
     });
 
+    describe('#toggleSuggestKeywords', function() {
+        var searchSpy;
+        beforeEach(function() {
+            searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
+        });
+        it('call search', function() {
+            scope.toggleSuggestKeywords();
+            expect(searchSpy).toHaveBeenCalledTimes(1);
+        });
+        it('set the value of the timeLimit', function() {
+            scope.tagSwitch.value = true;
+            scope.toggleSuggestKeywords();
+            expect(searchFilter.textLimit).toEqual(5);
+        });
+    });
+
     describe('#removeKeyWord', function() {
         var searchSpy;
         beforeEach(function() {

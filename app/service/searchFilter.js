@@ -13,7 +13,8 @@
             user: null,
             geo: '[-90,-180 TO 90,180]',
             hm: '[-1,1 TO 2,4]',
-            histogramCount: []
+            histogramCount: [],
+            textLimit: null
         };
 
         var emptyStringForNull = function(value) {
@@ -39,6 +40,7 @@
             service.text = null;
             service.user = null;
             service.geo = '[-90,-180 TO 90,180]';
+            service.textLimit = null;
         };
         return service;
     }]);

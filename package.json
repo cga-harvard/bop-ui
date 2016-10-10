@@ -30,6 +30,7 @@
     "js-lint": "eslint ./",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",
+    "lintest": "npm run js-lint && npm run test",
     "serve": "http-server -p 3001",
     "live-reload": "live-reload --port 9091 ./",
     "server": "parallelshell 'npm run live-reload -s' 'npm run serve -s' 'grunt dev-watch'",

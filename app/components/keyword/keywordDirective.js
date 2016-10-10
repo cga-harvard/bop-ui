@@ -5,8 +5,8 @@
         return {
             scope: {
                 tag: '@',
-                remove: '=',
-                removefn: '='
+                remove: '@',
+                removefn: '&'
             },
             link: keywordLink,
             templateUrl: 'components/keyword/keyword.tpl.html'

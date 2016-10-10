@@ -16,18 +16,21 @@
                 link: toolbarSearchLink,
                 restrict: 'EA',
                 templateUrl: 'components/toolbarSearch/toolbarSearchField.tpl.html',
-                scope: {}
+                scope: {
+                    numberKeywords: '='
+                }
             };
 
             function toolbarSearchLink(scope) {
                 var vm = scope;
-
+                var numberKeywords = vm.numberKeywords || 5;
 
                 vm.filter = searchFilter;
                 vm.filterArray = [];
                 vm.suggestedKeywords = [];
                 vm.textSearchInput = {value: '', previousLength: 0 };
                 vm.focus = false;
+                vm.tagSwitch = {value: false, disable: false};
 
                 vm.doSearch = doSearch;
                 vm.removeKeyWord = removeKeyWord;
@@ -35,6 +38,8 @@
                 vm.showtoolbarSearchInfo = showtoolbarSearchInfo;
                 vm.onKeyPress = onKeyPress;
                 vm.reset = reset;
+
+                vm.toggleSuggestKeywords = toggleSuggestKeywords;
 
                 listenSuggestWords();
 
@@ -120,10 +125,17 @@
 
                 function listenSuggestWords() {
                     vm.$on('setSuggestWords', function(event, dataRawKeywords) {
+                        vm.tagSwitch.disable = false;
                         vm.suggestedKeywords = dataRawKeywords.filter(function(obj) {
                             return obj.value.length >= 3;
                         });
                     });
+                }
+
+                function toggleSuggestKeywords() {
+                    vm.filter.textLimit = vm.tagSwitch.value ? numberKeywords : null;
+                    vm.tagSwitch.disable = true;
+                    HeatMapSourceGenerator.search();
                 }
             }
         }]);
