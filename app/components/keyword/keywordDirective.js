@@ -14,6 +14,7 @@
 
         function keywordLink(scope) {
             var vm = scope;
+            vm.removeTag = vm.remove === 'true' ? true : false;
         }
     });
 })();
