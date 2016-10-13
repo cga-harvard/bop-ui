@@ -21,8 +21,8 @@
                 var vm = scope;
 
                 vm.initialDateOptions = {
-                    minDate: new Date('2013-03-01'),
-                    maxDate: new Date('2013-04-01')
+                    minDate: new Date('2016-10-01'),
+                    maxDate: new Date('2016-04-01')
                 };
 
                 vm.dateOptions = searchFilter;

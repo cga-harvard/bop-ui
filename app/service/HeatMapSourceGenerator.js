@@ -26,6 +26,7 @@
                 /*
                 // calculate reduced bounding box
                 */
+
                 params = {
                     'q.text': reqParamsUi.text,
                     'q.user': reqParamsUi.user,

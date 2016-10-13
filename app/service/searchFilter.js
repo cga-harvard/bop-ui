@@ -6,8 +6,8 @@
     .factory('searchFilter', ['Map', function(Map){
         var MapService = Map;
         var service = {
-            minDate: new Date('2013-03-10'),
-            maxDate: new Date('2013-03-21'),
+            minDate: new Date('2016-10-10'),
+            maxDate: new Date('2016-10-21'),
             time: null,
             text: null,
             user: null,
