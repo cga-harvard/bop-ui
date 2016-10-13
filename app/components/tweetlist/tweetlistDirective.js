@@ -1,27 +1,54 @@
+/*eslint angular/di: [2,"array"]*/
 (function() {
     angular
     .module('search_tweetlist_component', [])
-    .directive('tweetlist', tweetlist);
+    .directive('tweetlist', ['Map',
+        function tweetlist(Map) {
+            var MapService = Map;
+            return {
+                link: tweetlistLink,
+                restrict: 'EA',
+                templateUrl: 'components/tweetlist/tweetlist.tpl.html',
+                scope: {}
+            };
 
-    function tweetlist() {
-        return {
-            link: tweetlistLink,
-            restrict: 'EA',
-            templateUrl: 'components/tweetlist/tweetlist.tpl.html',
-            scope: {}
-        };
+            function tweetlistLink(scope) {
+                var vm = scope;
+                vm.tweetList = [];
+                vm.tweetList.exist = false;
 
-        function tweetlistLink(scope) {
-            var vm = scope;
-            vm.tweetList = [];
-            vm.tweetList.exist = false;
-            vm.$on('setTweetList', setTweetList);
+                vm.addCircle = addCircle;
+                vm.removeAllfeatures = MapService.removeAllfeatures;
 
-            function setTweetList(event, tweetList) {
-                vm.tweetList = tweetList;
-                vm.tweetList.exist = true;
+                vm.$on('setTweetList', setTweetList);
+
+                var stylePoint = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({color: 'rgba(0,0,255,0.2)'}),
+                        stroke: new ol.style.Stroke({color: 'rgba(0,0,255,0.5)', width: 2})
+                    })
+                });
+
+                function setTweetList(event, tweetList) {
+                    vm.tweetList = tweetList;
+                    vm.tweetList.exist = true;
+                }
+
+                function addCircle(coordinates) {
+                    var coordArray;
+                    if (!angular.isString(coordinates)) {
+                        return;
+                    }
+                    if (coordinates.includes(',')) {
+                        coordArray = coordinates.split(',').map(function(val) {
+                            return Number(val);
+                        });
+                        MapService.addCircle([coordArray[1], coordArray[0]], stylePoint);
+                    }
+                }
+
             }
-        }
-    }
+        }]);
 
 })();

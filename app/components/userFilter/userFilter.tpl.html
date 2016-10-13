@@ -1,14 +1,13 @@
 <div class="row">
     <div class="col-xs-11">
-        <form ng-submit="userSearch()">
-            <div class="input-group searchinputfield" id="userfilterinput">
-                <input class="form-control input-sm" type="text" placeholder="@user"
-                  ng-model="filter.user" ng-click="onFocus()" ng-blur="onBlur()">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-search"></i></button>
-                </span>
-            </div>
-        </form>
+              <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
+                  <span class="input-group searchinputfield" id="searchinput">
+                      <input class="md-input" type="text" placeholder="@user" ng-keyup="onKeyPress($event)" ng-model="filter.user" ng-blur="focus=false" ng-focus="focus=true">
+                      <span ng-click="doSearch()" class="input-group-addon border-search">
+                         <i class="glyphicon glyphicon-search"></i>
+                      </span>
+                  </span>
+               </div>
     </div>
     <div class="col-xs-1 searchbtn pull-left padding-search">
         <a href="" class="infobtn" ng-click="showUserFilterInfo()">

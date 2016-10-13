@@ -1,21 +1,31 @@
 <div class="row">
-    <div class="col-sm-4 col-xs-3 export-slider">
-        <input type="number" class="form-control input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" ng-model="export.numDocuments">
+    <div class="col-sm-3 col-xs-3">
+        <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
+            <span class="input-group searchinputfield" id="searchinput">
+                <input class="md-input input-sm ng-valid ng-not-empty ng-dirty ng-valid-number ng-touched" type="number" placeholder="@user" ng-model="export.numDocuments" ng-blur="focus=false" ng-focus="focus=true">
+            </span>
+         </div>
     </div>
 
-    <div class="col-sm-8 col-xs-9 export-slider">
-        <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
+    <div class="col-sm-5 col-xs-9 results-display">
+              <label for="focusedInput" class="control-label">
+                 Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
+              </label>
+
+   </div>
+    <div class="col-sm-4">
+              <button class="btn btn-primary pull-right col-sm-12" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
     </div>
-    <div class="col-md-12 results-display">
+    <div class="col-sm-8 export-slider">
             <div>
-                <label for="focusedInput" class="control-label">
-                    Results: <span ng-bind="export.numDocuments"></span> of <span ng-bind="export.options.ceil"></span>
-                </label>
-                <button class="btn btn-primary pull-right" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>
+                <rzslider rz-slider-model="export.numDocuments" rz-slider-options="export.options"></rzslider>
+           </div>
+      </div>
+      <div class="col-sm-4 export-slider">
+             <div>
+                       <!-- THIS BUTTON IS JUST FOR REFERENCE IT HAS TO BE SETTED AS A RESET ACTION TRIGGER -->
+                <button class="btn btn-primary pull-right col-sm-12" id="exportbtn" title="EXPORT" type="button" ng-click="startExport()">RESET</button>
                 <span class="searchbtn">
-                    <a href="" class="infobtn" ng-click="showExportInfo()">
-                         <span class="glyphicon glyphicon-info-sign"></span>
-                    </a>
                 </span>
             </div>
     </div>
