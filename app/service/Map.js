@@ -511,6 +511,34 @@
                 return currentExtent;
             };
 
+            service.removeAllfeatures = function() {
+                if (angular.isObject(map)) {
+                    var layerLength = map.getLayers().getLength();
+                    for (var i = 3; i < layerLength; i++) {
+                        map.removeLayer(map.getLayers().getArray()[i]);
+                    }
+                }
+            };
+
+            service.addCircle = function(point, style) {
+                service.removeAllfeatures();
+
+                var geojsonObject = {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": ol.proj.fromLonLat(point)}
+                };
+
+                if (angular.isObject(map) && Object.keys(map).length !== 0) {
+                    var vectorLayer = new ol.layer.Vector({
+                        source: new ol.source.Vector({
+                            features: (new ol.format.GeoJSON).readFeatures(geojsonObject)
+                        })
+                    });
+                    vectorLayer.setStyle(style);
+                    map.addLayer(vectorLayer);
+                }
+            };
+
             /**
              *
              */

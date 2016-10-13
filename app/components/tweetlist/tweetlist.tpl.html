@@ -1,5 +1,6 @@
 
-<li ng-repeat="tweet in tweetList" class="tweet" style="list-style: none;">
+<li ng-repeat="tweet in tweetList" class="tweet" ng-mouseleave="removeAllfeatures()"
+    ng-mouseover="addCircle(tweet.coord)">
   <div class="list-item-text">
     <h3>@{{tweet.user_name}}</h3>
     <h4>{{tweet.text}}</h4>
