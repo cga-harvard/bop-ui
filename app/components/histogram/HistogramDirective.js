@@ -34,6 +34,9 @@
              */
             function makeHistogram(histogram) {
 
+                var barsheight = 40;
+                var histogrambarsWidth = 360;
+
                 findHistogramMaxValue();
                 return renderingSvgBars;
 
@@ -50,8 +53,7 @@
                         minValue = minValue || 0;
                         maxValue = maxValue || histogram.counts.length - 1;
                         histogram.bars = document.getElementById(scope.barId);
-                        var barsheight = 60;
-                        var rectWidth = (histogram.bars.offsetWidth / histogram.counts.length);
+                        var rectWidth = (histogrambarsWidth / histogram.counts.length);
                         var svgRect = histogram.counts.map(renderSvgBar);
                         histogram.bars.innerHTML = '<svg width="100%" height="' +
                             barsheight + '">' + svgRect.join('') + '</svg>';

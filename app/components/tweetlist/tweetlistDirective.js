@@ -2,8 +2,8 @@
 (function() {
     angular
     .module('search_tweetlist_component', [])
-    .directive('tweetlist', ['Map',
-        function tweetlist(Map) {
+    .directive('tweetlist', ['Map', 'HeightModule',
+        function tweetlist(Map, HeightModule) {
             var MapService = Map;
             return {
                 link: tweetlistLink,
@@ -19,6 +19,8 @@
 
                 vm.addCircle = addCircle;
                 vm.removeAllfeatures = MapService.removeAllfeatures;
+
+                vm.availableHeight = HeightModule.availableHeight();
 
                 vm.$on('setTweetList', setTweetList);
 

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>search</title>
 
     <!-- LIBRARY CSS -->
@@ -32,7 +33,6 @@
     <script src="./assets/lib/ol3-ext/interaction/transforminteraction.js"></script>
 
     <!-- APP CSS -->
-    <link rel="stylesheet" href="./assets/css/app.css">
     <link rel="stylesheet" href="./tmp/styles.css">
 
     <!-- APP JS -->
@@ -46,6 +46,7 @@
     <script src="./app/service/InfoService.js"></script>
     <script src="./app/service/searchFilter.js"></script>
     <script src="./app/service/queryService.js"></script>
+    <script src="./app/service/heightModule.js"></script>
 
     <!-- APP components -->
     <script src="./app/components/modules.js"></script>
@@ -65,14 +66,18 @@
 </head>
 
 <body ng-controller="MainController">
-		<ui-view></ui-view>
+	<ui-view></ui-view>
     <div class="container-fluid">
-        <div class="row">
-
-            <div class="col-md-4 container">
+        <div class="row center-block width-block">
+            <div class="container col-400-12 col-800-6 col-1200-4">
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
                         <toolbar-search number-keywords="10"></toolbar-search>
+                    </div>
+                </div>
+                <div class="row component-padding">
+                    <div class="col-xs-12 row-box" row-box>
+                        <user-filter></user-filter>
                     </div>
                 </div>
                 <div class="row component-padding">
@@ -87,32 +92,34 @@
                       </div>
                     </div>
                 </div>
+                <div class="row component-padding">
+                    <div class="col-md-12 row-box">
+                        <export-button></exportButton>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-8 container">
+            <div class="container col-400-12 col-800-6 col-1200-8">
                 <div class="row">
-                    <div class="col-md-7">
+                    <div class="container col-400-12 col-1200-4">
                         <div class="row component-padding">
-                            <div class="col-md-12 row-box">
+                            <div class="col-md-12 row-box"q>
                                 <date-picker></date-picker>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <div class="row component-padding">
-                            <div class="col-xs-12 row-box" row-box>
-                                <user-filter></user-filter>
-                            </div>
-                        </div>
+                    <div class="container col-400-12 col-1200-4">
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                                <export-button></exportButton>
+                                <div class="no-info">Tweet details</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                </div>
+                <div class="row">
+                    <div class="container col-400-12 col-1200-8 col-1600-9 col-2000-9 col-2800">
                         <div class="row component-padding">
-                            <div class="col-md-12 row-box">
+                            <div class="row-box heatmap">
                               <heatmap></heatmap>
                             </div>
                         </div>

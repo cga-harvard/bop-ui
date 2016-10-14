@@ -63,7 +63,7 @@ module.exports = function(grunt) {
         less: {
           development: {
             files: {
-              'tmp/styles.css': 'app/components/**/*.less'
+              'tmp/styles.css': ['app/**/*.less', 'assets/**/*.less']
             }
           },
           production: {
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
               ],
             },
             files: {
-              'build/styles.min.css': 'app/components/**/*.less'
+              'build/styles.min.css': ['app/**/*.less', 'assets/**/*.less']
             }
           }
         },
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
             livereload: true
           },
           build: {
-            files: ['app/**/*'],
+            files: ['app/**/*', 'assets/**/*'],
             tasks: ['dev']
           }
         },

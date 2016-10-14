@@ -23,7 +23,6 @@
     <script src="./assets/lib/ol3/ol.js"></script>
 
     <!-- APP CSS -->
-    <link rel="stylesheet" href="./assets/css/app.css">
     <link rel="stylesheet" href="./build/styles.min.css">
 
     <script src="./build/hm-client.min.js"></script>
@@ -31,14 +30,18 @@
 </head>
 
 <body ng-controller="MainController">
-		<ui-view></ui-view>
+	<ui-view></ui-view>
     <div class="container-fluid">
-        <div class="row">
-
-            <div class="col-md-4 container">
+        <div class="row center-block width-block">
+            <div class="container col-400-12 col-800-6 col-1200-4">
                 <div class="row component-padding">
                     <div class="col-xs-12 row-box">
                         <toolbar-search number-keywords="10"></toolbar-search>
+                    </div>
+                </div>
+                <div class="row component-padding">
+                    <div class="col-xs-12 row-box" row-box>
+                        <user-filter></user-filter>
                     </div>
                 </div>
                 <div class="row component-padding">
@@ -48,37 +51,39 @@
                 </div>
                 <div class="row component-padding">
                     <div class="col-md-12 row-box">
-                      <div class="row tweetlist-box">
+                      <div class="row">
                         <tweetlist></tweetlist>
                       </div>
                     </div>
                 </div>
+                <div class="row component-padding">
+                    <div class="col-md-12 row-box">
+                        <export-button></exportButton>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-8 container">
+            <div class="container col-400-12 col-800-6 col-1200-8">
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="container col-400-12 col-1200-4">
                         <div class="row component-padding">
-                            <div class="col-md-12 row-box">
+                            <div class="col-md-12 row-box"q>
                                 <date-picker></date-picker>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <div class="row component-padding">
-                            <div class="col-xs-12 row-box">
-                                <user-filter></user-filter>
-                            </div>
-                        </div>
+                    <div class="container col-400-12 col-1200-4">
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                                <export-button></exportButton>
+                                <div class="no-info">Tweet details</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                </div>
+                <div class="row">
+                    <div class="container col-400-12 col-1200-8 col-1600-9 col-2000-12">
                         <div class="row component-padding">
-                            <div class="col-md-12 row-box">
+                            <div class="row-box heatmap">
                               <heatmap></heatmap>
                             </div>
                         </div>
@@ -87,7 +92,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- map popup -->
     <ng-include src="'./app/view/mapPopup.html'"></ng-include>
     <!-- info popup -->

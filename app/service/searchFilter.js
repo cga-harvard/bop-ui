@@ -3,7 +3,7 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('searchFilter', ['Map', function(Map){
+    .factory('searchFilter', ['Map', 'HeightModule', function(Map, HeightModule){
         var MapService = Map;
         var service = {
             minDate: new Date('2016-10-10'),
@@ -14,7 +14,8 @@
             geo: '[-90,-180 TO 90,180]',
             hm: '[-1,1 TO 2,4]',
             histogramCount: [],
-            textLimit: null
+            textLimit: null,
+            docs: HeightModule.numberofItems()
         };
 
         var emptyStringForNull = function(value) {
@@ -35,6 +36,7 @@
                 service.hm = MapService.getReducedQueryFromExtent(filter.geo);
             }
         };
+
         service.resetFilter = function() {
             service.time = null;
             service.text = null;
@@ -42,6 +44,7 @@
             service.geo = '[-90,-180 TO 90,180]';
             service.textLimit = null;
         };
+
         return service;
     }]);
 })();
