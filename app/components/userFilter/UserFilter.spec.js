@@ -25,7 +25,7 @@ describe( 'UserFilterDirective', function() {
         });
         describe('calls search on HeatMapSourceGeneratorService', function() {
             it('once', function() {
-                scope.userSearch();
+                scope.doSearch();
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
         });
