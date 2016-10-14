@@ -10,7 +10,7 @@ html, body {
 }
 
 .map {
-  max-height: 600px;
+  max-height: 100%;
   margin: 4px;
   border: solid 1px #b3b3b3;
   border-radius: 4px;
@@ -95,10 +95,11 @@ code {
 }
 
 .row-box {
+    max-width: 400px;
+    min-width: 390px;
     background-color: #fff;
     border-radius: 2px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 10px;
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 1px 0 rgba(0,0,0,.14),0 1px 1px -1px rgba(0,0,0,.12);
 }
 
@@ -125,6 +126,47 @@ code {
   text-align: right;
 }
 
+@grid-base: 12;
+// @basepx: 400
+.generate-columns(@n, @base, @class, @i: 1) when (@i =< @n) {
+  .@{class}@{i} {
+    float: left;
+    width: (@base/@n)*@i;
+  }
+  .generate-columns(@n, @base, @class, (@i + 1));
+}
+
+.width-block-fn(@width) {
+    .width-block {
+        width: @width;
+    }
+}
+
+@media (min-width: 400px) {
+    .generate-columns(@grid-base, 400px, col-400-);
+    .width-block-fn(400px)
+}
+@media (min-width: 800px) {
+    .generate-columns(@grid-base, 800px, col-800-);
+    .width-block-fn(800px)
+}
+@media (min-width: 1200px) {
+    .generate-columns(@grid-base, 1200px, col-1200-);
+    .width-block-fn(1200px)
+}
+@media (min-width: 1600px) {
+    .generate-columns(@grid-base, 1600px, col-1600-);
+    .width-block-fn(1600px)
+}
+@media (min-width: 2000px) {
+    .generate-columns(@grid-base, 2000px, col-2000-);
+    .width-block-fn(2000px)
+}
+@media (min-width: 2800px) {
+    .col-2800 {
+        width: 1800px;
+    }
+}
 /*
  * CSS properties of search fields
  */
