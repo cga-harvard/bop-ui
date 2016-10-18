@@ -2,8 +2,8 @@
 (function() {
     angular
     .module('search_tweetlist_component', [])
-    .directive('tweetlist', ['Map', 'HeightModule',
-        function tweetlist(Map, HeightModule) {
+    .directive('tweetlist', ['Map', 'HeightModule', 'PanelInformationService',
+        function tweetlist(Map, HeightModule, PanelInformationService) {
             var MapService = Map;
             return {
                 link: tweetlistLink,
@@ -17,7 +17,7 @@
                 vm.tweetList = [];
                 vm.tweetList.exist = false;
 
-                vm.addCircle = addCircle;
+                vm.selectTweet = selectTweet;
                 vm.removeAllfeatures = MapService.removeAllfeatures;
 
                 vm.availableHeight = HeightModule.availableHeight();
@@ -26,15 +26,20 @@
 
                 var stylePoint = new ol.style.Style({
                     image: new ol.style.Circle({
-                        radius: 7,
+                        radius: 10,
                         fill: new ol.style.Fill({color: 'rgba(0,0,255,0.2)'}),
-                        stroke: new ol.style.Stroke({color: 'rgba(0,0,255,0.5)', width: 2})
+                        stroke: new ol.style.Stroke({color: 'rgba(0,0,255,0.9)', width: 2})
                     })
                 });
 
                 function setTweetList(event, tweetList) {
                     vm.tweetList = tweetList;
                     vm.tweetList.exist = true;
+                }
+
+                function selectTweet(tweet) {
+                    PanelInformationService.selectedTweet = tweet;
+                    addCircle(tweet.coord);
                 }
 
                 function addCircle(coordinates) {

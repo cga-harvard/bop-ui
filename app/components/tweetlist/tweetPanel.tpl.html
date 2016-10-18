@@ -1,0 +1,11 @@
+<dl class="dl-horizontal" ng-if="!panelEmpty">
+    <dt>id</dt>
+    <dd>{{selectedTweet.id}}</dd>
+    <dt>created_at</dt>
+    <dd>{{selectedTweet.created_at}}</dd>
+    <dt>coord</dt>
+    <dd>{{selectedTweet.coord}}</dd>
+    <dt>user_name</dt>
+    <dd>{{selectedTweet.user_name}}</dd>
+</dl>
+<div class="no-info" ng-if="panelEmpty">Tweet details</div>

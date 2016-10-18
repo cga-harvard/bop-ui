@@ -47,12 +47,14 @@
     <script src="./app/service/searchFilter.js"></script>
     <script src="./app/service/queryService.js"></script>
     <script src="./app/service/heightModule.js"></script>
+    <script src="./app/service/PanelInformationService.js"></script>
 
     <!-- APP components -->
     <script src="./app/components/modules.js"></script>
     <script src="./app/components/histogram/HistogramDirective.js"></script>
     <script src="./app/components/datepicker/DatepickerDirective.js"></script>
     <script src="./app/components/tweetlist/tweetlistDirective.js"></script>
+    <script src="./app/components/tweetlist/panelDirective.js"></script>
     <script src="./app/components/toolbarSearch/toolbarSearchDirective.js"></script>
     <script src="./app/components/userFilter/userFilterDirective.js"></script>
     <script src="./app/components/geospatialFilter/geospatialFilterDirective.js"></script>
@@ -111,7 +113,7 @@
                     <div class="container col-400-12 col-1200-4">
                         <div class="row component-padding">
                             <div class="col-md-12 row-box">
-                                <div class="no-info">Tweet details</div>
+                                <tweet-panel></tweet-panel>
                             </div>
                         </div>
                     </div>
