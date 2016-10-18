@@ -35,6 +35,7 @@
                 function setTweetList(event, tweetList) {
                     vm.tweetList = tweetList;
                     vm.tweetList.exist = true;
+                    vm.availableHeight = HeightModule.availableHeight();
                 }
 
                 function selectTweet(tweet) {

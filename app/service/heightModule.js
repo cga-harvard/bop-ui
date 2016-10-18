@@ -10,13 +10,12 @@
             otherHeights: 410,
             documentHeight: documentHeight,
             availableHeight: availableHeight,
-            numberofItems: calculateNumberofItems
+            getNumberofItems: calculateNumberofItems
         };
 
         function documentHeight() {
             var D = document;
-            return Math.max(D.body.scrollHeight, D.documentElement.scrollHeight,
-                D.body.offsetHeight, D.documentElement.offsetHeight,
+            return Math.max(D.body.offsetHeight, D.documentElement.offsetHeight,
                 D.body.clientHeight, D.documentElement.clientHeight);
         }
 

@@ -15,7 +15,7 @@
             hm: '[-1,1 TO 2,4]',
             histogramCount: [],
             textLimit: null,
-            docs: HeightModule.numberofItems()
+            getNumOfDocs: HeightModule.getNumberofItems
         };
 
         var emptyStringForNull = function(value) {

@@ -26,7 +26,6 @@
                 /*
                 // calculate reduced bounding box
                 */
-
                 params = {
                     'q.text': reqParamsUi.text,
                     'q.user': reqParamsUi.user,
@@ -35,7 +34,7 @@
                     'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
-                    'd.docs.limit': reqParamsUi.docs,
+                    'd.docs.limit': reqParamsUi.getNumOfDocs(),
                     'a.text.limit': reqParamsUi.textLimit
                 };
                 $state.go('search', {

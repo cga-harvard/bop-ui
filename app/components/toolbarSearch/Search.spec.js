@@ -55,27 +55,7 @@ describe( 'SearchDirective', function() {
             expect(scope.filterArray).toEqual(['San Diego', 'houston', 'San Francisco']);
         });
     });
-    describe('#reset', function() {
-        var searchSpy, mapSpy, filterSpy;
-        beforeEach(function() {
-            searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
-            mapSpy = spyOn(MapService, 'resetMap');
-            filterSpy = spyOn(searchFilter, 'resetFilter');
-            scope.searchInput = 'San Diego';
-        });
-        it('calls search on HeatMapSourceGeneratorService once', function() {
-            scope.reset();
-            expect(searchSpy).toHaveBeenCalledTimes(1);
-        });
-        it('calls restMap on MapService once', function() {
-            scope.reset();
-            expect(mapSpy).toHaveBeenCalledTimes(1);
-        });
-        it('calls resetFilter on searchFilter once', function() {
-            scope.reset();
-            expect(filterSpy).toHaveBeenCalledTimes(1);
-        });
-    });
+
     describe('#onKeyPress', function() {
         it('search on enter key pressed', function() {
             var searchSpy = spyOn(scope, 'doSearch');
