@@ -334,8 +334,8 @@
                 vector.getSource().addFeature(polygon);
 
                 var transformInteraction = new ol.interaction.Transform({
-                    translate: true,
-                    scale: true,
+                    translate: false,
+                    scale: false,
                     translateFeature: false,
                     rotate: false,
                     stretch: false
@@ -370,44 +370,35 @@
                 });
             }
 
+            service.calculateReducedBoundingBox = function(extent) {
+                if(solrHeatmapApp.appConfig) {
+                    var dx = extent.maxX - extent.minX,
+                        dy = extent.maxY - extent.minY,
+                        minX = extent.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        maxX = extent.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
+                        minY = extent.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                        maxY = extent.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
+                    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+                }
+                return extent;
+            };
+
             /*
              * For change:resolution event (zoom in map):
              * If bounding of transform interaction is grater than the map extent
-             * the transform box will be resized to 90%
+             * the transform box will be resized to solrHeatmapApp.appConfig.ratioInnerBbox percent
              */
             service.checkBoxOfTransformInteraction = function() {
-                var transformInteractionLayer = service.getLayersBy('name',
-                                                                    'TransformInteractionLayer')[0],
-                    mapExtent = service.getMapView().calculateExtent(service.getMapSize()),
-                    vectorSrc = transformInteractionLayer.getSource(),
-                    currentBbox = vectorSrc.getFeatures()[0],
-                    needsUpdate = false,
-                    ordArray = currentBbox.getGeometry().getCoordinates()[0];
+                var mapExtent = service.getMapView().calculateExtent(service.getMapSize());
 
-                // check if current bbox is greater than map extent
-                for (var i = 0; i<ordArray.length; i++) {
-                    if (! new ol.geom.Point(ordArray[i]).intersectsExtent(mapExtent)){
-                        needsUpdate = true;
-                        break;
-                    }
-                }
+                // calculate reduced bounding box
+                var reducedBoundingBox = service.calculateReducedBoundingBox({
+                    minX: mapExtent[0], minY: mapExtent[1],
+                    maxX: mapExtent[2], maxY: mapExtent[3]
+                });
 
-                if (needsUpdate === true) {
-                    // calculate reduced bounding box
-                    var minx = mapExtent[0],
-                        miny = mapExtent[1],
-                        maxx = mapExtent[2],
-                        maxy = mapExtent[3],
-                        dx = maxx - minx,
-                        dy = maxy - miny,
-                        minInnerX = minx + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                        maxInnerX = minx + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                        minInnerY = miny + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
-                        maxInnerY = miny + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
-
-                    setTransactionBBox([ minInnerX, minInnerY, maxInnerX, maxInnerY]);
-                }
-
+                setTransactionBBox([reducedBoundingBox.minX, reducedBoundingBox.minY,
+                    reducedBoundingBox.maxX, reducedBoundingBox.maxY]);
             };
 
             /**
@@ -424,19 +415,6 @@
 
                     setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
                 }
-            };
-
-            service.calculateReducedBoundingBox = function(extent) {
-                if(solrHeatmapApp.appConfig) {
-                    var dx = extent.maxX - extent.minX,
-                        dy = extent.maxY - extent.minY,
-                        minX = extent.minX + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                        maxX = extent.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                        minY = extent.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
-                        maxY = extent.minY + (solrHeatmapApp.appConfig.ratioInnerBbox) * dy;
-                    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
-                }
-                return extent;
             };
 
             service.getReducedQueryFromExtent = function(extentQuery) {
@@ -585,6 +563,7 @@
                     var vw = map.getView();
                     vw.set('extent', viewConfig.extent);
                     generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
+                    vw.fit(viewConfig.extent, service.getMapSize());
                 }
             };
             return service;

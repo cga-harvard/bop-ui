@@ -31,13 +31,12 @@
                           hmLayer.setRadius(radius);
                           hmLayer.setBlur(radius*2);
                       }
-
-                      // check box of transform interaction
-                      MapService.checkBoxOfTransformInteraction();
                   });
                 MapService.getMap().on('moveend', function(evt){
                     searchFilter.setFilter({geo: MapService.getCurrentExtentQuery() });
                     HeatMapSourceGeneratorService.search();
+                    // check box of transform interaction
+                    MapService.checkBoxOfTransformInteraction();
                 });
 
                 MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(

@@ -1,11 +1,12 @@
 {
     "appConfig": {
         "tweetsSearchBaseUrl": "http://128.31.24.219/bopws/tweets/search?",
+        "tweetsSearchBaseUrl_": "http://54.158.101.33:8080/bopws/tweets/search?",
         "tweetsExportBaseUrl": "http://128.31.24.219/bopws/tweets/export?",
-        "ratioInnerBbox": 0.9
+        "ratioInnerBbox": 1
     },
     "bopwsConfig": {
-        "heatmapFacetLimit": 10000,
+        "heatmapFacetLimit": 5000,
         "csvDocsLimit": 1
     },
     "mapConfig": {
@@ -19,7 +20,7 @@
             "resolution": null,
             "resolutions": null,
             "rotation": null,
-            "zoom": 1,
+            "zoom": 2,
             "zoomFactor": null
         },
         "layers": [{
