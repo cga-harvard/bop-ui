@@ -35,7 +35,7 @@
             function makeHistogram(histogram) {
 
                 var barsheight = 40;
-                var histogrambarsWidth = 360;
+                var histogrambarsWidth = 364;
 
                 findHistogramMaxValue();
                 return renderingSvgBars;
