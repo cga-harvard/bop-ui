@@ -1,11 +1,14 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy, defaultConfig, defaultViewConfig, layer;
+    var subject, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy,
+        defaultConfig, defaultViewConfig, layer, HeightModule, $window;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _Map_, _Normalize_) {
+    beforeEach( inject( function( _Map_, _Normalize_, _HeightModule_, _$window_) {
         subject = _Map_;
         NormalizeService = _Normalize_;
+        HeightModule = _HeightModule_;
+        $window = _$window_;
         mapViewSpy = jasmine.createSpyObj('view', ['set', 'fit']);
         mapSpy = jasmine.createSpyObj('map', ['getView', 'addLayer', 'addInteraction']);
         mapSpy.getView.and.returnValue(mapViewSpy);
@@ -74,8 +77,7 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(subject, 'getMap').and.returnValue(mapSpy);
             spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
             spyOn(subject, 'getMapSize').and.returnValue([100,50]);
-
-            defaultConfig = { mapConfig: { view: { extent: [0,0]}}};
+            defaultConfig = { mapConfig: { view: { extent: [0,0], initExtent: [0, 0, 0, 0] } } };
             subject.init(defaultConfig);
             expect(mapSpy.getView).toHaveBeenCalled();
             expect(mapViewSpy.set).toHaveBeenCalled();
@@ -316,14 +318,17 @@ describe( 'HeatMapSourceGenerator', function() {
     describe('#calculateReducedBoundingBox', function() {
         beforeEach(function() {
             solrHeatmapApp.appConfig.ratioInnerBbox = 2;
+            spyOn(HeightModule, 'documentHeight').and.returnValue(400);
+            spyOn(HeightModule, 'topPanelHeight').and.returnValue(200);
+            $window.innerWidth = 800;
         });
         it('returns boundingbox', function() {
-            expect(subject.calculateReducedBoundingBox({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: -1, minY: 1, maxX: 2, maxY: 4});
+            expect(subject.calculateReducedBoundingBoxFromInFullScreen({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: 0.5, minY: 1, maxX: 2, maxY: 2.5});
         });
-    });
-    describe('#reducedQueryForExtent', function() {
-        it('returns extent query', function() {
-            expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[-1,1 TO 2,4]');
+        describe('#reducedQueryForExtent', function() {
+            it('returns extent query', function() {
+                expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[0.5,1 TO 2,2.5]');
+            });
         });
     });
     describe('#getCurrentExtentQuery', function() {

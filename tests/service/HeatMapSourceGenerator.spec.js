@@ -3,7 +3,7 @@ describe( 'HeatMapSourceGenerator', function() {
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _HeightModule_) {
+    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_) {
         subject = _HeatMapSourceGenerator_;
         $httpBackend = _$httpBackend_;
         MapService = _Map_;

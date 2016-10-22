@@ -54,6 +54,7 @@
                         instructions = data.instructions;
 
                     if(solrHeatmapApp.$state.geo) {
+                        mapConf.view.initExtent = mapConf.view.extent;
                         mapConf.view.extent = queryService.
                           getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
