@@ -298,7 +298,7 @@
                         feature: currentBBox,
                         inner: false,
                         fill: new ol.style.Fill({
-                            color: [255,255,255,0.5]
+                            color: [0,0,0,0.2]
                         })
                     });
                     newHeatMapLayer.addFilter(mask);
@@ -335,20 +335,11 @@
                 service.getMap().addLayer(vector);
                 vector.getSource().addFeature(polygon);
 
-                var transformInteraction = new ol.interaction.Transform({
-                    translate: false,
-                    scale: false,
-                    translateFeature: false,
-                    rotate: false,
-                    stretch: false
-                });
-                service.getMap().addInteraction(transformInteraction);
-
                 var mask = new ol.filter.Mask({
                     feature: polygon,
-                    inner:false,
+                    inner: false,
                     fill: new ol.style.Fill({
-                        color:[255,255,255,0.5]
+                        color:[0,0,0,0.1]
                     })
                 });
                 backGroundLayer.addFilter(mask);
@@ -363,13 +354,6 @@
 
                 polyNew = ol.geom.Polygon.fromExtent(extent);
                 currentBbox.setGeometry(polyNew);
-
-                // update interaction
-                service.getInteractions().forEach(function(interaction){
-                    if(interaction instanceof ol.interaction.Transform){
-                        interaction.dispatchEvent('propertychange');
-                    }
-                });
             }
 
             service.calculateReducedBoundingBoxFromInFullScreen = function(extent) {
@@ -417,8 +401,7 @@
                     var vw = service.getMapView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
-
-                    setTransactionBBox(solrHeatmapApp.initMapConf.view.extent);
+                    service.checkBoxOfTransformInteraction();
                 }
             };
 
@@ -430,7 +413,11 @@
             };
 
             service.getCurrentExtentQuery = function(){
-                return queryService.createQueryFromExtent(service.getCurrentExtent());
+                var currentExtent = service.getCurrentExtent();
+                return {
+                    geo: queryService.createQueryFromExtent(currentExtent.geo),
+                    hm: queryService.createQueryFromExtent(currentExtent.hm)
+                };
             };
 
             /**
@@ -446,7 +433,8 @@
                                     getLayersBy('name', 'TransformInteractionLayer')[0],
                     currentBbox,
                     currentBboxExtentWgs84,
-                    currentExtent = {};
+                    currentExtent = {},
+                    currentExtentBox = {};
 
                 if (!transformInteractionLayer) {
                     return null;
@@ -461,38 +449,35 @@
                 }
 
                 if (extent && extentWgs84){
-                    var normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84),
-                        normalizedExtentBox =
-                            NormalizeService.normalizeExtent(currentBboxExtentWgs84),
-                        minX = normalizedExtentMap[1],
-                        maxX = normalizedExtentMap[3],
-                        minY = normalizedExtentMap[0],
-                        maxY = normalizedExtentMap[2];
+                    var normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84);
+                    var normalizedExtentBox = NormalizeService
+                            .normalizeExtent(currentBboxExtentWgs84);
 
-                    minX = normalizedExtentBox[1];
-                    maxX = normalizedExtentBox[3];
-                    minY = normalizedExtentBox[0];
-                    maxY = normalizedExtentBox[2];
+                    currentExtent = createExtent(normalizedExtentMap);
 
-                    currentExtent = {
-                        minX: minX,
-                        maxX: maxX,
-                        minY: minY,
-                        maxY: maxY
-                    };
+                    currentExtentBox = createExtent(normalizedExtentBox);
 
                     var roundToFixed = function(value){
                         return parseFloat(Math.round(value* 100) / 100).toFixed(2);
                     };
                     // Reset the date fields
                     $rootScope.$broadcast('geoFilterUpdated', '[' +
-                                            roundToFixed(minX) + ',' +
-                                            roundToFixed(minY) + ' TO ' +
-                                            roundToFixed(maxX) + ',' +
-                                            roundToFixed(maxY) + ']');
+                                            roundToFixed(currentExtentBox.minX) + ',' +
+                                            roundToFixed(currentExtentBox.minY) + ' TO ' +
+                                            roundToFixed(currentExtentBox.maxX) + ',' +
+                                            roundToFixed(currentExtentBox.maxY) + ']');
                 }
 
-                return currentExtent;
+                function createExtent(normalizedExtent) {
+                    return {
+                        minX: normalizedExtent[1],
+                        maxX: normalizedExtent[3],
+                        minY: normalizedExtent[0],
+                        maxY: normalizedExtent[2]
+                    };
+                }
+
+                return {hm: currentExtent, geo: currentExtentBox};
             };
 
             service.removeAllfeatures = function() {
@@ -538,7 +523,6 @@
                         new ol.control.ScaleLine(),
                         new ol.control.ZoomSlider()
                     ]),
-                    interactions: ol.interaction.defaults(),
                     layers: buildMapLayers(layerConfig),
                     renderer: angular.isString(rendererConfig) ?
                                             rendererConfig : undefined,

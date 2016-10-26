@@ -33,7 +33,7 @@
                 });
 
                 function setTweetList(event, tweetList) {
-                    vm.tweetList = tweetList;
+                    vm.tweetList = tweetList ? tweetList : [];
                     vm.tweetList.exist = true;
                     vm.availableHeight = HeightModule.availableHeight();
                 }

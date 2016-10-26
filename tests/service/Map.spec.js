@@ -201,7 +201,7 @@ describe( 'HeatMapSourceGenerator', function() {
         var extent, mapZoomSpy, layerSpy, view;
         beforeEach(function() {
             layer = { getSource: function() { return { getFeatures: function() { return [{getGeometry: function() { return { getExtent: function() { return [0,0,0,0];}};}}];}}; }};
-            view = { calculateExtent: function(size) { return [0,0]; }};
+            view = { calculateExtent: function(size) { return [0, 0, 0, 0]; }};
             spyOn(subject, 'getMapView').and.returnValue(view);
             mapZoomSpy = spyOn(subject, 'getMapZoom').and.returnValue(10);
             spyOn(subject, 'getMapSize').and.returnValue(10);
@@ -209,14 +209,14 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
         });
         it('returns extent', function() {
-            expect(subject.getCurrentExtent()).toEqual({minX: 0, maxX: 0, minY: 0, maxY: 0});
+            expect(subject.getCurrentExtent()).toEqual({hm: {minX: 0, maxX: 0, minY: 0, maxY: 0}, geo: {minX: 0, maxX: 0, minY: 0, maxY: 0}});
         });
         describe('zoom <= 1', function(){
             beforeEach(function() {
                 mapZoomSpy.and.returnValue(1);
             });
             it('returns extent', function() {
-                expect(subject.getCurrentExtent()).toEqual({minX: 0, maxX: 0, minY: 0, maxY: 0});
+                expect(subject.getCurrentExtent()).toEqual({ hm: {minX: -90, maxX: 90, minY: -180, maxY: 180}, geo: {minX: 0, maxX: 0, minY: 0, maxY: 0} });
             });
         });
         describe('no TransformInteractionLayer', function(){
@@ -278,6 +278,7 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(subject, 'getMapView').and.returnValue(getViewSpy);
             spyOn(subject, 'getInteractions').and.returnValue([]);
             spyOn(subject, 'getLayersBy').and.returnValue([layer]);
+            spyOn(subject, 'checkBoxOfTransformInteraction');
         });
         describe('no initialZoom or center is defined',function() {
             beforeEach(function() {
@@ -334,8 +335,8 @@ describe( 'HeatMapSourceGenerator', function() {
     describe('#getCurrentExtentQuery', function() {
         var view, layerSpy, mapZoomSpy;
         beforeEach(function() {
-            layer = { getSource: function() { return { getFeatures: function() { return [{getGeometry: function() { return { getExtent: function() { return [0,0,0,0];}};}}];}}; }};
-            view = { calculateExtent: function(size) { return [0,0]; }};
+            layer = { getSource: function() {return {getFeatures: function() {return [{getGeometry: function() {return {getExtent: function() {return [0,0,0,0];}};}}];}}; }};
+            view = { calculateExtent: function(size) { return [0,0, 0, 0]; }};
             spyOn(subject, 'getMapView').and.returnValue(view);
             mapZoomSpy = spyOn(subject, 'getMapZoom').and.returnValue(10);
             spyOn(subject, 'getMapSize').and.returnValue(10);
@@ -343,7 +344,7 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
         });
         it('returns extent query', function() {
-            expect(subject.getCurrentExtentQuery()).toEqual('[0,0 TO 0,0]');
+            expect(subject.getCurrentExtentQuery()).toEqual({ geo: '[0,0 TO 0,0]', hm: '[0,0 TO 0,0]' });
         });
     });
     describe('#updateTransformationLayerFromQueryForMap', function() {

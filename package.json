@@ -27,6 +27,7 @@
     "Heatmap"
   ],
   "scripts": {
+    "clean": "grunt clean",
     "js-lint": "eslint ./",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",

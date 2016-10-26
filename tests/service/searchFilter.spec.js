@@ -1,10 +1,11 @@
 describe( 'searchFilter', function() {
-    var subject;
+    var subject, MapService;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _searchFilter_) {
+    beforeEach( inject( function( _searchFilter_, _Map_) {
         subject = _searchFilter_;
+        MapService = _Map_;
     }));
 
     it('has geo default filter', function() {
@@ -31,6 +32,9 @@ describe( 'searchFilter', function() {
         });
     });
     describe('#resetFilter', function() {
+        beforeEach(function() {
+            spyOn(MapService, 'getCurrentExtentQuery').and.returnValue({ geo:['[-90,-180 TO 90,180]'] });
+        });
         it('resets the user', function() {
             subject.setFilter({user: 'Diego'});
             subject.resetFilter();
@@ -44,7 +48,7 @@ describe( 'searchFilter', function() {
         it('resets the geo', function() {
             subject.setFilter({geo: '[2,1 TO 2,1]'});
             subject.resetFilter();
-            expect(subject.geo).toEqual('[-90,-180 TO 90,180]');
+            expect(subject.geo).toEqual(['[-90,-180 TO 90,180]']);
         });
     });
 });

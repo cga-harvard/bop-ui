@@ -41,10 +41,10 @@
                 };
 
                 function reset() {
-                    searchFilter.resetFilter();
-                    HeatMapSourceGenerator.search();
                     // Reset the map
                     Map.resetMap();
+                    searchFilter.resetFilter();
+                    HeatMapSourceGenerator.search();
                 }
             }
         }]);

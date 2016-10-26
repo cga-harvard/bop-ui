@@ -94,7 +94,8 @@ module.exports = function(grunt) {
                 src: ['app/**/*.tpl.html'],
                 dest: 'tmp/templates.js'
             },
-          }
+        },
+        clean: ['tmp', 'build']
     });
 
     // get a formatted commit message to review changes from the commit log
@@ -128,7 +129,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('buildjs', ['html2js', 'concat', 'uglify']);
 
-    grunt.registerTask('dev', ['html2js', 'less:development']);
+    grunt.registerTask('dev', ['clean', 'html2js', 'less:development']);
 
     grunt.registerTask('dev-watch', ['dev', 'watch']);
 
