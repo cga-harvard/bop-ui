@@ -8,7 +8,8 @@
     angular
     .module('search_exportButton_component', [])
     .directive('exportButton', ['HeatMapSourceGenerator', 'InfoService',
-        function(HeatMapSourceGenerator, InfoService) {
+        'searchFilter', 'Map',
+        function(HeatMapSourceGenerator, InfoService, searchFilter, Map) {
             return {
                 link: ExportLink,
                 restrict: 'EA',
@@ -17,8 +18,8 @@
             };
 
             function ExportLink(scope) {
-
-                scope.export = {
+                var vm = scope;
+                vm.export = {
                     numDocuments: 1,
                     options: {
                         floor: 1,
@@ -27,15 +28,24 @@
                     }
                 };
 
-                scope.startExport = function() {
+                vm.reset = reset;
+
+                vm.startExport = function() {
                     var numDocs = scope.export.numDocuments;
 
                     HeatMapSourceGenerator.startCsvExport(numDocs);
                 };
 
-                scope.showExportInfo = function() {
+                vm.showExportInfo = function() {
                     InfoService.showInfoPopup('export');
                 };
+
+                function reset() {
+                    // Reset the map
+                    Map.resetMap();
+                    searchFilter.resetFilter();
+                    HeatMapSourceGenerator.search();
+                }
             }
         }]);
 })();

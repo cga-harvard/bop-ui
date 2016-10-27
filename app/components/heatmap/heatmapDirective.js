@@ -11,19 +11,9 @@
 
     function heatmap() {
         return {
-            link: ResultCounterLink,
             restrict: 'EA',
             templateUrl: 'components/heatmap/heatmap.tpl.html',
             scope: {}
         };
-
-        function ResultCounterLink(scope) {
-            scope.$on('setCounter', function(e, data){
-                if (data < 1 || !data) {
-                    data = 'No results found';
-                }
-                scope.counter = data;
-            });
-        }
     }
 })();

@@ -1,17 +1,16 @@
-<div class="row">
-    <div class="col-xs-11">
-              <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
-                  <span class="input-group searchinputfield" id="searchinput">
-                      <input class="md-input" type="text" placeholder="@user" ng-keyup="onKeyPress($event)" ng-model="filter.user" ng-blur="focus=false" ng-focus="focus=true">
-                      <span ng-click="doSearch()" class="input-group-addon border-search">
-                         <i class="glyphicon glyphicon-search"></i>
-                      </span>
-                  </span>
-               </div>
+    <div class="col-xs-11 padding-search">
+        <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
+            <span class="input-group searchinputfield" id="searchinput">
+                <input class="md-input" type="text" placeholder="@user" ng-keyup="onKeyPress($event)"
+                    ng-model="filter.user" ng-blur="focus=false" ng-focus="focus=true">
+                <span ng-click="doSearch()" class="input-group-addon border-search">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
+            </span>
+        </div>
     </div>
-    <div class="col-xs-1 searchbtn pull-left padding-search">
+    <div class="col-xs-1 searchbtn padding-search">
         <a href="" class="infobtn" ng-click="showUserFilterInfo()">
              <span class="glyphicon glyphicon-info-sign"></span>
         </a>
     </div>
-</div>

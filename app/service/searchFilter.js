@@ -6,16 +6,16 @@
     .factory('searchFilter', ['Map', 'HeightModule', function(Map, HeightModule){
         var MapService = Map;
         var service = {
-            minDate: new Date('2016-10-10'),
-            maxDate: new Date('2016-10-21'),
+            geo: '[-90,-180 TO 90,180]',
+            hm: '[-90,-180 TO 90,180]',
             time: null,
             text: null,
             user: null,
-            geo: '[-90,-180 TO 90,180]',
-            hm: '[-1,1 TO 2,4]',
             histogramCount: [],
             textLimit: null,
-            docs: HeightModule.numberofItems()
+            getNumOfDocs: HeightModule.getNumberofItems,
+            minDate: new Date('2016-10-10'),
+            maxDate: new Date('2016-10-21')
         };
 
         var emptyStringForNull = function(value) {
@@ -33,7 +33,9 @@
             }
             if(filter.geo) {
                 service.geo = filter.geo;
-                service.hm = MapService.getReducedQueryFromExtent(filter.geo);
+            }
+            if (filter.hm) {
+                service.hm = filter.hm;
             }
         };
 
@@ -41,7 +43,7 @@
             service.time = null;
             service.text = null;
             service.user = null;
-            service.geo = '[-90,-180 TO 90,180]';
+            service.geo = MapService.getCurrentExtentQuery().geo;
             service.textLimit = null;
         };
 

@@ -1,10 +1,10 @@
 describe( 'ExportDirective', function() {
-    var $scope, scope, element, rootScope, HeatMapSourceGeneratorService, compiledElement, InfoService;
+    var $scope, scope, element, rootScope, HeatMapSourceGeneratorService, compiledElement, InfoService, MapService, searchFilter;
 
     beforeEach(module('SolrHeatmapApp'));
     beforeEach(module('search_exportButton_component'));
 
-    beforeEach(inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _InfoService_) {
+    beforeEach(inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _InfoService_, _Map_, _searchFilter_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
 
@@ -15,6 +15,8 @@ describe( 'ExportDirective', function() {
 
         HeatMapSourceGeneratorService = _HeatMapSourceGenerator_;
         InfoService = _InfoService_;
+        MapService = _Map_;
+        searchFilter = _searchFilter_;
     }));
 
     it( 'export has defaults', function() {
@@ -42,6 +44,26 @@ describe( 'ExportDirective', function() {
             var modalSpy = spyOn(InfoService, 'showInfoPopup');
             scope.showExportInfo();
             expect(modalSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+    describe('#reset', function() {
+        var searchSpy, mapSpy, filterSpy;
+        beforeEach(function() {
+            searchSpy = spyOn(HeatMapSourceGeneratorService, 'search');
+            mapSpy = spyOn(MapService, 'resetMap');
+            filterSpy = spyOn(searchFilter, 'resetFilter');
+        });
+        it('calls search on HeatMapSourceGeneratorService once', function() {
+            scope.reset();
+            expect(searchSpy).toHaveBeenCalledTimes(1);
+        });
+        it('calls restMap on MapService once', function() {
+            scope.reset();
+            expect(mapSpy).toHaveBeenCalledTimes(1);
+        });
+        it('calls resetFilter on searchFilter once', function() {
+            scope.reset();
+            expect(filterSpy).toHaveBeenCalledTimes(1);
         });
     });
 });

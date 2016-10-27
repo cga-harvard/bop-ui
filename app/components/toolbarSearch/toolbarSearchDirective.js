@@ -7,10 +7,9 @@
 (function() {
     angular
     .module('search_toolbarsearch_component', [])
-    .directive('toolbarSearch', ['$rootScope', 'Map', 'HeatMapSourceGenerator',
+    .directive('toolbarSearch', ['$rootScope', 'HeatMapSourceGenerator',
         '$window', 'InfoService', 'searchFilter',
-        function toolbarSearch($rootScope, Map, HeatMapSourceGenerator, $window, InfoService, searchFilter) {
-            var MapService = Map;
+        function toolbarSearch($rootScope, HeatMapSourceGenerator, $window, InfoService, searchFilter) {
 
             return {
                 link: toolbarSearchLink,
@@ -37,7 +36,6 @@
                 vm.addSuggestedKeywordToSearchInput = addSuggestedKeywordToSearchInput;
                 vm.showtoolbarSearchInfo = showtoolbarSearchInfo;
                 vm.onKeyPress = onKeyPress;
-                vm.reset = reset;
 
                 vm.toggleSuggestKeywords = toggleSuggestKeywords;
 
@@ -79,13 +77,6 @@
                         vm.textSearchInput = {value: '', previousLength: 0};
                     }
                     HeatMapSourceGenerator.search(vm.filter.text);
-                }
-
-                function reset() {
-                    searchFilter.resetFilter();
-                    HeatMapSourceGenerator.search();
-                    // Reset the map
-                    MapService.resetMap();
                 }
 
                 function showtoolbarSearchInfo() {

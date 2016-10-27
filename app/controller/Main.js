@@ -32,19 +32,21 @@
                           hmLayer.setBlur(radius*2);
                       }
 
-                      // check box of transform interaction
                       MapService.checkBoxOfTransformInteraction();
                   });
                 MapService.getMap().on('moveend', function(evt){
-                    searchFilter.setFilter({geo: MapService.getCurrentExtentQuery() });
+                    MapService.checkBoxOfTransformInteraction();
+                    var currentExtent = MapService.getCurrentExtentQuery();
+                    searchFilter.setFilter({geo: currentExtent.geo, hm: currentExtent.hm });
                     HeatMapSourceGeneratorService.search();
                 });
 
-                MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
-                    ['translateend', 'scaleend'], function (e) {
-                        searchFilter.setFilter({geo: MapService.getCurrentExtentQuery() });
-                        HeatMapSourceGeneratorService.search();
-                    });
+                // MapService.getInteractionsByClass(ol.interaction.Transform)[0].on(
+                //     ['translateend', 'scaleend'], function (e) {
+                //         var currentExtent = MapService.getCurrentExtentQuery();
+                //         searchFilter.setFilter({geo: currentExtent.geo, hm: currentExtent.hm });
+                //         HeatMapSourceGeneratorService.search();
+                //     });
             };
 
             vm.response = function(data, status, headers, config) {
@@ -55,6 +57,7 @@
                         instructions = data.instructions;
 
                     if(solrHeatmapApp.$state.geo) {
+                        mapConf.view.initExtent = mapConf.view.extent;
                         mapConf.view.extent = queryService.
                           getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);

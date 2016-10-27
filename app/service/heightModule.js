@@ -3,21 +3,28 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('HeightModule', [function(){
+    .factory('HeightModule', ['$window', function($window){
 
         var service = {
             itemHeight: 90,
             otherHeights: 410,
             documentHeight: documentHeight,
             availableHeight: availableHeight,
-            numberofItems: calculateNumberofItems
+            getNumberofItems: calculateNumberofItems,
+            topPanelHeight: topPanelHeight
         };
 
         function documentHeight() {
             var D = document;
-            return Math.max(D.body.scrollHeight, D.documentElement.scrollHeight,
-                D.body.offsetHeight, D.documentElement.offsetHeight,
+            return Math.max(D.body.offsetHeight, D.documentElement.offsetHeight,
                 D.body.clientHeight, D.documentElement.clientHeight);
+        }
+
+        function topPanelHeight() {
+            if ($window.innerWidth < 1200) {
+                return 370;
+            }
+            return 200;
         }
 
         function availableHeight() {

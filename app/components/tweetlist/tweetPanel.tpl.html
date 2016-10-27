@@ -1,0 +1,19 @@
+<dl class="dl-horizontal list-group" ng-if="!panelEmpty">
+<div class="list-group-item">
+    <dt>Id</dt>
+    <dd >{{selectedTweet.id}}</dd>
+</div>
+<div class="list-group-item">
+    <dt>Created at</dt>
+    <dd>{{selectedTweet.created_at}}</dd>
+</div>
+<div class="list-group-item">
+    <dt>Coord</dt>
+    <dd>{{selectedTweet.coord}}</dd>
+</div>
+<div class="list-group-item">
+    <dt>User Name</dt>
+    <dd>{{selectedTweet.user_name}}</dd>
+</div>
+</dl>
+<div class="no-info" ng-if="panelEmpty">Tweet details</div>

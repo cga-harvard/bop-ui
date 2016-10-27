@@ -1,7 +1,7 @@
     <div class="col-md-12 component-padding">
         <div class="form-horizontal">
             <div class="row">
-                <label class="control-label col-xs-2">From:</label>
+                <label class="control-label col-xs-2">From</label>
                 <div class="col-xs-4 datepicker-wrapper">
                     <p class="input-group">
                         <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerStartDate" is-open="startDate.opened"
@@ -12,7 +12,7 @@
                         </span>
                     </p>
                 </div>
-                <label class="control-label col-xs-1">To:</label>
+                <label class="control-label col-xs-1">To</label>
                 <div class="col-xs-4 datepicker-wrapper">
                     <p class="input-group">
                         <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerEndDate" is-open="endDate.opened" show-button-bar="false"
@@ -31,7 +31,7 @@
           <div class="date-picker-input">
               <form ng-submit="onSubmitDateText()">
                     <div class="form-group">
-                        <div class="col-xs-11 ">
+                        <div class="col-xs-11">
                             <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
                                 <span class="input-group searchinputfield" id="searchinput">
                                     <input class="md-input input-sm" type="text" ng-keyup="onKeyPress($event)" ng-model="dateString" ng-blur="focus=false" ng-focus="focus=true">
