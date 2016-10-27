@@ -1,7 +1,7 @@
 {
     "appConfig": {
-        "tweetsSearchBaseUrl": "http://128.31.24.219/bopws/tweets/search?",
-        "tweetsSearchBaseUrl_": "http://54.158.101.33:8080/bopws/tweets/search?",
+        "tweetsSearchBaseUrl_": "http://128.31.24.219/bopws/tweets/search?",
+        "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?",
         "tweetsExportBaseUrl": "http://128.31.24.219/bopws/tweets/export?",
         "ratioInnerBbox": 0.98
     },
@@ -14,7 +14,7 @@
         "view": {
             "center": [-9707182.048613328, 1585691.7893914054],
             "extent": [-20037508.34,-20037508.34,20037508.34,20037508.34],
-            "maxZoom": 15,
+            "maxZoom": 20,
             "minZoom": 3,
             "projection": "EPSG:3857",
             "resolution": null,
