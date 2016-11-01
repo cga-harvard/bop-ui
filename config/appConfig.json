@@ -1,8 +1,6 @@
 {
     "appConfig": {
-        "tweetsSearchBaseUrl_": "http://128.31.24.219/bopws/tweets/search?",
         "tweetsSearchBaseUrl": "http://54.158.101.33:8080/bopws/tweets/search?",
-        "tweetsExportBaseUrl": "http://128.31.24.219/bopws/tweets/export?",
         "ratioInnerBbox": 0.98
     },
     "bopwsConfig": {

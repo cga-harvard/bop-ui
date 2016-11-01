@@ -13,7 +13,7 @@
             user: null,
             histogramCount: [],
             textLimit: null,
-            getNumOfDocs: HeightModule.getNumberofItems,
+            numOfDocs: 50,
             // minDate: new Date('2016-10-10'),
             // maxDate: new Date('2016-10-21')
             minDate: new Date('2013-03-10'),

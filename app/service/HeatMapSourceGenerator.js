@@ -7,14 +7,14 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window', '$document', '$http', '$state', 'searchFilter',
-        function(Map, $rootScope, $controller, $filter, $window, $document , $http, $state, searchFilter) {
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window',
+        '$document', '$http', '$state', 'searchFilter', 'DateTimeService',
+        function(Map, $rootScope, $controller, $filter, $window, $document,
+            $http, $state, searchFilter, DateTimeService) {
             var MapService= Map;
 
             var methods = {
-                search: search,
-                startCsvExport: startCsvExport,
-                getFormattedDateString: getFormattedDateString
+                search: search
             };
             /**
              *
@@ -34,7 +34,7 @@
                     'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
-                    'd.docs.limit': reqParamsUi.getNumOfDocs(),
+                    'd.docs.limit': reqParamsUi.numOfDocs,
                     'a.text.limit': reqParamsUi.textLimit
                 };
                 $state.go('search', {
@@ -102,61 +102,9 @@
                 }
             }
 
-
-            /**
-             * Help method to build the whole params object, that will be used in
-             * the API requests.
-             */
-            function startCsvExport(numberOfDocuments){
-                var config,
-                    params = createParamsForGeospatialSearch();
-                if (params) {
-                    params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
-                            numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
-                    config = {
-                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
-                        method: 'GET',
-                        params: params
-                    };
-
-                    //start the export
-                    $http(config)
-                    .then(function successCallback(response) {
-                        var anchor = angular.element('<a/>');
-                        anchor.css({display: 'none'}); // Make sure it's not visible
-                        angular.element($document.body).append(anchor); // Attach to document
-                        anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
-                            target: '_blank',
-                            download: 'bop_export.csv'
-                        })[0].click();
-                        anchor.remove(); // Clean it up afterwards
-                    }, function errorCallback(response) {
-                        $window.alert('An error occured while exporting csv data');
-                    })
-                    .catch(function() {
-                        $window.alert('An error occured while exporting csv data');
-                    });
-                } else {
-                    $window.alert('Spatial filter could not be computed.');
-                }
-            }
-
-            /**
-             * Returns the formatted date object that can be parsed by API.
-             * @param {minDate} date full date object
-                            (e.g. 'Sat Jan 01 2000 01:00:00 GMT+0100 (CET))
-             * @return {String} formatted date as string (e.g. [2013-03-10T00:00:00 TO 2013-03-21T00:00:00])
-             */
-            function getFormattedDateString(minDate, maxDate){
-                return '[' + minDate.toISOString().replace('.000Z','') + ' TO ' +
-                  maxDate.toISOString().replace('.000Z','') + ']';
-            }
             function timeTextFormat(textDate, minDate, maxDate) {
-                return textDate === null ? getFormattedDateString(minDate, maxDate) : textDate;
+                return textDate === null ? DateTimeService.formatDatesToString(minDate, maxDate) : textDate;
             }
-
-
         }]
 );
 })();
