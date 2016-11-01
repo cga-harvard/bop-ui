@@ -15,8 +15,9 @@
                 <label class="control-label col-xs-1">To</label>
                 <div class="col-xs-4 datepicker-wrapper">
                     <p class="input-group">
-                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerEndDate" is-open="endDate.opened" show-button-bar="false"
-                          datepicker-options="dateOptions" ng-required="true" ng-change="onChangeDatepicker()" readonly />
+                        <input type="text" class="form-control input-sm" uib-datepicker-popup ng-model="datepickerEndDate" is-open="endDate.opened"
+                            show-button-bar="false" datepicker-options="dateOptions" ng-required="true"
+                            ng-model-options="{timezone: 'UTC'}" ng-change="onChangeDatepicker()" readonly />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default btn-sm" ng-click="openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
