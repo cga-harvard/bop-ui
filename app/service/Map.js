@@ -298,7 +298,7 @@
                         feature: currentBBox,
                         inner: false,
                         fill: new ol.style.Fill({
-                            color: [0,0,0,0.2]
+                            color: [255,255,255,0.6]
                         })
                     });
                     newHeatMapLayer.addFilter(mask);
@@ -339,7 +339,7 @@
                     feature: polygon,
                     inner: false,
                     fill: new ol.style.Fill({
-                        color:[0,0,0,0.1]
+                        color:[255,255,255,0.6]
                     })
                 });
                 backGroundLayer.addFilter(mask);
@@ -357,7 +357,7 @@
             }
 
             service.calculateReducedBoundingBoxFromInFullScreen = function(extent) {
-                var sideBarPercent = 1 - (400/$window.innerWidth);
+                var sideBarPercent = 1 - (HeightModule.sideBarWidth/$window.innerWidth);
                 var topBarPercent = 1 -
                     (HeightModule.topPanelHeight()/HeightModule.documentHeight());
                 if(solrHeatmapApp.appConfig) {

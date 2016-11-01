@@ -13,7 +13,6 @@
 
             var methods = {
                 search: search,
-                startCsvExport: startCsvExport,
                 getFormattedDateString: getFormattedDateString
             };
             /**
@@ -34,7 +33,7 @@
                     'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
-                    'd.docs.limit': reqParamsUi.getNumOfDocs(),
+                    'd.docs.limit': reqParamsUi.numOfDocs,
                     'a.text.limit': reqParamsUi.textLimit
                 };
                 $state.go('search', {
@@ -96,46 +95,6 @@
                     })
                     .catch(function() {
                         $window.alert('An error occured while reading heatmap data');
-                    });
-                } else {
-                    $window.alert('Spatial filter could not be computed.');
-                }
-            }
-
-
-            /**
-             * Help method to build the whole params object, that will be used in
-             * the API requests.
-             */
-            function startCsvExport(numberOfDocuments){
-                var config,
-                    params = createParamsForGeospatialSearch();
-                if (params) {
-                    params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
-                            numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
-                    config = {
-                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
-                        method: 'GET',
-                        params: params
-                    };
-
-                    //start the export
-                    $http(config)
-                    .then(function successCallback(response) {
-                        var anchor = angular.element('<a/>');
-                        anchor.css({display: 'none'}); // Make sure it's not visible
-                        angular.element($document.body).append(anchor); // Attach to document
-                        anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
-                            target: '_blank',
-                            download: 'bop_export.csv'
-                        })[0].click();
-                        anchor.remove(); // Clean it up afterwards
-                    }, function errorCallback(response) {
-                        $window.alert('An error occured while exporting csv data');
-                    })
-                    .catch(function() {
-                        $window.alert('An error occured while exporting csv data');
                     });
                 } else {
                     $window.alert('Spatial filter could not be computed.');
