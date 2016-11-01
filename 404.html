@@ -45,6 +45,7 @@
     <script src="./app/service/queryService.js"></script>
     <script src="./app/service/heightModule.js"></script>
     <script src="./app/service/PanelInformationService.js"></script>
+    <script src="./app/service/dateTimeService.js"></script>
 
     <!-- APP components -->
     <script src="./app/components/modules.js"></script>
@@ -60,6 +61,7 @@
     <script src="./app/components/heatmap/heatmapDirective.js"></script>
     <script src="./app/components/search/search.js"></script>
     <script src="./app/components/keyword/keywordDirective.js"></script>
+    <script src="./app/components/cardwrapper/cardwrapperDirective.js"></script>
 
     <script src="./tmp/templates.js"></script>
 
@@ -71,41 +73,41 @@
     <div class="container-fluid">
         <div class="row">
             <div class="container col-400-12 col-800-6 col-1200-4">
-                <div class="row component-padding">
-                    <div class="col-xs-12 row-box">
-                        <toolbar-search number-keywords="10"></toolbar-search>
-                    </div>
-                </div>
-                <div class="row component-padding">
-                    <div class="col-xs-12 row-box" row-box>
-                        <user-filter></user-filter>
-                    </div>
-                </div>
-                <div class="row component-padding">
-                    <div class="col-md-12 row-box">
-                      <div class="row">
-                        <tweetlist></tweetlist>
-                      </div>
-                    </div>
-                </div>
+                <card-wrapper>
+                    <toolbar-search number-keywords="10"></toolbar-search>
+                </card-wrapper>
+
+                <card-wrapper>
+                    <user-filter></user-filter>
+                </card-wrapper>
+
+                <card-wrapper>
+                    <tweetlist></tweetlist>
+                </card-wrapper>
+
                 <reset-button></reset-button>
             </div>
 
-            <div class="container col-400-12 col-800-6 col-1200-8">
+            <div class="container col-400-12 col-800-6 col-1200-8 col-1600-9">
                 <div class="row">
-                    <div class="container col-400-12 col-1200-4">
-                        <div class="row component-padding">
-                            <div class="col-md-12 row-box"q>
-                                <date-picker></date-picker>
+                    <div class="container col-400-12 col-1200-4 col-1600-6">
+                        <div class="row">
+                            <div class="container col-400-12 col-1600-3">
+                                <card-wrapper>
+                                    <date-picker></date-picker>
+                                </card-wrapper>
+                            </div>
+                            <div class="container col-400-12 col-1600-3">
+                                <card-wrapper>
+                                    <time-histogram barId="inbar"></time-histogram>
+                                </card-wrapper>
                             </div>
                         </div>
                     </div>
-                    <div class="container col-400-12 col-1200-4">
-                        <div class="row component-padding">
-                            <div class="col-md-12 row-box">
-                                <tweet-panel></tweet-panel>
-                            </div>
-                        </div>
+                    <div class="container col-400-12 col-1600-3">
+                        <card-wrapper>
+                            <tweet-panel></tweet-panel>
+                        </card-wrapper>
                     </div>
                 </div>
             </div>

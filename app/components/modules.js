@@ -10,6 +10,7 @@
         'search_geospatialFilter_component',
         'search_resetButton_component',
         'search_heatmap_component',
-        'search_keyword_component'
+        'search_keyword_component',
+        'search_cardwrapper_component'
     ]);
 })();
