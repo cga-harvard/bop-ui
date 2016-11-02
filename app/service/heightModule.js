@@ -9,6 +9,8 @@
             itemHeight: 90,
             otherHeights: 280,
             sideBarWidth: 405,
+            rightSideBarWidth: 4, /* new */
+            bottomHeight: 8, /* new */
             documentHeight: documentHeight,
             availableHeight: availableHeight,
             getNumberofItems: calculateNumberofItems,
@@ -25,7 +27,7 @@
             if ($window.innerWidth < 1200) {
                 return 400;
             }
-            return 210;
+            return 204;
         }
 
         function availableHeight() {

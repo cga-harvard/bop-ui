@@ -322,14 +322,16 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(HeightModule, 'documentHeight').and.returnValue(400);
             spyOn(HeightModule, 'topPanelHeight').and.returnValue(200);
             HeightModule.sideBarWidth = 400;
+            HeightModule.rightSideBarWidth = 200;
+            HeightModule.bottomHeight = 200;
             $window.innerWidth = 800;
         });
         it('returns boundingbox', function() {
-            expect(subject.calculateReducedBoundingBoxFromInFullScreen({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: 0.5, minY: 1, maxX: 2, maxY: 2.5});
+            expect(subject.calculateReducedBoundingBoxFromInFullScreen({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: 0.5, minY: 2.25, maxX: 0.75, maxY: 2.5});
         });
         describe('#reducedQueryForExtent', function() {
             it('returns extent query', function() {
-                expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[0.5,1 TO 2,2.5]');
+                expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[0.5,2.25 TO 0.75,2.5]');
             });
         });
     });

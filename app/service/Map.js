@@ -358,14 +358,16 @@
 
             service.calculateReducedBoundingBoxFromInFullScreen = function(extent) {
                 var sideBarPercent = 1 - (HeightModule.sideBarWidth/$window.innerWidth);
+                var rightSideBarWidth = 1 - (HeightModule.rightSideBarWidth/$window.innerWidth);
+                var bottomHeight = 1 - (HeightModule.bottomHeight/$window.innerWidth);
                 var topBarPercent = 1 -
                     (HeightModule.topPanelHeight()/HeightModule.documentHeight());
                 if(solrHeatmapApp.appConfig) {
                     var dx = extent.maxX - extent.minX,
                         dy = extent.maxY - extent.minY,
                         minX = extent.minX + (1 - sideBarPercent) * dx,
-                        maxX = extent.minX + (solrHeatmapApp.appConfig.ratioInnerBbox) * dx,
-                        minY = extent.minY + (1 - solrHeatmapApp.appConfig.ratioInnerBbox) * dy,
+                        maxX = extent.minX + (rightSideBarWidth) * dx,
+                        minY = extent.minY + (1 - bottomHeight) * dy,
                         maxY = extent.minY + (topBarPercent) * dy;
                     return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
                 }
