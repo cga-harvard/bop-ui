@@ -8,7 +8,7 @@
         var service = {
             itemHeight: 90,
             otherHeights: 280,
-            sideBarWidth: 405,
+            sideBarWidth: 400,
             rightSideBarWidth: 4, /* new */
             bottomHeight: 8, /* new */
             documentHeight: documentHeight,
@@ -25,9 +25,9 @@
 
         function topPanelHeight() {
             if ($window.innerWidth < 1200) {
-                return 400;
+                return 4;
             }
-            return 204;
+            return 4;
         }
 
         function availableHeight() {
