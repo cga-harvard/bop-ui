@@ -130,7 +130,7 @@
                     if (option) {
                         vm.slider.options.disabled = true;
                         vm.slider.options.getSelectionBarColor = function() {
-                            return '#d8e0f3';
+                            return '#e3e3e3';
                         };
                     }else {
                         vm.slider.options.disabled = false;

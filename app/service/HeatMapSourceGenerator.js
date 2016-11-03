@@ -35,7 +35,8 @@
                     'a.time.limit': '1',
                     'a.time.gap': 'PT1H',
                     'd.docs.limit': reqParamsUi.numOfDocs,
-                    'a.text.limit': reqParamsUi.textLimit
+                    'a.text.limit': reqParamsUi.textLimit,
+                    'a.user.limit': reqParamsUi.userLimit
                 };
                 $state.go('search', {
                     text: params['q.text'],
@@ -88,6 +89,8 @@
                             $rootScope.$broadcast('setTweetList', data['d.docs']);
 
                             $rootScope.$broadcast('setSuggestWords', data['a.text']);
+
+                            $rootScope.$broadcast('setUserSuggestWords', data['a.user']);
 
                             searchFilter.histogramCount = data['a.time'].counts;
                         }

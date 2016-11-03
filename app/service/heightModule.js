@@ -7,25 +7,20 @@
 
         var service = {
             itemHeight: 90,
-            otherHeights: 280,
-            sideBarWidth: 405,
+            otherHeights: 330,
+            sideBarWidth: 400,
+            rightSideBarWidth: 4,
+            bottomHeight: 8,
+            topPanelHeight: 105,
             documentHeight: documentHeight,
             availableHeight: availableHeight,
-            getNumberofItems: calculateNumberofItems,
-            topPanelHeight: topPanelHeight
+            getNumberofItems: calculateNumberofItems
         };
 
         function documentHeight() {
             var D = document;
             return Math.max(D.body.offsetHeight, D.documentElement.offsetHeight,
                 D.body.clientHeight, D.documentElement.clientHeight);
-        }
-
-        function topPanelHeight() {
-            if ($window.innerWidth < 1200) {
-                return 400;
-            }
-            return 210;
         }
 
         function availableHeight() {

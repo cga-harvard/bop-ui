@@ -7,7 +7,9 @@ describe( 'SearchDirective', function() {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
 
-        element = angular.element('<toolbar-search></toolbar-search>');
+        element = angular.element('<keyword-input number-keywords="5" text="text" limit="textLimit"' +
+                    'listen-keyword-event="setSuggestWords">' +
+                '</keyword-input>');
         compiledElement = $compile(element)($scope);
         $scope.$digest();
         scope = compiledElement.isolateScope();
@@ -31,15 +33,16 @@ describe( 'SearchDirective', function() {
                 expect(searchSpy).toHaveBeenCalledTimes(1);
             });
             it('with searchInput and clean textSearchInput', function() {
-                scope.filter.text = 'San Diego';
+                scope.filter[scope.text] = 'San Diego';
+                scope.textSearchInput.value = '';
                 scope.doSearch();
-                expect(searchSpy).toHaveBeenCalledWith('San Diego');
+                expect(scope.filter[scope.text]).toEqual('San Diego');
             });
             it('with a previous value in scope.filter.text and new value in the input', function() {
                 scope.textSearchInput.value = 'california';
-                scope.filter.text = '"San Diego"';
+                scope.filter.text = 'San Diego';
                 scope.doSearch();
-                expect(searchSpy).toHaveBeenCalledWith('"San Diego" "california"');
+                expect(scope.filter[scope.text]).toEqual('"San Diego" "california"');
             });
         });
     });
@@ -93,11 +96,13 @@ describe( 'SearchDirective', function() {
         });
         it('remove keyword on backspace key pressed', function() {
             scope.onKeyPress({which: 8});
-            expect(searchSpy).toHaveBeenCalledWith('"test1" "test2"');
+            expect(scope.filter[scope.text]).toEqual('"test1" "test2"');
+            expect(searchSpy).toHaveBeenCalled();
         });
         it('remove keyword from tag in input', function() {
             scope.removeKeyWord('test2');
-            expect(searchSpy).toHaveBeenCalledWith('"test1" "test3"');
+            expect(scope.filter[scope.text]).toEqual('"test1" "test3"');
+            expect(searchSpy).toHaveBeenCalled();
         });
     });
 
@@ -113,14 +118,6 @@ describe( 'SearchDirective', function() {
                 {value: 'test1', count: 300},
                 {value: 'te2', count: 200}
             ]);
-        });
-    });
-
-    describe('#showInfo', function() {
-        it('opens the modal info', function() {
-            var modalSpy = spyOn(InfoService, 'showInfoPopup');
-            scope.showtoolbarSearchInfo();
-            expect(modalSpy).toHaveBeenCalledTimes(1);
         });
     });
 });

@@ -11,6 +11,7 @@
         'search_resetButton_component',
         'search_heatmap_component',
         'search_keyword_component',
-        'search_cardwrapper_component'
+        'search_cardwrapper_component',
+        'search_keywordinput_component'
     ]);
 })();
