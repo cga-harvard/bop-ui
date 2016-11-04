@@ -51,8 +51,3 @@
         return service;
     }]);
 })();
-/*
-function setHistogramCount(val) {
-searchObj.histogramCount = angular.isArray(val) && val.length !== 0 ? val : [];
-}
-*/
