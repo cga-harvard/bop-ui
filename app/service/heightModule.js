@@ -7,11 +7,11 @@
 
         var service = {
             itemHeight: 90,
-            otherHeights: 330,
-            sideBarWidth: 400,
+            otherHeights: otherHeights,
+            sideBarWidth:sideBarWidth,
             rightSideBarWidth: 4,
-            bottomHeight: 8,
-            topPanelHeight: 105,
+            bottomHeight: 4,
+            topPanelHeight: topPanelHeight,
             documentHeight: documentHeight,
             availableHeight: availableHeight,
             getNumberofItems: calculateNumberofItems
@@ -23,8 +23,29 @@
                 D.body.clientHeight, D.documentElement.clientHeight);
         }
 
+        function topPanelHeight() {
+            if ($window.innerWidth < 1200) {
+                return 4;
+            }
+            return 102;
+        }
+
+        function otherHeights() {
+            if ($window.innerWidth < 1200) {
+                return 560;
+            }
+            return 350;
+        }
+
+        function sideBarWidth() {
+            if ($window.innerWidth < 800) {
+                return 4;
+            }
+            return 400;
+        }
+
         function availableHeight() {
-            return documentHeight() - service.otherHeights;
+            return documentHeight() - service.otherHeights();
         }
 
         function calculateNumberofItems() {

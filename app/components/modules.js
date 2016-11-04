@@ -12,6 +12,7 @@
         'search_heatmap_component',
         'search_keyword_component',
         'search_cardwrapper_component',
-        'search_keywordinput_component'
+        'search_keywordinput_component',
+        'search_responsiveLayout_component'
     ]);
 })();

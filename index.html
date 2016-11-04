@@ -32,50 +32,8 @@
 <body ng-controller="MainController">
 	<ui-view></ui-view>
     <heatmap></heatmap>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="container col-400-12 col-800-6 col-1200-4">
-                <card-wrapper>
-                    <toolbar-search number-keywords="10"></toolbar-search>
-                </card-wrapper>
 
-                <card-wrapper>
-                    <user-filter></user-filter>
-                </card-wrapper>
-
-                <card-wrapper>
-                    <tweetlist></tweetlist>
-                </card-wrapper>
-
-                <reset-button></reset-button>
-            </div>
-
-            <div class="container col-400-12 col-800-6 col-1200-8 col-1600-9">
-                <div class="row">
-                    <div class="container col-400-12 col-1200-4 col-1600-6">
-                        <div class="row">
-                            <div class="container col-400-12 col-1600-3">
-                                <card-wrapper>
-                                    <date-picker></date-picker>
-                                </card-wrapper>
-                            </div>
-                            <div class="container col-400-12 col-1600-3">
-                                <card-wrapper>
-                                    <time-histogram barId="inbar"></time-histogram>
-                                </card-wrapper>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container col-400-12 col-1600-3">
-                        <card-wrapper>
-                            <tweet-panel></tweet-panel>
-                        </card-wrapper>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <responsive-layout></responsive-layout>
 
     <!-- map popup -->
     <ng-include src="'./app/view/mapPopup.html'"></ng-include>
