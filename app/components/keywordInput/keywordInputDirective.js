@@ -2,8 +2,8 @@
 (function() {
     angular
     .module('search_keywordinput_component', [])
-    .directive('keywordInput', ['HeatMapSourceGenerator', 'searchFilter', '$window', 'filterKeywordService',
-        function keywordInput(HeatMapSourceGenerator, searchFilter, $window, filterKeywordService) {
+    .directive('keywordInput', ['HeatMapSourceGenerator', 'searchFilter', '$window',
+        function keywordInput(HeatMapSourceGenerator, searchFilter, $window) {
 
             return {
                 link: keywordInputLink,
@@ -13,8 +13,7 @@
                     listenKeywordEvent: '@',
                     numberKeywords: '=',
                     limit: '@',
-                    text: '@',
-                    placeholder: '@'
+                    text: '@'
                 }
             };
 
@@ -120,7 +119,7 @@
                             dataRawKeywords = [];
                         }
                         vm.tagSwitch.disable = false;
-                        vm.suggestedKeywords = dataRawKeywords.filter(filterKeywordService.filter);
+                        vm.suggestedKeywords = dataRawKeywords.filter(filterKeywords);
                     });
                 }
 

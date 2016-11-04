@@ -298,7 +298,7 @@
                         feature: currentBBox,
                         inner: false,
                         fill: new ol.style.Fill({
-                            color: [255,255,255,0.5]
+                            color: [255,255,255,0.6]
                         })
                     });
                     newHeatMapLayer.addFilter(mask);
@@ -339,7 +339,7 @@
                     feature: polygon,
                     inner: false,
                     fill: new ol.style.Fill({
-                        color:[255,255,255,0.5]
+                        color:[255,255,255,0.6]
                     })
                 });
                 backGroundLayer.addFilter(mask);
