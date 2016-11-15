@@ -154,6 +154,39 @@ code {
         width: 1800px;
     }
 }
+@media (min-width:1200px){
+   .tweetlist-lg {
+      display: visible;
+   }
+   .time-components-lg {
+      display: visible;
+   }
+   .sidebar-tools-md {
+      display: none;
+   }
+}
+@media (min-width:800px) and (max-width:1200px){
+   .tweetlist-lg {
+      display: none;
+   }
+   .time-components-lg {
+      display: none;
+   }
+   .sidebar-tools-md {
+      display: visible; // this class is commented-out in 404.html 
+   }
+}
+@media (max-width:800px) {
+   .tweetlist-lg {
+      display: none;
+   }
+   .time-components-lg {
+      display: none;
+   }
+   .sidebar-tools-md {
+      display: none;
+   }
+}
 /*
  * CSS properties of search fields
  */
@@ -342,13 +375,12 @@ code {
 .searchtext {
     border-color: rgba(0,0,0,0.12);
     padding-bottom: 0;
-    border-width: 0 0 1px;
+    border-width: 0 0 2px;
     border-style: solid;
     margin-right: 0px;
     margin-left: 0px;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 .searchtext-focus {
-    border-color: rgba(0,0,0,0);
-    box-shadow: 0 2px #337ab7;
+    border-color: #337ab7;
 }

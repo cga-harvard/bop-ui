@@ -103,10 +103,16 @@ li .tweet {
 .list-group-item:last-child {
     padding-bottom: 15px;
 }
-@media (min-width: 1200px) {
+@media (min-width: 800px) {
     .tweet-detail-panel {
         position: fixed;
-        right: 4px;
+        right: 60px;
+        bottom: 0px;
         width: 393px;
+   }
+}
+@media (max-width:800px) {
+    .tweet-detail-panel {
+        display: none;
    }
 }

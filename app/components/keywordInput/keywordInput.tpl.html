@@ -1,8 +1,8 @@
 <div class="col-xs-12 padding-search">
-    <div class="row toolbarsearch" ng-class="{'searchtext-focus': focus}">
+    <div class="row searchtext" ng-class="{'searchtext-focus': focus}">
         <keyword removefn="removeKeyWord(keyword)" ng-repeat="keywordFilter in filterArray track by $index" remove="true" tag="{{keywordFilter}}"></keyword>
         <span class="input-group searchinputfield" id="searchinput">
-             <input class="md-input" type="text" placeholder="Enter keyword" ng-keyup="onKeyPress($event)"
+             <input class="md-input" type="text" placeholder="{{placeholder}}" ng-keyup="onKeyPress($event)"
               ng-model="textSearchInput.value" ng-blur="focus=false" ng-focus="focus=true">
             <span ng-click="doSearch()" class="input-group-addon border-search">
                 <i class="glyphicon glyphicon-search"></i>

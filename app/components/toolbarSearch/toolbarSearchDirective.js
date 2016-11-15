@@ -11,8 +11,8 @@
         function toolbarSearch() {
             return {
                 restrict: 'EA',
-                template: '<keyword-input number-keywords="5" text="text" limit="textLimit"' +
-                            'listen-keyword-event="setSuggestWords">' +
+                template: '<keyword-input number-keywords="15" text="text" limit="textLimit"' +
+                            'listen-keyword-event="setSuggestWords" placeholder="Enter keyword">' +
                         '</keyword-input>',
                 scope: {}
             };
