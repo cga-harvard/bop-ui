@@ -17,7 +17,7 @@ describe( 'HeatMapSourceGenerator', function() {
             solrHeatmapApp.bopwsConfig = { csvDocsLimit: 10 };
             solrHeatmapApp.appConfig = { tweetsSearchBaseUrl: '/search' };
             geospatialFilter = {queryGeo: { minX: 1, maxX: 1, minY: 1, maxY: 1}};
-            exportRequest = $httpBackend.when('GET', '/search?a.hm.filter=%5B-90,-180+TO+90,180%5D&a.time.gap=PT1H&a.time.limit=1&d.docs.limit=50&q.geo=%5B-90,-180+TO+90,180%5D&q.time=%5B2013-03-10T00:00:00+TO+2013-03-21T00:00:00%5D').respond('');
+            exportRequest = $httpBackend.when('GET', '/search?a.hm.filter=%5B-90,-180+TO+90,180%5D&a.time.gap=PT1H&a.time.limit=1&d.docs.limit=50&d.docs.sort=distance&q.geo=%5B-90,-180+TO+90,180%5D&q.time=%5B2013-03-10T00:00:00+TO+2013-03-21T00:00:00%5D').respond('');
         });
         afterEach(function() {
             $httpBackend.resetExpectations();
@@ -25,7 +25,7 @@ describe( 'HeatMapSourceGenerator', function() {
             $httpBackend.verifyNoOutstandingRequest();
         });
         it('sends the search request', function() {
-            $httpBackend.expectGET('/search?a.hm.filter=%5B-90,-180+TO+90,180%5D&a.time.gap=PT1H&a.time.limit=1&d.docs.limit=50&q.geo=%5B-90,-180+TO+90,180%5D&q.time=%5B2013-03-10T00:00:00+TO+2013-03-21T00:00:00%5D').respond('');
+            $httpBackend.expectGET('/search?a.hm.filter=%5B-90,-180+TO+90,180%5D&a.time.gap=PT1H&a.time.limit=1&d.docs.limit=50&d.docs.sort=distance&q.geo=%5B-90,-180+TO+90,180%5D&q.time=%5B2013-03-10T00:00:00+TO+2013-03-21T00:00:00%5D').respond('');
             subject.search();
             $httpBackend.flush();
         });
