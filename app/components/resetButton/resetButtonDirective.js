@@ -17,12 +17,20 @@
             };
 
             function ExportLink(scope) {
+                var vm = scope;
+                vm.basemaps = 'OSM basemap';
 
-                scope.reset = function reset() {
+                vm.reset = function reset() {
                     // Reset the map
                     Map.resetMap();
                     searchFilter.resetFilter();
                     HeatMapSourceGenerator.search();
+                };
+
+                vm.toggleBaseMaps = function() {
+                    vm.basemaps = vm.basemaps === 'OSM basemap' ?
+                        'Google Terrain' : 'OSM basemap';
+                    Map.toggleBaseMaps();
                 };
             }
         }]);

@@ -10,7 +10,9 @@
         "location": false,
         "angular": false,
         "solrHeatmapApp": false,
-        "proj4": false
+        "proj4": false,
+        "olgm": false,
+        "google" : false
     },
     "rules": {
         "angular/controller_name": 0,

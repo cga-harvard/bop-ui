@@ -22,6 +22,14 @@
             "zoomFactor": null
         },
         "layers": [{
+                "type": "googleLayer",
+                "backgroundLayer": true,
+                "visible": true
+            },{
+                "type": "OSM",
+                "backgroundLayer": true,
+                "visible": false
+            },{
             "type": "TileWMS",
             "backgroundLayer": true,
             "name": "terrestris OSM WMS",
@@ -40,7 +48,7 @@
             },
             "crossOrigin": "anonymous",
             "opacity": 1,
-            "visible": true
+            "visible": false
         }]
     },
     "instructions": {

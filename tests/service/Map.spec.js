@@ -1,6 +1,6 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy,
-        defaultConfig, defaultViewConfig, layer, HeightModule, $window;
+    var subject, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy, olgmSpy,
+        olgmObjSpy, defaultConfig, defaultViewConfig, layer, HeightModule, $window;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
@@ -14,6 +14,9 @@ describe( 'HeatMapSourceGenerator', function() {
         mapSpy.getView.and.returnValue(mapViewSpy);
         olSpy = spyOn(ol, 'Map').and.returnValue(mapSpy);
         viewSpy = spyOn(ol, 'View');
+        olgmObjSpy = jasmine.createSpyObj('olGM', ['activate']);
+        olgmSpy = spyOn(olgm, 'OLGoogleMaps').and.returnValue(olgmObjSpy);
+
         defaultConfig = { mapConfig: { view: {}}};
         defaultViewConfig = { center: [0, 0 ], maxZoom: undefined, minZoom: undefined, projection: 'EPSG:3857', resolution: undefined, resolutions: undefined, rotation: undefined, zoom: 2, zoomFactor: undefined };
     }));
