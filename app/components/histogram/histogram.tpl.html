@@ -1,5 +1,5 @@
-<!-- <time-histogram barId="inbar"></time-histogram> -->
 <div class="col-md-12 component-padding">
-    <div class="bar-graph" id="{{barId}}" style="min-width: 400px" ng-class="{disabled: slider.options.disabled}"></div>
+    <div class="bar-graph" id="{{barId}}" ng-class="{disabled: slider.options.disabled}"></div>
     <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
+    <legend-histogram dimensions="histogramBarsDimensions"></legend-histogram>
 </div>
