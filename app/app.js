@@ -12,7 +12,7 @@
     angular.module('SolrHeatmapApp')
     .config(function($locationProvider, $stateProvider, $urlRouterProvider) {
         $locationProvider.html5Mode({
-            enabled: true,
+            enabled: false,
             requireBase: false
         });
         $urlRouterProvider.otherwise('/search');
