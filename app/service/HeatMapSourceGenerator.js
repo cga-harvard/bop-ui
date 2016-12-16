@@ -39,12 +39,12 @@
                     'a.user.limit': reqParamsUi.userLimit,
                     'd.docs.sort': 'distance'
                 };
-                $state.go('root', {
+                $state.go('search', {
                     text: params['q.text'],
                     user: params['q.user'],
                     time: params['q.time'],
                     geo: params['q.geo']
-                }, {notify: false, location: true}
+                }, {notify: false, location: "replace"}
                 );
 
                 return params;

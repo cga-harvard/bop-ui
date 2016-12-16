@@ -15,18 +15,11 @@
             enabled: true,
             requireBase: false
         });
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/search');
         $stateProvider.state({
-            name: 'root',
-            url: '/?time&geo&text&user',
-            resolve: {
-                search: function($stateParams,HeatMapSourceGenerator,searchFilter) {
-                    searchFilter.setFilter($stateParams);
-                }
-            }
-        }).state({
             name: 'search',
             url: '/search?time&geo&text&user',
+            component: 'search',
             resolve: {
                 search: function($stateParams,HeatMapSourceGenerator,searchFilter) {
                     searchFilter.setFilter($stateParams);
