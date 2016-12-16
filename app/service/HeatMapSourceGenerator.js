@@ -36,7 +36,8 @@
                     'a.time.gap': 'PT1H',
                     'd.docs.limit': reqParamsUi.numOfDocs,
                     'a.text.limit': reqParamsUi.textLimit,
-                    'a.user.limit': reqParamsUi.userLimit
+                    'a.user.limit': reqParamsUi.userLimit,
+                    'd.docs.sort': 'distance'
                 };
                 $state.go('search', {
                     text: params['q.text'],

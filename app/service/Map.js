@@ -32,7 +32,23 @@
                     layers = [];
 
                 if (angular.isArray(layerConfig)) {
+
                     angular.forEach(layerConfig, function(conf) {
+                        if (conf.type === 'googleLayer') {
+                            service.googleLayer = new olgm.layer.Google({
+                                backgroundLayer: conf.visible,
+                                mapTypeId: google.maps.MapTypeId.TERRAIN
+                            });
+                            layer = service.googleLayer;
+                        }
+                        if (conf.type === 'OSM') {
+                            service.osmLayer = new ol.layer.Tile({
+                                source: new ol.source.OSM(),
+                                backgroundLayer: conf.backgroundLayer,
+                                visible: conf.visible
+                            });
+                            layer = service.osmLayer;
+                        }
                         if (conf.type === 'TileWMS') {
                             layer = new ol.layer.Tile({
                                 name: conf.name,
@@ -111,7 +127,7 @@
 
             service.getLayersBy = function(key, value) {
                 var layers = service.getLayers();
-                return $filter('filter')(layers, function(layer) {
+                return layers.filter(function (layer) {
                     return layer.get(key) === value;
                 });
             };
@@ -147,9 +163,9 @@
             * heatmap layer
             */
             var _switchMasks = function(hmAvailable) {
-                var heatMapLayer = service.getLayersBy('name', 'HeatMapLayer')[0],
-                    heatMapMask = heatMapLayer.getFilters()[0],
-                    backgroundLayer = service.getLayersBy('backgroundLayer', true)[0],
+                var heatMapLayer = service.getLayersBy('name', 'HeatMapLayer')[0];
+                var heatMapMask = heatMapLayer.getFilters()[0];
+                var backgroundLayer = service.getLayersBy('backgroundLayer', true)[0],
                     backgroundLayerMask = backgroundLayer.getFilters()[0];
 
                 // disable mask of backgroundLayer if heatmap is available and vice versa
@@ -288,22 +304,13 @@
                         source: olVecSrc,
                         radius: 10
                     });
+                    try {
+                        service.getMap().addLayer(newHeatMapLayer);
+                    } catch(err) {
+                        void 0;
+                    }
 
-                    service.getMap().addLayer(newHeatMapLayer);
-
-                    // Add Mask to HeatMapLayer
-                    var currentBBox = transformInteractionLayer.getSource().getFeatures()[0];
-
-                    var mask = new ol.filter.Mask({
-                        feature: currentBBox,
-                        inner: false,
-                        fill: new ol.style.Fill({
-                            color: [255,255,255,0.5]
-                        })
-                    });
-                    newHeatMapLayer.addFilter(mask);
                 }
-                _switchMasks(olVecSrc !== null);
             };
 
             /**
@@ -328,21 +335,16 @@
                     source: new ol.source.Vector(),
                     style: new ol.style.Style({
                         fill: new ol.style.Fill({
-                            color: [255,255,255,0.01]
+                            color: [255,255,255,0]
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: [0,0,0,0],
+                            width: 0
                         })
                     })
                 });
                 service.getMap().addLayer(vector);
                 vector.getSource().addFeature(polygon);
-
-                var mask = new ol.filter.Mask({
-                    feature: polygon,
-                    inner: false,
-                    fill: new ol.style.Fill({
-                        color:[255,255,255,0.5]
-                    })
-                });
-                backGroundLayer.addFilter(mask);
             }
 
             function setTransactionBBox(extent) {
@@ -484,15 +486,12 @@
 
             service.removeAllfeatures = function() {
                 if (angular.isObject(map)) {
-                    var layerLength = map.getLayers().getLength();
-                    for (var i = 3; i < layerLength; i++) {
-                        map.removeLayer(map.getLayers().getArray()[i]);
-                    }
+                    var layersWithBbox = service.getLayersBy('isbbox', true);
+                    layersWithBbox[0].getSource().clear();
                 }
             };
 
             service.addCircle = function(point, style) {
-                service.removeAllfeatures();
 
                 var geojsonObject = {
                     "type": "Feature",
@@ -500,14 +499,28 @@
                 };
 
                 if (angular.isObject(map) && Object.keys(map).length !== 0) {
-                    var vectorLayer = new ol.layer.Vector({
-                        source: new ol.source.Vector({
-                            features: (new ol.format.GeoJSON).readFeatures(geojsonObject)
-                        })
-                    });
-                    vectorLayer.setStyle(style);
-                    map.addLayer(vectorLayer);
+                    var layersWithBbox = service.getLayersBy('isbbox', true);
+                    var features = (new ol.format.GeoJSON).readFeatures(geojsonObject);
+
+                    if (layersWithBbox.length) {
+                        layersWithBbox[0].getSource().addFeatures(features);
+                    }else{
+                        var vectorLayer = new ol.layer.Vector({
+                            isbbox: true,
+                            source: new ol.source.Vector({
+                                features: features
+                            })
+                        });
+                        vectorLayer.setStyle(style);
+                        map.addLayer(vectorLayer);
+                    }
+
                 }
+            };
+
+            service.toggleBaseMaps = function() {
+                service.googleLayer.setVisible(!service.googleLayer.getVisible());
+                service.osmLayer.setVisible(!service.osmLayer.getVisible());
             };
 
             /**
@@ -521,6 +534,8 @@
                     layerConfig = config.mapConfig.layers;
 
                 map = new ol.Map({
+                    // use OL3-Google-Maps recommended default interactions
+                    interactions: olgm.interaction.defaults(),
                     controls: ol.control.defaults().extend([
                         new ol.control.ScaleLine(),
                         new ol.control.ZoomSlider()
@@ -529,6 +544,7 @@
                     renderer: angular.isString(rendererConfig) ?
                                             rendererConfig : undefined,
                     target: 'map',
+
                     view: new ol.View({
                         center: angular.isArray(viewConfig.center) ?
                                 viewConfig.center : undefined,
@@ -550,6 +566,10 @@
                                 viewConfig.zoomFactor : undefined
                     })
                 });
+
+                var olGM = new olgm.OLGoogleMaps({map: map}); // map is the ol.Map instance
+                olGM.activate();
+
                 if (angular.isArray(viewConfig.extent)) {
                     var vw = map.getView();
                     vw.set('extent', viewConfig.extent);
