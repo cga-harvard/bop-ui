@@ -39,13 +39,13 @@
                     'a.user.limit': reqParamsUi.userLimit,
                     'd.docs.sort': 'distance'
                 };
+                // console.log("params['q.geo']", params['q.geo']);
                 $state.go('search', {
                     text: params['q.text'],
                     user: params['q.user'],
                     time: params['q.time'],
                     geo: params['q.geo']
-                }, {notify: false, location: "replace"}
-                );
+                }, {});
 
                 return params;
             }
