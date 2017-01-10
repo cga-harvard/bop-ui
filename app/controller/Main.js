@@ -16,10 +16,11 @@
             var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
             var mapIsMoved = false;
             var isBackbuttonPressed = false;
-            var isThereInteraction = false;
+            // var isThereInteraction = false;
 
             var vm = this;
             vm.$state = $stateParams;
+            vm.isThereInteraction = false;
 
             vm.setupEvents = function() {
                 MapService.getMap().getView().on('change:center', function(evt){
@@ -27,7 +28,7 @@
                 });
                 MapService.getMap().getView()
                     .on('change:resolution', function(evt){
-                        isThereInteraction = true;
+                        vm.isThereInteraction = true;
                         var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
                         if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
                             var radius = 500 * evt.target.getResolution();
@@ -41,7 +42,7 @@
                     });
                 MapService.getMap().on('moveend', function(evt){
                     if ((mapIsMoved || searchFilter.geo === '[-90,-180 TO 90,180]') && !isBackbuttonPressed) {
-                        isThereInteraction = true;
+                        vm.isThereInteraction = true;
                         changeGeoSearch();
                         mapIsMoved = false;
                     }else {
@@ -51,14 +52,14 @@
                 });
 
                 var locationChangeEventBroadcast = $rootScope.$on('$locationChangeSuccess', function() {
-                    if (!isThereInteraction) {
+                    if (!vm.isThereInteraction) {
                         isBackbuttonPressed = true;
                         var extent = queryService.
                           getExtentForProjectionFromQuery($location.search().geo,
                                                           solrHeatmapApp.initMapConf.view.projection);
                         MapService.getMap().getView().fit(extent, MapService.getMapSize());
                     }
-                    isThereInteraction = false;
+                    vm.isThereInteraction = false;
                 });
 
                 function changeGeoSearch() {

@@ -39,7 +39,6 @@
                     'a.user.limit': reqParamsUi.userLimit,
                     'd.docs.sort': 'distance'
                 };
-                // console.log("params['q.geo']", params['q.geo']);
                 $state.go('search', {
                     text: params['q.text'],
                     user: params['q.user'],
@@ -92,8 +91,6 @@
                             $rootScope.$broadcast('setSuggestWords', data['a.text']);
 
                             $rootScope.$broadcast('setUserSuggestWords', data['a.user']);
-
-                            searchFilter.histogramCount = data['a.time'].counts;
                         }
                     }, function errorCallback(response) {
                         $window.alert('An error occured while reading heatmap data');
