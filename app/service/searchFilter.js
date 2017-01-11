@@ -11,7 +11,6 @@
             time: null,
             text: null,
             user: null,
-            histogramCount: [],
             textLimit: null,
             userLimit: null,
             numOfDocs: 50,
