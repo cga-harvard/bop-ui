@@ -1,13 +1,14 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, $httpBackend, MapService, spatialSpy, geospatialFilter;
+    var subject, $httpBackend, MapService, spatialSpy, geospatialFilter, $window;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_) {
+    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _$window_) {
         subject = _HeatMapSourceGenerator_;
         $httpBackend = _$httpBackend_;
         MapService = _Map_;
         geospatialFilter = { minX: 1, maxX: 1, minY: 1, maxY: 1};
+        $window = _$window_;
         spatialSpy = spyOn(MapService, 'getCurrentExtent').and.returnValue(geospatialFilter);
     }));
 
@@ -33,6 +34,7 @@ describe( 'HeatMapSourceGenerator', function() {
             var createOrUpdateHeatMapLayerSpy;
             beforeEach(function() {
                 createOrUpdateHeatMapLayerSpy = spyOn(MapService, 'createOrUpdateHeatMapLayer');
+                $window.localStorage.clear();
             });
             describe('no a.hm data', function() {
                 beforeEach(function() {
@@ -56,7 +58,10 @@ describe( 'HeatMapSourceGenerator', function() {
             });
         });
         describe('error from server', function() {
-            it('throws an window error', inject(function($window) {
+            beforeEach(function() {
+                $window.localStorage.clear();
+            });
+            it('throws an window error', function() {
                 exportRequest.respond(401, '');
                 spyOn( $window, 'alert' ).and.callFake( function() {
                     return true;
@@ -64,7 +69,7 @@ describe( 'HeatMapSourceGenerator', function() {
                 subject.search();
                 $httpBackend.flush();
                 expect($window.alert).toHaveBeenCalled();
-            }));
+            });
         });
     });
 });
