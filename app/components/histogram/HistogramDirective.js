@@ -105,6 +105,7 @@
                         disableSlider(true);
                         return;
                     }
+                    dataHistogram.counts = generateAllDates(dataHistogram.counts);
                     disableSlider(false);
                     var firstDate = new Date(dataHistogram.counts[0].value);
                     var lastDate = new Date(dataHistogram.counts[dataHistogram.counts.length - 1].value);
@@ -128,6 +129,26 @@
                         vm.slider.changeTime = false;
                         $rootScope.$broadcast('changeSlider', vm.slider);
                     }
+                }
+
+                function generateAllDates(data) {
+                    var newData = [];
+                    data.forEach(function (datetime, index) {
+                        if (index < data.length - 1) {
+                            var startDate = moment(datetime.value);
+                            var nextHour = startDate.add(1, 'hour');
+                            var nextDate = moment(data[index + 1].value);
+                            newData.push(datetime);
+                            while (new Date(nextHour.toJSON()) < new Date(nextDate.toJSON())) {
+                                newData.push({
+                                    count: 0,
+                                    value: nextHour.toJSON()
+                                });
+                                nextHour = nextHour.add(1, 'hour');
+                            }
+                        }
+                    });
+                    return newData;
                 }
 
                 function getSubDataHistogram(dataHistogram, slider) {
