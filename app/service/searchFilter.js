@@ -15,7 +15,7 @@
             userLimit: null,
             numOfDocs: 50,
             minDate: new Date('2016-12-10'),
-            maxDate: new Date('2016-12-21')
+            maxDate: new Date('2017-01-18')
         };
 
         var emptyStringForNull = function(value) {
