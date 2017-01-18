@@ -285,6 +285,7 @@
 
             service.createOrUpdateHeatMapLayer = function(data) {
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
+                var heatmapRadius = 20;
                 existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
                 transformInteractionLayer = service.getLayersBy('name',
                                                                 "TransformInteractionLayer")[0];
@@ -298,12 +299,17 @@
                         layerSrc.clear();
                     }
                     currHeatmapLayer.setSource(olVecSrc);
+                    currHeatmapLayer.setRadius(heatmapRadius);
                 } else {
                     newHeatMapLayer = new ol.layer.Heatmap({
                         name: 'HeatMapLayer',
                         source: olVecSrc,
-                        radius: 10
+                        radius: heatmapRadius,
+                        blur: 20,
+                        gradient: ['#40f', '#00f', '#00aaff', '#0ff',
+                            '#ff0', '#f80', '#ff4000', '#f00']
                     });
+
                     try {
                         service.getMap().addLayer(newHeatMapLayer);
                     } catch(err) {
