@@ -23,7 +23,7 @@
 
                 vm.initialDateOptions = {
                     minDate: new Date('2016-12-01'),
-                    maxDate: new Date('2017-02-01')
+                    maxDate: new Date('2017-01-19')
                 };
 
                 vm.dateOptions = searchFilter;
