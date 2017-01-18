@@ -39,6 +39,7 @@
                     'a.user.limit': reqParamsUi.userLimit,
                     'd.docs.sort': 'distance'
                 };
+
                 $state.go('search', {
                     text: params['q.text'],
                     user: params['q.user'],
@@ -85,7 +86,6 @@
                         // check if we have a heatmap facet and update the map with it
                         var data = response.data;
                         DataCacheService.insertData(config.params, data);
-
                         broadcastData(data);
 
                     }, function errorCallback(response) {
