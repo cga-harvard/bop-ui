@@ -73,11 +73,11 @@
                         params: params
                     };
 
-                    var responseCache = DataCacheService.getObjData(config.params);
-                    if (angular.isObject(responseCache)) {
-                        broadcastData(responseCache);
-                        return;
-                    }
+                    // var responseCache = DataCacheService.getObjData(config.params);
+                    // if (angular.isObject(responseCache)) {
+                    //     broadcastData(responseCache);
+                    //     return;
+                    // }
 
                     //load the data
 
@@ -85,7 +85,7 @@
                     .then(function successCallback(response) {
                         // check if we have a heatmap facet and update the map with it
                         var data = response.data;
-                        DataCacheService.insertData(config.params, data);
+                        // DataCacheService.insertData(config.params, data);
                         broadcastData(data);
 
                     }, function errorCallback(response) {
