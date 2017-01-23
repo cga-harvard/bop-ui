@@ -13,7 +13,8 @@
         "proj4": false,
         "olgm": false,
         "google": false,
-        "moment": false
+        "moment": false,
+        "geostats": false
     },
     "rules": {
         "angular/controller_name": 0,

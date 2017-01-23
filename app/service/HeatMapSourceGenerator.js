@@ -33,7 +33,7 @@
                     'q.geo': reqParamsUi.geo,
                     'a.hm.filter': reqParamsUi.hm,
                     'a.time.limit': '1',
-                    'a.time.gap': 'PT1H',
+                    'a.time.gap': 'P1D',
                     'd.docs.limit': reqParamsUi.numOfDocs,
                     'a.text.limit': reqParamsUi.textLimit,
                     'a.user.limit': reqParamsUi.userLimit,
@@ -73,11 +73,11 @@
                         params: params
                     };
 
-                    var responseCache = DataCacheService.getObjData(config.params);
-                    if (angular.isObject(responseCache)) {
-                        broadcastData(responseCache);
-                        return;
-                    }
+                    // var responseCache = DataCacheService.getObjData(config.params);
+                    // if (angular.isObject(responseCache)) {
+                    //     broadcastData(responseCache);
+                    //     return;
+                    // }
 
                     //load the data
 
@@ -85,7 +85,7 @@
                     .then(function successCallback(response) {
                         // check if we have a heatmap facet and update the map with it
                         var data = response.data;
-                        DataCacheService.insertData(config.params, data);
+                        // DataCacheService.insertData(config.params, data);
                         broadcastData(data);
 
                     }, function errorCallback(response) {
