@@ -18,7 +18,7 @@
 
             function ExportLink(scope) {
                 var vm = scope;
-                vm.basemaps = 'OSM basemap';
+                vm.basemaps = 'Toner basemap';
 
                 vm.reset = function reset() {
                     // Reset the map
@@ -28,8 +28,8 @@
                 };
 
                 vm.toggleBaseMaps = function() {
-                    vm.basemaps = vm.basemaps === 'OSM basemap' ?
-                        'Google Terrain' : 'OSM basemap';
+                    vm.basemaps = vm.basemaps === 'Toner basemap' ?
+                        'Google Terrain' : 'Toner basemap';
                     Map.toggleBaseMaps();
                 };
             }

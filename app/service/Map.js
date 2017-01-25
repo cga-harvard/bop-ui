@@ -41,13 +41,15 @@
                             });
                             layer = service.googleLayer;
                         }
-                        if (conf.type === 'OSM') {
-                            service.osmLayer = new ol.layer.Tile({
-                                source: new ol.source.OSM(),
+                        if (conf.type === 'Toner') {
+                            service.tonerLayer = new ol.layer.Tile({
+                                source: new ol.source.Stamen({
+                                    layer: 'toner'
+                                }),
                                 backgroundLayer: conf.backgroundLayer,
                                 visible: conf.visible
                             });
-                            layer = service.osmLayer;
+                            layer = service.tonerLayer;
                         }
                         if (conf.type === 'TileWMS') {
                             layer = new ol.layer.Tile({
@@ -577,7 +579,7 @@
 
             service.toggleBaseMaps = function() {
                 service.googleLayer.setVisible(!service.googleLayer.getVisible());
-                service.osmLayer.setVisible(!service.osmLayer.getVisible());
+                service.tonerLayer.setVisible(!service.tonerLayer.getVisible());
             };
 
             /**
