@@ -273,14 +273,16 @@
                               map.getView().getProjection().getCode()
                             );
 
+                            var classifiedValue = closestValue(classifications, hmVal);
+                            var scaledValue = rescaleHeatmapValue(classifiedValue, minMaxValue);
+
                             feat = new ol.Feature({
+                                name: hmVal,
+                                scaledValue: scaledValue,
                                 geometry: new ol.geom.Point(coords),
                                 opacity: 1,
                                 weight: 1
                             });
-
-                            var classifiedValue = closestValue(classifications, hmVal);
-                            var scaledValue = rescaleHeatmapValue(classifiedValue, minMaxValue);
 
                             feat.set('weight', scaledValue);
                             feat.set('origVal', hmVal);
@@ -313,11 +315,25 @@
                 return context.canvas.toDataURL();
             }
 
+            function displayTooltip(evt, overlay, tooltip) {
+                var pixel = evt.pixel;
+                var feature = map.forEachFeatureAtPixel(pixel, function(feat) {
+                    return feat;
+                });
+
+                var name = feature ? feature.get('name') : undefined;
+                tooltip.style.display = name ? '' : 'none';
+                if (name) {
+                    overlay.setPosition(evt.coordinate);
+                    tooltip.innerHTML = name;
+                }
+            }
+
             service.createOrUpdateHeatMapLayer = function(hmData) {
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
 
                 hmData.heatmapRadius = 20;
-                hmData.blur = 20;
+                hmData.blur = 6;
                 hmData.gradientArray = ['#000000', '#0000df', '#0000df', '#00effe',
                     '#00effe', '#00ff42',' #00ff42', '#00ff42',
                     '#feec30', '#ff5f00', '#ff0000'];
@@ -620,6 +636,18 @@
                         vw.fit(viewConfig.extent, service.getMapSize());
                     }
                 }
+
+                var tooltip = $window.document.getElementById('tooltip');
+                var overlay = new ol.Overlay({
+                    element: tooltip,
+                    offset: [10, 0],
+                    positioning: 'bottom-left'
+                });
+                map.addOverlay(overlay);
+
+                map.on('pointermove', function (evt) {
+                    displayTooltip(evt, overlay, tooltip);
+                });
             };
             return service;
         }]

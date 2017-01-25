@@ -10,7 +10,7 @@ describe( 'HeatMapSourceGenerator', function() {
         HeightModule = _HeightModule_;
         $window = _$window_;
         mapViewSpy = jasmine.createSpyObj('view', ['set', 'fit']);
-        mapSpy = jasmine.createSpyObj('map', ['getView', 'addLayer', 'addInteraction']);
+        mapSpy = jasmine.createSpyObj('map', ['getView', 'addLayer', 'addInteraction', 'addOverlay', 'on']);
         mapSpy.getView.and.returnValue(mapViewSpy);
         olSpy = spyOn(ol, 'Map').and.returnValue(mapSpy);
         viewSpy = spyOn(ol, 'View');

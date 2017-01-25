@@ -17,7 +17,7 @@ module.exports = function ( config ) {
       'node_modules/angularjs-slider/dist/rzslider.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'assets/lib/ol3-google-maps/dist/ol3gm.js',
-      'node_modules/geostats/lib/geostats.min.js',
+      'assets/lib/geostats/lib/geostats.min.js',
       'https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAjtdt_Db2IOZDVYznVqot45xUs1tNhhDw',
       'app/**/*.js',
       'tests/**/*.spec.js',
