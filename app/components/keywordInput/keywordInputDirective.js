@@ -120,7 +120,7 @@
                             dataRawKeywords = [];
                         }
                         vm.tagSwitch.disable = false;
-                        vm.suggestedKeywords = dataRawKeywords.filter(filterKeywordService.filter);
+                        vm.suggestedKeywords = dataRawKeywords.filter(filterKeywordService.filter).slice(0, 10);
                     });
                 }
 
