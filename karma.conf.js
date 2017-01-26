@@ -21,7 +21,8 @@ module.exports = function ( config ) {
       'https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAjtdt_Db2IOZDVYznVqot45xUs1tNhhDw',
       'app/**/*.js',
       'tests/**/*.spec.js',
-      'app/**/*.tpl.html'
+      'app/**/*.tpl.html',
+      'assets/lib/moment/min/moment.min.js'
     ],
     exclude: [
     ],

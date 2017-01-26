@@ -14,8 +14,8 @@
             textLimit: null,
             userLimit: null,
             numOfDocs: 50,
-            minDate: new Date('2016-12-10'),
-            maxDate: new Date('2016-12-21')
+            minDate: new Date(moment().subtract(2, 'months').format('YYYY-MM-DD')),
+            maxDate: new Date(moment().format('YYYY-MM-DD'))
         };
 
         var emptyStringForNull = function(value) {
