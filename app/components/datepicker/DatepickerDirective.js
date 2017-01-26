@@ -21,14 +21,14 @@
 
                 var vm = scope;
 
-                vm.initialDateOptions = {
-                    minDate: new Date('2016-12-01'),
-                    maxDate: new Date('2017-01-01')
-                };
-
                 vm.dateOptions = searchFilter;
                 vm.dateOptions.startingDate = 1;
                 vm.dateOptions.showWeeks = false;
+
+                vm.initialDateOptions = {
+                    minDate: vm.dateOptions.minDate,
+                    maxDate: vm.dateOptions.maxDate
+                };
 
                 vm.$watch(function(){
                     return vm.dateOptions.time;
