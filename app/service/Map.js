@@ -44,7 +44,7 @@
                         if (conf.type === 'Toner') {
                             service.tonerLayer = new ol.layer.Tile({
                                 source: new ol.source.Stamen({
-                                    layer: 'toner'
+                                    layer: 'toner-lite'
                                 }),
                                 backgroundLayer: conf.backgroundLayer,
                                 visible: conf.visible

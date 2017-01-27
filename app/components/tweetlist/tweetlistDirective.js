@@ -18,7 +18,7 @@
                 vm.tweetList.exist = false;
 
                 vm.selectTweet = selectTweet;
-                vm.removeAllfeatures = MapService.removeAllfeatures;
+                vm.removeAllfeatures = removeAllfeatures;
 
                 vm.availableHeight = HeightModule.availableHeight();
 
@@ -41,6 +41,11 @@
                 function selectTweet(tweet) {
                     PanelInformationService.selectedTweet = tweet;
                     addCircle(tweet.coord);
+                }
+
+                function removeAllfeatures() {
+                    PanelInformationService.selectedTweet = {};
+                    MapService.removeAllfeatures();
                 }
 
                 function addCircle(coordinates) {
