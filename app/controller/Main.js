@@ -45,6 +45,8 @@
                         vm.isThereInteraction = true;
                         changeGeoSearch();
                         mapIsMoved = false;
+                    }else if(!isBackbuttonPressed){
+                        changeGeoSearch();
                     }else {
                         isBackbuttonPressed = false;
                         HeatMapSourceGeneratorService.search();
@@ -82,6 +84,8 @@
                         mapConf.view.extent = queryService.
                           getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
+                        mapConf.view.extent = MapService
+                            .calculateFullScreenExtentFromBoundingBox(mapConf.view.extent);
                     }
                     MapService.init({
                         mapConfig: mapConf
