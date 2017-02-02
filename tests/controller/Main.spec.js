@@ -33,6 +33,7 @@ describe( 'MainController', function() {
                 var serviceSpy;
                 beforeEach(function() {
                     serviceSpy = spyOn(queryService, 'getExtentForProjectionFromQuery');
+                    spyOn(MapService, 'calculateFullScreenExtentFromBoundingBox');
                     MainCtrl.$state = { geo: '[1,1 TO 1,1]'};
                 });
                 it( 'calls MapService getExtentForProjectionFromQuery', function() {

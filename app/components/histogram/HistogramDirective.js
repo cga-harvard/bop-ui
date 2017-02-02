@@ -131,12 +131,13 @@
                     }
                 }
 
-                function generateAllDates(data) {
+                function generateAllDates(data, unitOfTime) {
                     var newData = [];
+                    unitOfTime = unitOfTime || 'day';
                     data.forEach(function (datetime, index) {
                         if (index < data.length - 1) {
                             var startDate = moment(datetime.value);
-                            var nextHour = startDate.add(1, 'hour');
+                            var nextHour = startDate.add(1, unitOfTime);
                             var nextDate = moment(data[index + 1].value);
                             newData.push(datetime);
                             while (new Date(nextHour.toJSON()) < new Date(nextDate.toJSON())) {
@@ -144,7 +145,7 @@
                                     count: 0,
                                     value: nextHour.toJSON()
                                 });
-                                nextHour = nextHour.add(1, 'hour');
+                                nextHour = nextHour.add(1, unitOfTime);
                             }
                         }
                     });
