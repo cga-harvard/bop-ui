@@ -13,16 +13,16 @@
             $http, $state, searchFilter, DateTimeService, DataCacheService) {
             var MapService= Map;
 
-            var methods = {
+            return {
                 search: search
             };
+
             /**
              *
              */
-            function getTweetsSearchQueryParameters (bounds) {
+            function createParamsForGeospatialSearch () {
                 var params,
                     reqParamsUi = searchFilter;
-
                 /*
                 // calculate reduced bounding box
                 */
@@ -40,30 +40,25 @@
                     'd.docs.sort': 'distance'
                 };
 
+                return params;
+            }
+
+            function setUrlwithParams(params) {
                 $state.go('search', {
                     text: params['q.text'],
                     user: params['q.user'],
                     time: params['q.time'],
                     geo: params['q.geo']
                 }, {});
-
-                return params;
             }
-            var createParamsForGeospatialSearch = function() {
-                //var spatialFilters = MapService.getCurrentExtent(), params;
-                return getTweetsSearchQueryParameters();
-            };
-
-            return methods;
-
-
 
             /**
              * Performs search with the given full configuration / search object.
              */
-            function search(){
+            function search(changeUrl){
                 var config,
                     params = createParamsForGeospatialSearch();
+
                 if (params) {
                     params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
 
@@ -73,16 +68,13 @@
                         params: params
                     };
 
-                    // var responseCache = DataCacheService.getObjData(config.params);
-                    // if (angular.isObject(responseCache)) {
-                    //     broadcastData(responseCache);
-                    //     return;
-                    // }
-
                     //load the data
-
                     $http(config)
                     .then(function successCallback(response) {
+                        if (changeUrl) {
+                            setUrlwithParams(params);
+                        }
+
                         // check if we have a heatmap facet and update the map with it
                         var data = response.data;
                         // DataCacheService.insertData(config.params, data);

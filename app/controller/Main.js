@@ -29,16 +29,6 @@
                 MapService.getMap().getView()
                     .on('change:resolution', function(evt){
                         vm.isThereInteraction = true;
-                        var existingHeatMapLayers = MapService.getLayersBy('name', 'HeatMapLayer');
-                        if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
-                            var radius = 500 * evt.target.getResolution();
-                            var hmLayer = existingHeatMapLayers[0];
-                            if (radius > 15) {
-                                radius = 15;
-                            }
-                            hmLayer.setRadius(radius);
-                            hmLayer.setBlur(radius*2);
-                        }
                     });
                 MapService.getMap().on('moveend', function(evt){
                     if ((mapIsMoved || searchFilter.geo === '[-90,-180 TO 90,180]') && !isBackbuttonPressed) {
@@ -46,7 +36,9 @@
                         changeGeoSearch();
                         mapIsMoved = false;
                     }else if(!isBackbuttonPressed){
-                        changeGeoSearch();
+                        vm.isThereInteraction = true;
+                        mapIsMoved = false;
+                        changeGeoSearch(false);
                     }else {
                         isBackbuttonPressed = false;
                         HeatMapSourceGeneratorService.search();
@@ -64,11 +56,12 @@
                     vm.isThereInteraction = false;
                 });
 
-                function changeGeoSearch() {
+                function changeGeoSearch(changeUrl) {
+                    changeUrl = angular.isUndefined(changeUrl) || changeUrl ? true : false;
                     MapService.checkBoxOfTransformInteraction();
                     var currentExtent = MapService.getCurrentExtentQuery();
                     searchFilter.setFilter({geo: currentExtent.geo, hm: currentExtent.hm });
-                    HeatMapSourceGeneratorService.search();
+                    HeatMapSourceGeneratorService.search(changeUrl);
                 }
             };
 

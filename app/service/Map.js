@@ -353,7 +353,7 @@
                         layerSrc.clear();
                     }
                     currHeatmapLayer.setSource(olVecSrc);
-                    currHeatmapLayer.setRadius(hmData.heatmapRadius);
+                    // currHeatmapLayer.setRadius(hmData.heatmapRadius);
                 } else {
                     newHeatMapLayer = new ol.layer.Heatmap({
                         name: 'HeatMapLayer',
