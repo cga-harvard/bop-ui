@@ -10,15 +10,15 @@
     .directive('resetButton', ['HeatMapSourceGenerator', 'searchFilter', 'Map',
         function(HeatMapSourceGenerator, searchFilter, Map) {
             return {
-                link: ExportLink,
+                link: ResetLink,
                 restrict: 'EA',
                 templateUrl: 'components/resetButton/resetButton.tpl.html',
                 scope: {}
             };
 
-            function ExportLink(scope) {
+            function ResetLink(scope) {
                 var vm = scope;
-                vm.basemaps = 'Toner basemap';
+                vm.basemaps = 'TONER BP';
 
                 vm.reset = function reset() {
                     // Reset the map
@@ -28,8 +28,8 @@
                 };
 
                 vm.toggleBaseMaps = function() {
-                    vm.basemaps = vm.basemaps === 'Toner basemap' ?
-                        'Google Terrain' : 'Toner basemap';
+                    vm.basemaps = vm.basemaps === 'TONER BP' ?
+                        'TERRAIN' : 'TONER BP';
                     Map.toggleBaseMaps();
                 };
             }
