@@ -18,7 +18,6 @@
 
             function ResetLink(scope) {
                 var vm = scope;
-                vm.basemaps = 'TONER BP';
 
                 vm.reset = function reset() {
                     // Reset the map
@@ -28,8 +27,6 @@
                 };
 
                 vm.toggleBaseMaps = function() {
-                    vm.basemaps = vm.basemaps === 'TONER BP' ?
-                        'TERRAIN' : 'TONER BP';
                     Map.toggleBaseMaps();
                 };
             }
