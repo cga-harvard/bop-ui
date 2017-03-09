@@ -12,23 +12,32 @@
             return {
                 link: ResetLink,
                 restrict: 'EA',
-                templateUrl: 'components/resetButton/resetButton.tpl.html',
+                template: '<button class="btn btn-primary" id="resetbtn" title="RESET" ' +
+                    'type="button" ng-click="reset()">RESET</button>',
                 scope: {}
             };
 
             function ResetLink(scope) {
-                var vm = scope;
-
-                vm.reset = function reset() {
+                scope.reset = function reset() {
                     // Reset the map
                     Map.resetMap();
                     searchFilter.resetFilter();
                     HeatMapSourceGenerator.search();
                 };
-
-                vm.toggleBaseMaps = function() {
-                    Map.toggleBaseMaps();
-                };
             }
-        }]);
+        }])
+    .directive('basemapButton', ['Map', function(Map) {
+        return {
+            link: link,
+            template: '<button class="btn btn-default" type="button" ' +
+                'ng-click="toggleBaseMaps()">BASEMAPS</button>',
+            scope: {}
+        };
+
+        function link(scope) {
+            scope.toggleBaseMaps = function() {
+                Map.toggleBaseMaps();
+            };
+        }
+    }]);
 })();
