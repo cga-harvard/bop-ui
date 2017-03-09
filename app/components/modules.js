@@ -6,6 +6,7 @@
         'search_tweetlist_component',
         'search_tweetpanel_component',
         'search_tweetcounter_component',
+        'search_buttonPanel_component',
         'search_toolbarsearch_component',
         'search_userFilter_component',
         'search_geospatialFilter_component',
@@ -15,6 +16,7 @@
         'search_keyword_component',
         'search_cardwrapper_component',
         'search_keywordinput_component',
-        'search_responsiveLayout_component'
+        'search_responsiveLayout_component',
+        'search_dataverseButton_component'
     ]);
 })();

@@ -59,6 +59,7 @@
     <script src="./app/service/dateTimeService.js"></script>
     <script src="./app/service/filterKeywordsService.js"></script>
     <script src="./app/service/dataCacheService.js"></script>
+    <script src="./app/service/dataverseService.js"></script>
 
     <!-- APP components -->
     <script src="./app/components/modules.js"></script>
@@ -68,6 +69,7 @@
     <script src="./app/components/tweetlist/tweetlistDirective.js"></script>
     <script src="./app/components/tweetlist/panelDirective.js"></script>
     <script src="./app/components/tweetlist/counterDirective.js"></script>
+    <script src="./app/components/buttonPanel/buttonPanelDirective.js"></script>
     <script src="./app/components/toolbarSearch/toolbarSearchDirective.js"></script>
     <script src="./app/components/userFilter/userFilterDirective.js"></script>
     <script src="./app/components/geospatialFilter/geospatialFilterDirective.js"></script>
@@ -79,22 +81,16 @@
     <script src="./app/components/cardwrapper/cardwrapperDirective.js"></script>
     <script src="./app/components/keywordInput/keywordInputDirective.js"></script>
     <script src="./app/components/responsiveView/responsiveViewDirective.js"></script>
+    <script src="./app/components/dataverseButton/dataverseButtonDirective.js"></script>
 
     <script src="./tmp/templates.js"></script>
 
 </head>
 
 <body ng-controller="MainController">
-	<ui-view></ui-view>
+    <ui-view></ui-view>
     <heatmap></heatmap>
-
     <responsive-layout></responsive-layout>
-
-    <!-- map popup -->
-    <ng-include src="'./app/view/mapPopup.html'"></ng-include>
-    <!-- info popup -->
-    <ng-include src="'./app/view/infoPopup.html'"></ng-include>
-
 </body>
 
 </html>

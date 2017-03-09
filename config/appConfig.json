@@ -6,7 +6,17 @@
     },
     "bopwsConfig": {
         "heatmapFacetLimit": 10000,
-        "csvDocsLimit": 1
+        "csvDocsLimit": 1,
+        "dataverse": {
+            "AllowDataverseDeposit": true,
+            "dataverseDepositUrl": "https://dataverse.harvard.edu/deposit-bop-subset",
+            "subsetRetrievalUrl": "cb=https://bop.cga.edu/get_subset",
+            "parameters": {
+                "time": "{}",
+                "keywords": "{}",
+                "extent": "{}"
+            }
+        }
     },
     "mapConfig": {
         "renderer": "canvas",
