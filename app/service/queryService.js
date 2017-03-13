@@ -6,10 +6,10 @@
     .factory('queryService', ['Normalize', function(Normalize){
         var service = {};
         service.createQueryFromExtent = function(extent) {
-            return '[' + extent.minX +
-                ',' + extent.minY +
-                ' TO ' + extent.maxX +
-                ',' + extent.maxY + ']';
+            return '[' + extent.minY +
+                ',' + extent.minX +
+                ' TO ' + extent.maxY +
+                ',' + extent.maxX + ']';
         };
         service.getExtentFromQuery = function(query) {
             var extent, min, max,

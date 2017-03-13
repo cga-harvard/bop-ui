@@ -15,8 +15,20 @@
 
             return {
                 startCsvExport: startCsvExport,
-                search: search
+                search: search,
+                simpleSearch: simpleSearch
             };
+
+            function simpleSearch(params, callback) {
+                var config = {
+                    url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                    method: 'GET',
+                    params: params
+                };
+                $http(config).then(function(response) {
+                    return callback(response);
+                });
+            }
 
             /**
              *
