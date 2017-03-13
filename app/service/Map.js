@@ -499,6 +499,15 @@
                 };
             };
 
+            service.createExtentFromNormalize = function(normalizedExtent) {
+                return {
+                    minX: normalizedExtent[0],
+                    minY: normalizedExtent[1],
+                    maxX: normalizedExtent[2],
+                    maxY: normalizedExtent[3]
+                };
+            };
+
             /**
              * Builds geospatial filter depending on the current map extent.
              * This filter will be used later for `q.geo` parameter of the API
@@ -532,9 +541,9 @@
                     var normalizedExtentBox = NormalizeService
                             .normalizeExtent(currentBboxExtentWgs84);
 
-                    currentExtent = createExtent(normalizedExtentMap);
+                    currentExtent = service.createExtentFromNormalize(normalizedExtentMap);
 
-                    currentExtentBox = createExtent(normalizedExtentBox);
+                    currentExtentBox = service.createExtentFromNormalize(normalizedExtentBox);
 
                     var roundToFixed = function(value){
                         return parseFloat(Math.round(value* 100) / 100).toFixed(2);
@@ -545,15 +554,6 @@
                                             roundToFixed(currentExtentBox.minY) + ' TO ' +
                                             roundToFixed(currentExtentBox.maxX) + ',' +
                                             roundToFixed(currentExtentBox.maxY) + ']');
-                }
-
-                function createExtent(normalizedExtent) {
-                    return {
-                        minX: normalizedExtent[1],
-                        maxX: normalizedExtent[3],
-                        minY: normalizedExtent[0],
-                        maxY: normalizedExtent[2]
-                    };
                 }
 
                 return {hm: currentExtent, geo: currentExtentBox};

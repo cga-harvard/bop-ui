@@ -9,7 +9,7 @@ describe( 'queryService', function() {
     }));
     describe('#createQueryFromExtent', function() {
         it('returns query string', function() {
-            expect(subject.createQueryFromExtent({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual('[0,2 TO 1,3]');
+            expect(subject.createQueryFromExtent({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual('[2,0 TO 3,1]');
         });
     });
     describe('#getExtentFromQuery', function() {

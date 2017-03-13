@@ -219,7 +219,10 @@ describe( 'HeatMapSourceGenerator', function() {
                 mapZoomSpy.and.returnValue(1);
             });
             it('returns extent', function() {
-                expect(subject.getCurrentExtent()).toEqual({ hm: {minX: -90, maxX: 90, minY: -180, maxY: 180}, geo: {minX: 0, maxX: 0, minY: 0, maxY: 0} });
+                expect(subject.getCurrentExtent()).toEqual({
+                    hm: {minY: -90, maxY: 90, minX: -180, maxX: 180},
+                    geo: {minX: 0, maxX: 0, minY: 0, maxY: 0}
+                });
             });
         });
         describe('no TransformInteractionLayer', function(){
@@ -336,7 +339,7 @@ describe( 'HeatMapSourceGenerator', function() {
         });
         describe('#reducedQueryForExtent', function() {
             it('returns extent query', function() {
-                expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[0.5,2.25 TO 0.75,2.5]');
+                expect(subject.getReducedQueryFromExtent('[0,2 TO 1,3]')).toEqual('[2.25,0.5 TO 2.5,0.75]');
             });
         });
     });
