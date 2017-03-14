@@ -20,7 +20,7 @@
 
             function ExportLink(scope) {
                 scope.startExport = function() {
-                    HeatMapSourceGenerator.startCsvExport(100);
+                    HeatMapSourceGenerator.startCsvExport();
                 };
             }
         }]);
