@@ -13,8 +13,9 @@
             "subsetRetrievalUrl": "cb=https://bop.cga.edu/get_subset",
             "parameters": {
                 "time": "{}",
-                "keywords": "{}",
-                "extent": "{}"
+                "text": "{}",
+                "geo": "{}",
+                "user": "{}"
             }
         }
     },

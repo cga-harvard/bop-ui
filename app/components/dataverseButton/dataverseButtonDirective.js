@@ -12,15 +12,27 @@
             return {
                 link: Link,
                 restrict: 'EA',
-                template: '<a ng-if="dataversefn().AllowDataverseDeposit" ' +
-                    'class="btn btn-default" id="dataversebtn" target="_blank"' +
-                    'type="button" href="{{linkfn()}}">DATAVERSE</a>',
+                templateUrl: 'components/dataverseButton/dataverseButton.tpl.html',
                 scope: {}
             };
 
             function Link(scope) {
-                scope.linkfn = dataverseService.prepareDataverseUrl;
-                scope.dataversefn = dataverseService.getDataverse;
+                var vm = scope;
+                vm.sendToDataverse = sendToDataverse;
+                vm.dataversefn = dataverseService.getDataverse;
+                vm.callbackMessage = '';
+
+                function sendToDataverse() {
+                    dataverseService.dataverseRequest(function (response) {
+                        vm.response = response;
+                        if (response.status === 200) {
+                            vm.callbackMessage = 'Dataverse success response';
+                        } else {
+                            vm.callbackMessage = 'Url error';
+                        }
+                        angular.element('#dataverseresponse').modal('show');
+                    });
+                }
             }
         }]);
 })();
