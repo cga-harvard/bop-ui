@@ -47,10 +47,10 @@
                     var deltaY = Math.abs(extentGeo.maxY - extentGeo.minY);
 
                     var newExtent = {
-                        minX: centerPoint[1] - deltaX/2,
-                        minY: centerPoint[0] - deltaY/2,
-                        maxX: centerPoint[1] + deltaX/2,
-                        maxY: centerPoint[0] + deltaY/2
+                        minX: centerPoint[0] - deltaX/2,
+                        minY: centerPoint[1] - deltaY/2,
+                        maxX: centerPoint[0] + deltaX/2,
+                        maxY: centerPoint[1] + deltaY/2
                     };
 
                     var normalizedExtent = Normalize.normalizeExtent([

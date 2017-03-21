@@ -20,6 +20,10 @@
             };
 
             function simpleSearch(params, callback) {
+                var sF = searchFilter;
+                params['q.text'] = sF.text;
+                params['q.user'] = sF.user;
+                params['q.time'] = timeTextFormat(sF.time, sF.minDate, sF.maxDate);
                 var config = {
                     url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                     method: 'GET',
@@ -34,26 +38,20 @@
              *
              */
             function createParamsForGeospatialSearch () {
-                var params,
-                    reqParamsUi = searchFilter;
-                /*
-                // calculate reduced bounding box
-                */
-                params = {
-                    'q.text': reqParamsUi.text,
-                    'q.user': reqParamsUi.user,
-                    'q.time': timeTextFormat(reqParamsUi.time, reqParamsUi.minDate, reqParamsUi.maxDate),
-                    'q.geo': reqParamsUi.geo,
-                    'a.hm.filter': reqParamsUi.hm,
+                var sF = searchFilter;
+                return {
+                    'q.text': sF.text,
+                    'q.user': sF.user,
+                    'q.time': timeTextFormat(sF.time, sF.minDate, sF.maxDate),
+                    'q.geo': sF.geo,
+                    'a.hm.filter': sF.hm,
                     'a.time.limit': '1',
                     'a.time.gap': 'P1D',
-                    'd.docs.limit': reqParamsUi.numOfDocs,
-                    'a.text.limit': reqParamsUi.textLimit,
-                    'a.user.limit': reqParamsUi.userLimit,
+                    'd.docs.limit': sF.numOfDocs,
+                    'a.text.limit': sF.textLimit,
+                    'a.user.limit': sF.userLimit,
                     'd.docs.sort': 'distance'
                 };
-
-                return params;
             }
 
             function setUrlwithParams(params) {
