@@ -7,9 +7,9 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$window',
+    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$log',
         '$document', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
-        function(Map, $rootScope, $controller, $filter, $window, $document,
+        function(Map, $rootScope, $controller, $filter, $log, $document,
             $http, $state, searchFilter, DateTimeService, DataCacheService) {
             var MapService= Map;
 
@@ -94,13 +94,13 @@
                         broadcastData(data);
 
                     }, function errorCallback(response) {
-                        $window.alert('An error occured while reading heatmap data');
+                        $log.error('An error occured while reading heatmap data');
                     })
                     .catch(function() {
-                        $window.alert('An error occured while reading heatmap data');
+                        $log.error('An error occured while reading heatmap data');
                     });
                 } else {
-                    $window.alert('Spatial filter could not be computed.');
+                    $log.error('Spatial filter could not be computed.');
                 }
             }
 
@@ -147,13 +147,13 @@
                         })[0].click();
                         anchor.remove(); // Clean it up afterwards
                     }, function errorCallback(response) {
-                        $window.alert('An error occured while exporting csv data');
+                        $log.error('An error occured while exporting csv data');
                     })
                     .catch(function() {
-                        $window.alert('An error occured while exporting csv data');
+                        $log.error('An error occured while exporting csv data');
                     });
                 } else {
-                    $window.alert('Spatial filter could not be computed.');
+                    $log.error('Spatial filter could not be computed.');
                 }
             }
 

@@ -1,15 +1,16 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, $httpBackend, MapService, spatialSpy, geospatialFilter, searchFilter, $window;
+    var subject, $httpBackend, MapService, spatialSpy, geospatialFilter, searchFilter, $window, $log;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _searchFilter_, _$window_) {
+    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _searchFilter_, _$window_, _$log_) {
         subject = _HeatMapSourceGenerator_;
         $httpBackend = _$httpBackend_;
         MapService = _Map_;
         geospatialFilter = { minX: 1, maxX: 1, minY: 1, maxY: 1};
         searchFilter = _searchFilter_;
         $window = _$window_;
+        $log = _$log_;
         spatialSpy = spyOn(MapService, 'getCurrentExtent').and.returnValue(geospatialFilter);
     }));
 
@@ -64,14 +65,14 @@ describe( 'HeatMapSourceGenerator', function() {
             beforeEach(function() {
                 $window.localStorage.clear();
             });
-            it('throws an window error', function() {
+            it('throws an log error', function() {
                 exportRequest.respond(401, '');
-                spyOn( $window, 'alert' ).and.callFake( function() {
+                spyOn( $log, 'error' ).and.callFake( function() {
                     return true;
                 } );
                 subject.search();
                 $httpBackend.flush();
-                expect($window.alert).toHaveBeenCalled();
+                expect($log.error).toHaveBeenCalled();
             });
         });
     });
