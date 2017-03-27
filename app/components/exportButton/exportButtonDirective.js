@@ -12,7 +12,7 @@
             return {
                 link: ExportLink,
                 restrict: 'EA',
-                template: '<button class="btn btn-default" id="exportbtn" ' +
+                template: '<button class="btn btn-default from-panel" id="exportbtn" ' +
                 'style="border-top-left-radius: 0;border-bottom-left-radius: 0;"' +
                 'title="EXPORT" type="button" ng-click="startExport()">EXPORT</button>',
                 scope: {}
@@ -20,7 +20,7 @@
 
             function ExportLink(scope) {
                 scope.startExport = function() {
-                    HeatMapSourceGenerator.startCsvExport(100);
+                    HeatMapSourceGenerator.startCsvExport();
                 };
             }
         }]);

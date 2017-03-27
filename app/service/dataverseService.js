@@ -3,39 +3,52 @@
 (function () {
     angular
     .module('SolrHeatmapApp')
-    .factory('dataverseService', ['$rootScope', function ($rootScope) {
+    .factory('dataverseService', ['$rootScope', '$http',
+        function ($rootScope, $http) {
+            var dataverse = {
+                AllowDataverseDeposit: false
+            };
 
-        var dataverse = {
-            AllowDataverseDeposit: false
-        };
+            var mapReadyEvent = $rootScope.$on('mapReady', function(even, _) {
+                dataverse = solrHeatmapApp.bopwsConfig.dataverse;
+            });
 
-
-        var mapReadyEvent = $rootScope.$on('mapReady', function(even, _) {
-            dataverse = solrHeatmapApp.bopwsConfig.dataverse;
-        });
-
-        function prepareDataverseUrl() {
-            var dv = dataverse;
-            if (dv.AllowDataverseDeposit) {
-                var urlArray = [dv.dataverseDepositUrl, dv.subsetRetrievalUrl,
-                    paramsToString(dv.parameters)];
-                return urlArray.join('?');
+            function prepareDataverseUrl() {
+                var dv = dataverse;
+                if (dv.AllowDataverseDeposit) {
+                    var urlArray = [dv.dataverseDepositUrl, dv.subsetRetrievalUrl,
+                        paramsToString(dv.parameters)];
+                    return urlArray.join('?');
+                }
+                return false;
             }
-            return false;
-        }
 
-        function paramsToString(params) {
-            return 'time=' + params.time + '&keywords=' + params.keywords +
-            '&extent=' + params.extent;
-        }
+            function paramsToString(params) {
+                var stringParams = [];
+                for (var key in params) {
+                    stringParams.push(key + '=' + params[key]);
+                }
+                return stringParams.join('&');
+            }
 
-        return {
-            getDataverse: function () {
-                return dataverse;
-            },
-            prepareDataverseUrl: prepareDataverseUrl
-        };
+            function dataverseRequest(callback) {
+                var config = {
+                    url: prepareDataverseUrl(),
+                    method: 'GET'
+                };
+                $http(config).then(function(response) {
+                    return callback(response);
+                }, function errorCallback(response) {
+                    return callback(response);
+                });
+            }
 
-
-    }]);
+            return {
+                getDataverse: function () {
+                    return dataverse;
+                },
+                prepareDataverseUrl: prepareDataverseUrl,
+                dataverseRequest: dataverseRequest
+            };
+        }]);
 })();

@@ -3,11 +3,17 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('PanelInformationService', [function(){
+    .factory('PanelInformationService', ['$window', function($window){
 
         var service = {
-            selectedTweet: {}
+            selectedTweet: {},
+            tweetStatusUrl: tweetStatusUrl
         };
+
+        function tweetStatusUrl(tweetInfo) {
+            var url = 'https://twitter.com/' + tweetInfo.user_name + '/status/' + tweetInfo.id;
+            $window.open(url, '_blank');
+        }
 
         return service;
     }]);

@@ -22,6 +22,8 @@
 
                 vm.availableHeight = HeightModule.availableHeight();
 
+                vm.sendToTweetStatus = PanelInformationService.tweetStatusUrl;
+
                 vm.$on('setTweetList', setTweetList);
 
                 var stylePoint = new ol.style.Style({
@@ -60,6 +62,7 @@
                         MapService.addCircle([coordArray[1], coordArray[0]], stylePoint);
                     }
                 }
+
 
             }
         }]);

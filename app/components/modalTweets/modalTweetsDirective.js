@@ -5,8 +5,9 @@
     angular
     .module('search_modaltweets_component', [])
     .directive('modalTweets', ['Map', 'queryService',
-        'HeatMapSourceGenerator', 'Normalize',
-        function(Map, queryService, HeatMapSourceGenerator, Normalize) {
+        'HeatMapSourceGenerator', 'Normalize', 'PanelInformationService',
+        function(Map, queryService, HeatMapSourceGenerator,
+            Normalize, PanelInformationService) {
             return {
                 link: modalLink,
                 templateUrl: 'components/modalTweets/modalTweets.tpl.html',
@@ -19,6 +20,8 @@
                 var MapService = Map;
                 vm.closestTweets = [];
                 vm.coordinate = [];
+
+                vm.sendToTweetStatus = PanelInformationService.tweetStatusUrl;
 
                 vm.$on('mapReady', function () {
                     MapService.getMap().on('click', function(evt){
@@ -44,10 +47,10 @@
                     var deltaY = Math.abs(extentGeo.maxY - extentGeo.minY);
 
                     var newExtent = {
-                        minX: centerPoint[1] - deltaX/2,
-                        minY: centerPoint[0] - deltaY/2,
-                        maxX: centerPoint[1] + deltaX/2,
-                        maxY: centerPoint[0] + deltaY/2
+                        minX: centerPoint[0] - deltaX/2,
+                        minY: centerPoint[1] - deltaY/2,
+                        maxX: centerPoint[0] + deltaX/2,
+                        maxY: centerPoint[1] + deltaY/2
                     };
 
                     var normalizedExtent = Normalize.normalizeExtent([

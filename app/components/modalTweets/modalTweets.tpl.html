@@ -12,7 +12,7 @@
       </div>
       <div class="modal-body">
           <div class="tweet-component">
-              <li ng-repeat="tweet in closestTweets" class="tweet">
+              <li ng-repeat="tweet in closestTweets" class="tweet" ng-click="sendToTweetStatus(tweet)">
                 <div class="list-item-text">
                   <h3>@{{tweet.user_name}}</h3>
                   <h4>{{tweet.text}}</h4>
