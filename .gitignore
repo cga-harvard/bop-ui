@@ -5,3 +5,4 @@ tmp
 /.grunt
 build
 reports/
+.DS_Store

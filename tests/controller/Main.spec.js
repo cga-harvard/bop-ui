@@ -26,7 +26,7 @@ describe( 'MainController', function() {
                 setupSpy = spyOn(MainCtrl, 'setupEvents');
             });
             it( 'calls MapService init', function() {
-                MainCtrl.response({mapConfig: { view: { projection: 'EPSG:4326'}}});
+                MainCtrl.response({data: {mapConfig: { view: { projection: 'EPSG:4326'}}}});
                 expect(mapServiceSpy).toHaveBeenCalled();
             });
             describe('with a geo state', function() {
@@ -37,7 +37,7 @@ describe( 'MainController', function() {
                     MainCtrl.$state = { geo: '[1,1 TO 1,1]'};
                 });
                 it( 'calls MapService getExtentForProjectionFromQuery', function() {
-                    MainCtrl.response({mapConfig: { view: { projection: 'EPSG:4326'}}});
+                    MainCtrl.response({data: {mapConfig: { view: { projection: 'EPSG:4326'}}}});
                     expect(serviceSpy).toHaveBeenCalled();
                 });
             });
