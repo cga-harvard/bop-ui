@@ -1,17 +1,16 @@
 describe( 'GeospatialFilterDirective', function() {
-    var $scope, scope, rootScope, Map, HeatMapSourceGenerator, InfoService, element, compiledElement;
+    var $scope, scope, rootScope, Map, HeatMapSourceGenerator, element, compiledElement;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
     beforeEach( module( 'search_geospatialFilter_component' ) );
 
-    beforeEach( inject( function($compile, $controller, $rootScope, _InfoService_, _Map_, _HeatMapSourceGenerator_) {
+    beforeEach( inject( function($compile, $controller, $rootScope, _Map_, _HeatMapSourceGenerator_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
         element = angular.element('<geospatial-filter></geospatial-filter>');
         compiledElement = $compile(element)($scope);
         $scope.$digest();
         scope = compiledElement.isolateScope();
-        InfoService = _InfoService_;
         Map = _Map_;
         HeatMapSourceGenerator = _HeatMapSourceGenerator_;
     }));
@@ -22,13 +21,6 @@ describe( 'GeospatialFilterDirective', function() {
         it('updates the string', function() {
             scope.updateFilterString('[1,1 TO 1,1]');
             expect(scope.filter.geo).toEqual('[1,1 TO 1,1]');
-        });
-    });
-    describe('#showInfo', function() {
-        it('opens the modal info', function() {
-            var modalSpy = spyOn(InfoService, 'showInfoPopup');
-            scope.showGeospatialInfo();
-            expect(modalSpy).toHaveBeenCalledTimes(1);
         });
     });
     describe('#search', function() {

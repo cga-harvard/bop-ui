@@ -6,8 +6,8 @@
 (function() {
     angular
     .module('search_geospatialFilter_component', [])
-    .directive('geospatialFilter', ['InfoService', 'searchFilter', 'HeatMapSourceGenerator', 'Map',
-        function(InfoService, searchFilter, HeatMapSourceGenerator, Map) {
+    .directive('geospatialFilter', ['searchFilter', 'HeatMapSourceGenerator', 'Map',
+        function(searchFilter, HeatMapSourceGenerator, Map) {
             return {
                 link: GeospatialFilterLink,
                 restrict: 'EA',
@@ -18,10 +18,6 @@
             function GeospatialFilterLink(scope) {
 
                 scope.filter = searchFilter;
-
-                scope.showGeospatialInfo = function() {
-                    InfoService.showInfoPopup('geospatialsearch');
-                };
 
                 scope.updateFilterString = function(str) {
                     scope.filter.geo = str;

@@ -7,9 +7,9 @@
 
     angular
     .module('search_datepicker_component', [])
-    .directive('datePicker', ['HeatMapSourceGenerator', 'InfoService',
+    .directive('datePicker', ['HeatMapSourceGenerator',
         'searchFilter', 'DateTimeService',
-        function(HeatMapSourceGenerator, InfoService, searchFilter, DateTimeService) {
+        function(HeatMapSourceGenerator, searchFilter, DateTimeService) {
             return {
                 link: datePickerFilterLink,
                 templateUrl: 'components/datepicker/datepicker.tpl.html',
@@ -54,8 +54,6 @@
                 vm.datepickerEndDate = vm.dateOptions.maxDate;
 
                 vm.onChangeDatepicker = onChangeDatepicker;
-
-                vm.showDatepickerInfo = showDatepickerInfo;
 
                 vm.openEndDate = openEndDate;
 
@@ -131,10 +129,6 @@
                     if (hasDatepickerChanged) {
                         performDateSearch();
                     }
-                }
-
-                function showDatepickerInfo() {
-                    InfoService.showInfoPopup('datepicker');
                 }
 
                 function performDateSearch() {

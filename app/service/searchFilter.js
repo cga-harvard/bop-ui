@@ -43,11 +43,12 @@
         };
 
         service.resetFilter = function() {
-            service.time = null;
+            service.time = DateTimeService.formatDatesToString(service.minDate, service.maxDate);
             service.text = null;
             service.user = null;
             service.geo = MapService.getCurrentExtentQuery().geo;
             service.textLimit = null;
+            service.gap = 'P1M';
         };
 
         return service;

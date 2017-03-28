@@ -23,7 +23,6 @@
             resolve: {
                 search: function($stateParams,HeatMapSourceGenerator,searchFilter,
                     DateTimeService) {
-                    // console.log($stateParams);
                     searchFilter.setFilter($stateParams);
                 }
             }
