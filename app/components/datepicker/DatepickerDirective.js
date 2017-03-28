@@ -138,7 +138,7 @@
                 }
 
                 function performDateSearch() {
-                    searchFilter.time = vm.dateString;
+                    searchFilter.setFilter({time: vm.dateString});
                     HeatMapSourceGenerator.search();
                 }
             }

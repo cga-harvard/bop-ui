@@ -114,7 +114,6 @@
                     disableSlider(false);
                     var firstDate = new Date(dataHistogram.counts[0].value);
                     var lastDate = new Date(dataHistogram.counts[dataHistogram.counts.length - 1].value);
-
                     if (vm.slider.options.ceil === 1 || isTheInitialDate() ||
                         dataHistogram.counts.length - 1 > vm.slider.options.ceil) {
                         vm.slider.counts = dataHistogram.counts;
@@ -123,8 +122,7 @@
                         vm.slider.minValue = 0;
                         dataHistogram.slider = vm.slider;
                         $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-
-                    }else if ( (dataHistogram.counts.length < vm.slider.options.ceil && !vm.slider.changeTime) ||
+                    }else if ( (dataHistogram.counts.length - 1 <= vm.slider.options.ceil && !vm.slider.changeTime) ||
                         vm.slider.oldFirstDate > firstDate || vm.slider.oldLastDate < lastDate) {
                         vm.slider.oldFirstDate = firstDate;
                         vm.slider.oldLastDate = lastDate;
@@ -136,9 +134,12 @@
                     }
                 }
 
-                function generateAllDates(data, unitOfTime) {
+                function generateAllDates(data) {
                     var newData = [];
-                    unitOfTime = unitOfTime || 'day';
+                    var unitOfTime = DateTimeService.getDurationFormatFromGap(searchFilter.gap).duration;
+                    if (!unitOfTime) {
+                        return data;
+                    }
                     data.forEach(function (datetime, index) {
                         if (index < data.length - 1) {
                             var startDate = moment(datetime.value);
@@ -192,7 +193,7 @@
 
                 function performDateSearch() {
                     vm.slider.changeTime = true;
-                    searchFilter.time = vm.dateString;
+                    searchFilter.setFilter({time: vm.dateString});
                     HeatMapSourceGenerator.search();
                 }
 
@@ -234,11 +235,13 @@
 
 
                 function createRange(maxValue, partition) {
+                    if (maxValue < partition) {
+                        return [];
+                    }
                     var range =[];
                     partition = partition || 1;
                     maxValue = maxValue || 0;
                     var step = Math.floor(maxValue/partition);
-
                     for (var i = 0; i <= maxValue; i = i+step) {
                         range.push(NumberService.compactInteger(i));
                     }

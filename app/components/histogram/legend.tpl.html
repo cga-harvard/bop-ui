@@ -1,5 +1,5 @@
 <div class="histogram-legend" style="padding-left: {{paddingBar}}px;">
-    <div ng-repeat="legend in legendList" style="width: {{legendWidth}}px;float:left">
+    <div ng-repeat="legend in legendList track by $index" style="width: {{legendWidth}}px;float:left">
         <div class="legend-ticks "></div>
         <div>{{legend}}</div>
     </div>

@@ -65,7 +65,8 @@
                 }
             };
 
-            vm.response = function(data, status, headers, config) {
+            vm.response = function(response) {
+                var data = response ? response.data : undefined;
                 if (data && data.mapConfig) {
                     var mapConf = data.mapConfig,
                         appConf = data.appConfig,
@@ -104,7 +105,7 @@
                     throw new Error('Could not find the mapConfig');
                 }
             };
-            vm.badResponse = function(data, status, headers, config) {
+            vm.badResponse = function(data) {
                 throw new Error('Error while loading the config.json');
             };
 
@@ -112,8 +113,7 @@
 
             //  get the app config
             $http.get('./config/appConfig.json')
-                .success(solrHeatmapApp.response)
-                .error(solrHeatmapApp.badResponse);
+                .then(solrHeatmapApp.response, solrHeatmapApp.badResponse);
         }]
 );
 })();
