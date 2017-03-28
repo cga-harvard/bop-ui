@@ -8,16 +8,11 @@
     angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$log',
-        '$document', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
-        function(Map, $rootScope, $controller, $filter, $log, $document,
+        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
+        function(Map, $rootScope, $controller, $filter, $log, $document, $q,
             $http, $state, searchFilter, DateTimeService, DataCacheService) {
             var MapService= Map;
-
-            return {
-                startCsvExport: startCsvExport,
-                search: search,
-                simpleSearch: simpleSearch
-            };
+            var canceler = $q.defer();
 
             function simpleSearch(params, callback) {
                 var sF = searchFilter;
@@ -46,7 +41,7 @@
                     'q.geo': sF.geo,
                     'a.hm.filter': sF.hm,
                     'a.time.limit': '1',
-                    'a.time.gap': 'P1D',
+                    'a.time.gap': sF.gap,
                     'd.docs.limit': sF.numOfDocs,
                     'a.text.limit': sF.textLimit,
                     'a.user.limit': sF.userLimit,
@@ -67,25 +62,25 @@
              * Performs search with the given full configuration / search object.
              */
             function search(changeUrl){
-                var config,
-                    params = createParamsForGeospatialSearch();
-
+                var config, params = createParamsForGeospatialSearch();
+                changeUrl = angular.isUndefined(changeUrl) || changeUrl ? true : false;
                 if (params) {
-                    params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
+                    canceler.resolve();
+                    canceler = $q.defer();
 
+                    params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                         method: 'GET',
-                        params: params
+                        params: params,
+                        timeout: canceler.promise
                     };
-
                     //load the data
                     $http(config)
                     .then(function successCallback(response) {
                         if (changeUrl) {
                             setUrlwithParams(params);
                         }
-
                         // check if we have a heatmap facet and update the map with it
                         var data = response.data;
                         // DataCacheService.insertData(config.params, data);
@@ -104,10 +99,9 @@
 
             function broadcastData(data) {
                 data['a.text'] = data['a.text'] || [];
-
                 if (data && data['a.hm']) {
                     MapService.createOrUpdateHeatMapLayer(data['a.hm']);
-                    // get the count of matches
+
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
 
                     $rootScope.$broadcast('setHistogram', data['a.time']);
@@ -158,6 +152,12 @@
             function timeTextFormat(textDate, minDate, maxDate) {
                 return textDate === null ? DateTimeService.formatDatesToString(minDate, maxDate) : textDate;
             }
+
+            return {
+                startCsvExport: startCsvExport,
+                search: search,
+                simpleSearch: simpleSearch
+            };
         }]
 );
 })();
