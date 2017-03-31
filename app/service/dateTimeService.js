@@ -45,7 +45,7 @@
                 return;
             }
             var gap,
-                partition = 120,
+                partition = 80,
                 dates = formatStringToDates(timeString),
                 diffms = moment(dates[1]).diff(dates[0]),
                 hours = diffms/(1000*3600),

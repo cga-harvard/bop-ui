@@ -28,6 +28,7 @@
   ],
   "scripts": {
     "clean": "grunt clean",
+    "settings": "node settings.js",
     "js-lint": "eslint ./",
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",
