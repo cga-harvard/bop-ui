@@ -27,8 +27,10 @@
 
                 function timeBar(dimensions) {
                     vm.legendList = [];
+                    var countsLength = dimensions.counts.length;
                     var partition = 5;
-                    var delta = dimensions.counts.length/partition;
+                    partition = partition > countsLength ? countsLength : partition;
+                    var delta = countsLength/partition;
                     for (var i = 0; i < partition; i++) {
                         var index = Math.round(i*delta);
                         var date = moment(dimensions.counts[index].value).utc();

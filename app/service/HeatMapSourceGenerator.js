@@ -19,10 +19,13 @@
                 params['q.text'] = sF.text;
                 params['q.user'] = sF.user;
                 params['q.time'] = timeTextFormat(sF.time, sF.minDate, sF.maxDate);
+                canceler.resolve();
+                canceler = $q.defer();
                 var config = {
                     url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                     method: 'GET',
-                    params: params
+                    params: params,
+                    timeout: canceler.promise
                 };
                 $http(config).then(function(response) {
                     return callback(response);

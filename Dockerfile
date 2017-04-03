@@ -20,7 +20,6 @@ ENV CSV_DOCS_LIMIT=10000
 
 # Install dependencies.
 RUN npm install
-RUN npm run settings
 RUN npm run deploy
 
 ONBUILD COPY . /usr/src/app/

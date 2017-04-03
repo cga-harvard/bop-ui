@@ -34,9 +34,9 @@
     "test:unit": "./node_modules/karma/bin/karma start --browsers PhantomJS --auto-watch",
     "lintest": "npm run js-lint && npm run test",
     "serve": "http-server -p 3001",
-    "server": "parallelshell 'npm run serve -s' 'grunt dev-watch -s'",
-    "deploy": "grunt deploy",
-    "publish": "grunt publish"
+    "server": "parallelshell 'npm run settings' 'npm run serve -s' 'grunt dev-watch -s'",
+    "deploy": "npm run settings && grunt deploy",
+    "publish": "npm run settings && grunt publish"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5",

@@ -6,3 +6,4 @@ tmp
 build
 reports/
 .DS_Store
+/config/appConfig.json
