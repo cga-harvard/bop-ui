@@ -11,18 +11,44 @@ Installation
 Be sure to have at least node version 4 installed.
 
 
-#### Local environment:
+### Local environment:
 
 Install dependencies:
-```npm install```
+```
+npm install
+```
 
-For development use `npm run server`, this compile the templates html, the less files and watch the changes.
+For development use:
+```
+npm run server
+```
+This command compile the templates html, the less files and watch the changes.
 Run in http://localhost:3001/search it uses the `404.html`
 
 To run the production version locally:
 ```
 npm run deploy
 npm run serve
+```
+
+### Docker environment:
+
+Using local docker command
+```
+docker build -t bopimage . 
+docker run -i --name bopcontainer -d -p 80:80 bopimage
+```
+it runs in  http://localhost, if you want change the port, modify the first number of `80:80` on the above comand i.e `3000:80`
+
+Using docker compose:
+```
+docker-compose build web
+docker-compose up -d 
+```
+
+From **Docker hub** [harvardcga/bop-ui](https://hub.docker.com/r/harvardcga/bop-ui):
+```
+docker run -p 80:80 harvardcga/bop-ui
 ```
 
 _Used libraries_:
