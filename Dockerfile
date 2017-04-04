@@ -6,6 +6,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 RUN apt-get update && apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
+RUN apt-get install -y bzip2
 
 # Creating working directory.
 RUN mkdir -p /usr/src/app
