@@ -183,9 +183,10 @@
                     solrHeatmapApp.isThereInteraction = true;
                     var minKey = vm.slider.minValue;
                     var maxKey = vm.slider.maxValue;
-
-                    vm.datepickerStartDate = new Date(vm.slider.counts[minKey].value);
-                    vm.datepickerEndDate = new Date(vm.slider.counts[maxKey].value);
+                    vm.datepickerStartDate = minKey === 0 ?
+                        searchFilter.minDate : new Date(vm.slider.counts[minKey].value);
+                    vm.datepickerEndDate = maxKey === vm.slider.counts.length - 1 ?
+                        searchFilter.maxDate : new Date(vm.slider.counts[maxKey].value);
                     vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                             vm.datepickerEndDate);
                     performDateSearch();

@@ -2,7 +2,7 @@
     ng-style="{'visibility': yLegendRange.length ? 'visible' : 'hidden'}"
     style="padding: 0px 0px; margin-left: 30px; width: {{histogramBarsDimensions.histogrambarsWidth}}px">
     <div class="y-legend" style="height: {{histogramBarsDimensions.barsheight}}px;">
-        <ul class="histogram-legend">
+        <ul class="histogram-legend list-unstyled">
             <li ng-repeat="y in yLegendRange track by $index">{{y}}</li>
         </ul>
     </div>
