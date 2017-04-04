@@ -10,24 +10,16 @@ Installation
 ---
 Be sure to have at least node version 4 installed.
 
-You must initialize the submodule if you did not already cloned with it
-
-`git submodule update --init`
-
 Install dependencies with
 
 `npm install`
 
 Local environment:
 - `npm run server`
-- http://localhost:3001/index-dev.html
-
-To use the new search query:
-
-`http://localhost:3001/search`
+- http://localhost:3001/search
 it uses the `404.html`
 
 _Used libraries_:
-* AngularJS v1.5.5
+* AngularJS 1.6.3
 * OpenLayers 3 (v3.16.0)
 * Bootstrap v3.3.4
