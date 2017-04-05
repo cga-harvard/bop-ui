@@ -41,6 +41,9 @@
             if (filter.hm) {
                 service.hm = filter.hm;
             }
+            if (angular.isDefined(filter.posSent)) {
+                service.posSent = filter.posSent;
+            }
         };
 
         service.resetFilter = function() {

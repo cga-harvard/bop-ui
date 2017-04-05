@@ -237,10 +237,10 @@ describe( 'HeatMapSourceGenerator', function() {
     describe('#createOrUpdateHeatMapLayer', function() {
         var data, layerSpy, setSourceSpy, setRadiusSpy;
         beforeEach(function() {
-            var clearSourceSpy = jasmine.createSpyObj('getSource', ['clear']);
-            layer = { getFilters: function() { return [{ setActive: function() {}}]; }, setSource: function() {}, setRadius: function() {}, getSource: function() { return { clear: function() {}, getFeatures: function() { return [{getGeometry: function() { return { getExtent: function() { return [0,0,0,0];}};}}];}}; }};
+            var clearSourceSpy = jasmine.createSpyObj('getSource', ['clear']);layer = { getFilters: function() {return [{ setActive: function() {}}];}, setSource: function() {}, setRadius: function() {}, setGradient: function() {}, getSource: function() { return { clear: function() {}, getFeatures: function() { return [{getGeometry: function() { return { getExtent: function() { return [0,0,0,0];}};}}];}}; }};
             setSourceSpy = spyOn(layer, 'setSource');
-            setRadiusSpy = spyOn(layer, 'setRadius');
+            spyOn(layer, 'setRadius');
+            spyOn(layer, 'setGradient');
             data = { columns: 4, rows: 4, gridLevel: 2, maxX: 1, maxY: 1, minY: 0, minX: 0,
                     projection: 'EPSG:4326', counts_ints2D: [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]};
         });

@@ -336,9 +336,10 @@
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
 
                 hmData.heatmapRadius = 20;
-                hmData.blur = 6;
+                hmData.blur = 10;
                 hmData.gradientArray = hmData.posSent ?
-                ['#ff0000', '#ff0000', '#ff0000', '#0000ff', '#0000ff', '#ff0000'] :
+                ['#ff0000', '#ff0000', '#ff0000','#ff0088', '#ff0088', '#ff00ff',
+                '#8800ff', '#0000ff', '#0000ff', '#0077ff', '#00aaff', '#00ddff'] :
                 ['#000000', '#0000df', '#0000df', '#00effe', '#00effe', '#00ff42',
                 ' #00ff42', '#00ff42', '#feec30', '#ff5f00', '#ff0000'];
 
@@ -355,6 +356,7 @@
                         layerSrc.clear();
                     }
                     currHeatmapLayer.setSource(olVecSrc);
+                    currHeatmapLayer.setGradient(hmData.gradientArray);
                     // currHeatmapLayer.setRadius(hmData.heatmapRadius);
                 } else {
                     newHeatMapLayer = new ol.layer.Heatmap({
