@@ -218,8 +218,12 @@
             }
 
             function closestValue(arrayOfValues, value) {
+                //it makes sure that nothing above zero is assigned to the zero bin.
+                if (value === 0) {
+                    return 0;
+                }
                 var currValue = arrayOfValues[0];
-                var currIndex = 0;
+                var currIndex = 1;
                 for (var i = 1; i < arrayOfValues.length; i++) {
                     if (Math.abs(value - arrayOfValues[i]) < Math.abs(value - currValue)) {
                         currValue = arrayOfValues[i];
