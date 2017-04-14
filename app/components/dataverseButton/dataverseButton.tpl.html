@@ -1,7 +1,8 @@
 <button ng-if="dataversefn().AllowDataverseDeposit" class="btn btn-default from-panel"
-    id="dataversebtn" type="button" ng-click="sendToDataverse()">
+    id="dataversebtn" type="button" ng-disabled="true" ng-click="sendToDataverse()">
     DATAVERSE
 </button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="dataverseresponse" tabindex="-1">
