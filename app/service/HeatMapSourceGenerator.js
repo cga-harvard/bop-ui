@@ -43,12 +43,14 @@
                     'q.time': timeTextFormat(sF.time, sF.minDate, sF.maxDate),
                     'q.geo': sF.geo,
                     'a.hm.filter': sF.hm,
+                    'a.hm.posSent': sF.posSent,
                     'a.time.limit': '1',
                     'a.time.gap': sF.gap,
                     'd.docs.limit': sF.numOfDocs,
                     'a.text.limit': sF.textLimit,
                     'a.user.limit': sF.userLimit,
-                    'd.docs.sort': 'distance'
+                    'd.docs.sort': 'distance',
+                    'a.hm.limit': solrHeatmapApp.bopwsConfig.heatmapFacetLimit
                 };
             }
 
@@ -70,8 +72,6 @@
                 if (params) {
                     canceler.resolve();
                     canceler = $q.defer();
-
-                    params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
                     config = {
                         url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                         method: 'GET',
@@ -102,17 +102,19 @@
 
             function broadcastData(data) {
                 data['a.text'] = data['a.text'] || [];
+                var heatmapData = {};
                 if (data && data['a.hm']) {
-                    MapService.createOrUpdateHeatMapLayer(data['a.hm']);
-
+                    if (data['a.hm.posSent']) {
+                        heatmapData = data['a.hm.posSent'];
+                        heatmapData.posSent = true;
+                    }else {
+                        heatmapData = data['a.hm'];
+                    }
+                    MapService.createOrUpdateHeatMapLayer(heatmapData);
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
-
                     $rootScope.$broadcast('setHistogram', data['a.time']);
-
                     $rootScope.$broadcast('setTweetList', data['d.docs']);
-
                     $rootScope.$broadcast('setSuggestWords', data['a.text']);
-
                     $rootScope.$broadcast('setUserSuggestWords', data['a.user']);
                 }
             }

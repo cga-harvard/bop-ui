@@ -213,7 +213,8 @@
                     flattenCount.push.apply(flattenCount, row);
                 });
                 var series = new geostats(flattenCount);
-                var numberOfClassifications = hmParams.gradientArray.length - 5;
+                var gradientLength = hmParams.gradientArray.length;
+                var numberOfClassifications = gradientLength - Math.ceil(gradientLength*0.4);
                 return series.getClassJenks(numberOfClassifications);
             }
 
@@ -337,12 +338,13 @@
 
             service.createOrUpdateHeatMapLayer = function(hmData) {
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
-
+                var sentimetGradient = ['#ff0000', '#ff0000', '#ff0000','#ff0088', '#ff0088',
+                '#ff00ff', '#8800ff', '#0000ff', '#0000ff', '#0077ff', '#00aaff', '#00ddff'];
+                var normalCountGradient = ['#000000', '#0000df', '#0000df', '#00effe', '#00effe',
+                '#00ff42', ' #00ff42', '#00ff42', '#feec30', '#ff5f00', '#ff0000'];
                 hmData.heatmapRadius = 20;
-                hmData.blur = 6;
-                hmData.gradientArray = ['#000000', '#0000df', '#0000df', '#00effe',
-                    '#00effe', '#00ff42',' #00ff42', '#00ff42',
-                    '#feec30', '#ff5f00', '#ff0000'];
+                hmData.blur = 10;
+                hmData.gradientArray = hmData.posSent ? sentimetGradient : normalCountGradient;
 
                 existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
                 transformInteractionLayer = service.getLayersBy('name',
@@ -357,7 +359,7 @@
                         layerSrc.clear();
                     }
                     currHeatmapLayer.setSource(olVecSrc);
-                    // currHeatmapLayer.setRadius(hmData.heatmapRadius);
+                    currHeatmapLayer.setGradient(hmData.gradientArray);
                 } else {
                     newHeatMapLayer = new ol.layer.Heatmap({
                         name: 'HeatMapLayer',

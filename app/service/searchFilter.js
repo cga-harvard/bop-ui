@@ -16,6 +16,7 @@
             userLimit: null,
             numOfDocs: 50,
             gap: 'P1W',
+            posSent: false,
             minDate: new Date(moment().subtract(3, 'months').format('YYYY-MM-DD')),
             maxDate: new Date(moment().format('YYYY-MM-DD'))
         };
@@ -39,6 +40,9 @@
             }
             if (filter.hm) {
                 service.hm = filter.hm;
+            }
+            if (angular.isDefined(filter.posSent)) {
+                service.posSent = filter.posSent;
             }
         };
 
