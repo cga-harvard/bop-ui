@@ -21,14 +21,15 @@
 
                 var vm = scope;
 
-                vm.dateOptions = searchFilter;
+                // vm.dateOptions = searchFilter;
+                vm.dateOptions = {};
                 vm.dateOptions.startingDate = 1;
                 vm.dateOptions.showWeeks = false;
 
-                vm.initialDateOptions = {
-                    minDate: vm.dateOptions.minDate,
-                    maxDate: vm.dateOptions.maxDate
-                };
+                // vm.initialDateOptions = {
+                //     minDate: searchFilter.minDate,
+                //     maxDate: searchFilter.maxDate
+                // };
 
                 vm.$watch(function(){
                     return vm.dateOptions.time;
@@ -50,8 +51,10 @@
                 /**
                  * Set initial values for min and max dates in both of datepicker.
                  */
-                vm.datepickerStartDate = vm.dateOptions.minDate;
-                vm.datepickerEndDate = vm.dateOptions.maxDate;
+                vm.datepickerStartDate = searchFilter.minDate;
+                vm.datepickerEndDate = searchFilter.maxDate;
+                vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
+                                                        vm.datepickerEndDate);
 
                 vm.onChangeDatepicker = onChangeDatepicker;
 
@@ -69,8 +72,8 @@
                  */
                 function openStartDate() {
                     vm.startDate.opened = true;
-                    vm.dateOptions.minDate = vm.initialDateOptions.minDate;
-                    vm.dateOptions.maxDate = vm.datepickerEndDate;
+                    // vm.dateOptions.minDate = vm.initialDateOptions.minDate;
+                    // vm.dateOptions.maxDate = vm.datepickerEndDate;
                 }
 
 
@@ -82,8 +85,8 @@
                  */
                 function openEndDate() {
                     vm.endDate.opened = true;
-                    vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
-                    vm.dateOptions.minDate = vm.datepickerStartDate;
+                    // vm.dateOptions.maxDate = vm.initialDateOptions.maxDate;
+                    // vm.dateOptions.minDate = vm.datepickerStartDate;
                 }
 
                 /**
