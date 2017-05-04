@@ -224,7 +224,7 @@
                     return 0;
                 }
                 var currValue = arrayOfValues[0];
-                var currIndex = 1;
+                var currIndex = 0;
                 for (var i = 1; i < arrayOfValues.length; i++) {
                     if (Math.abs(value - arrayOfValues[i]) < Math.abs(value - currValue)) {
                         currValue = arrayOfValues[i];
