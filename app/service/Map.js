@@ -387,8 +387,8 @@
             };
 
             /**
-            * This funcion distribuye los gradientes de colores usando la funcion sigmoid,
-            * distribuyendo los colores to disperse the middle classes of the center
+            * This function distributes the color gradients using the sigmoid function,
+                distributing the colors to disperse the middle classes of the center
             * The HEX was replaced with the HSL color model, this allows to generate and
                 array of colors that changes only the hue and maintains saturation and luminosity.
             **/
