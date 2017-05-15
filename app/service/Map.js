@@ -224,7 +224,7 @@
                     return 0;
                 }
                 var currValue = arrayOfValues[0];
-                var currIndex = 0;
+                var currIndex = 1;
                 for (var i = 1; i < arrayOfValues.length; i++) {
                     if (Math.abs(value - arrayOfValues[i]) < Math.abs(value - currValue)) {
                         currValue = arrayOfValues[i];
@@ -338,12 +338,20 @@
 
             service.createOrUpdateHeatMapLayer = function(hmData) {
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
-                var sentimetGradient = ['#ff0000', '#ff0000', '#ff0000','#ff0088', '#ff0088',
-                '#ff00ff', '#8800ff', '#0000ff', '#0000ff', '#0077ff', '#00aaff', '#00ddff'];
-                var normalCountGradient = ['#000000', '#0000df', '#0000df', '#00effe', '#00effe',
-                '#00ff42', ' #00ff42', '#00ff42', '#feec30', '#ff5f00', '#ff0000'];
+
+                var sentimetGradient = generateSigmoidColorGradient(390, 200);
+
+                // Hardcode linear color gradient
+                /** var normalCountGradient = ["hsl(0, 0%, 0%)", "hsl(300, 100%, 50%)",
+                    "hsl(270, 100%, 50%)", "hsl(240, 100%, 50%)", "hsl(210, 100%, 50%)",
+                    "hsl(180, 100%, 50%)", "hsl(150, 100%, 50%)", "hsl(120, 100%, 50%)",
+                    "hsl(90, 100%, 50%)", "hsl(60, 100%, 50%)", "hsl(30, 100%, 50%)",
+                    "hsl(0, 100%, 50%)"];
+                */
+                var normalCountGradient = generateSigmoidColorGradient(330, 0);
+
                 hmData.heatmapRadius = 20;
-                hmData.blur = 10;
+                hmData.blur = 12;
                 hmData.gradientArray = hmData.posSent ? sentimetGradient : normalCountGradient;
 
                 existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
@@ -377,6 +385,29 @@
 
                 }
             };
+
+            /**
+            * This funcion distribuye los gradientes de colores usando la funcion sigmoid,
+            * distribuyendo los colores to disperse the middle classes of the center
+            * The HEX was replaced with the HSL color model, this allows to generate and
+                array of colors that changes only the hue and maintains saturation and luminosity.
+            **/
+            function generateSigmoidColorGradient(maxHue, minHue) {
+                maxHue = maxHue || 300;
+                minHue = minHue || 0;
+                var normalCountGradient = [];
+                var NumberPartition = 12;
+                var delta = (maxHue-minHue);
+                for (var i = -NumberPartition/2; i < NumberPartition/2; i++) {
+                    var hue = sigmoid(i)*delta + minHue;
+                    var hsl = 'hsl(' + hue + ', 100%, 50%)';
+                    normalCountGradient.push(hsl);
+                }
+                return normalCountGradient.reverse();
+            }
+            function sigmoid(x) {
+                return 1/(1 + Math.pow(Math.E, -x));
+            }
 
             /**
              * This method adds a transfrom interaction to the mapand a mask to background layer
