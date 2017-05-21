@@ -18,6 +18,7 @@
         'search_keywordinput_component',
         'search_responsiveLayout_component',
         'search_dataverseButton_component',
-        'search_modaltweets_component'
+        'search_modaltweets_component',
+        'search_alert_component'
     ]);
 })();
