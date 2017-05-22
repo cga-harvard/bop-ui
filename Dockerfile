@@ -1,9 +1,9 @@
-FROM nginx
+FROM nginx:stable
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Install prerequisites
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl && apt-get install -y gnupg
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y bzip2
