@@ -18,10 +18,8 @@ const config = {
         'tweetsExportBaseUrl': tweetsExportBaseUrl,
         'ratioInnerBbox': 0.98,
         // Message to put on top of the application
-        'alertMsg' : 'NOTICE:  The BOP will be down from approximately 12pm EST ' +
-            'Monday May 22nd to approximately 12pm EST May 24th due to an annual ' +
-            'power shutdown on the host, Massachusetts Open Cloud. We apologize ' +
-            'for any inconvenience.'
+        'alertMsg' : '          ' 
+                     
     },
     'bopwsConfig': {
         'heatmapFacetLimit': process.env['HEATMAP_FACET_LIMIT'] || 10000,
