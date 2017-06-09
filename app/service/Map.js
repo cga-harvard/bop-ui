@@ -7,9 +7,9 @@
 (function() {
     angular.module('SolrHeatmapApp')
     .factory('Map',
-             ['$rootScope', '$filter', '$document', 'Normalize', '$controller',
+             ['$rootScope', 'DataConf', '$filter', '$document', 'Normalize', '$controller',
              'queryService', 'HeightModule', '$window',
-        function($rootScope, $filter, $document, Normalize, $controller,
+        function($rootScope, DataConf, $filter, $document, Normalize, $controller,
             queryService, HeightModule, $window) {
             var NormalizeService = Normalize;
             var service = {};
@@ -427,7 +427,7 @@
                 var bottomHeight = 1 - (HeightModule.bottomHeight/$window.innerWidth);
                 var topBarPercent = 1 -
                     (HeightModule.topPanelHeight()/HeightModule.documentHeight());
-                if(solrHeatmapApp.appConfig) {
+                if(DataConf.solrHeatmapApp.appConfig) {
                     var dx = extent.maxX - extent.minX,
                         dy = extent.maxY - extent.minY,
                         minX = extent.minX + (1 - sideBarPercent) * dx,
@@ -458,7 +458,8 @@
             /*
              * For change:resolution event (zoom in map):
              * If bounding of transform interaction is grater than the map extent
-             * the transform box will be resized to solrHeatmapApp.appConfig.ratioInnerBbox percent
+             * the transform box will be resized to
+             * DataConf.solrHeatmapApp.appConfig.ratioInnerBbox percent
              */
             service.checkBoxOfTransformInteraction = function() {
                 var mapExtent = service.getMapView().calculateExtent(service.getMapSize());
@@ -478,8 +479,8 @@
              */
             service.resetMap = function() {
                 // Reset view
-                var intitalCenter = solrHeatmapApp.initMapConf.view.center,
-                    intitalZoom = solrHeatmapApp.initMapConf.view.zoom;
+                var intitalCenter = DataConf.solrHeatmapApp.initMapConf.view.center,
+                    intitalZoom = DataConf.solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
                     var vw = service.getMapView();
                     vw.setCenter(intitalCenter);

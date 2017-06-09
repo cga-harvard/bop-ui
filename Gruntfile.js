@@ -140,7 +140,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('buildjs', ['html2js', 'concat', 'babel', 'uglify']);
 
-    grunt.registerTask('dev', ['clean', 'html2js', 'less:development']);
+    grunt.registerTask('dev', ['clean', 'html2js', 'concat', 'babel', 'less:development']);
 
     grunt.registerTask('dev-watch', ['dev', 'watch']);
 

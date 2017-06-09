@@ -4,9 +4,9 @@
 
     angular
     .module('search_timehistogram_component', [])
-    .directive('timeHistogram', ['$rootScope', 'HeatMapSourceGenerator',
+    .directive('timeHistogram', ['$rootScope', 'DataConf', 'HeatMapSourceGenerator',
         'searchFilter', 'DateTimeService', 'NumberService',
-        function timeHistogram($rootScope, HeatMapSourceGenerator,
+        function timeHistogram($rootScope, DataConf, HeatMapSourceGenerator,
             searchFilter, DateTimeService, NumberService) {
             var directive = {
                 templateUrl: 'components/histogram/histogram.tpl.html',
@@ -180,7 +180,7 @@
                 }
 
                 function slideEnded() {
-                    solrHeatmapApp.isThereInteraction = true;
+                    DataConf.solrHeatmapApp.isThereInteraction = true;
                     var minKey = vm.slider.minValue;
                     var maxKey = vm.slider.maxValue;
                     vm.datepickerStartDate = minKey === 0 ?

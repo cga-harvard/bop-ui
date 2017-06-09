@@ -1,9 +1,10 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, $httpBackend, MapService, spatialSpy, geospatialFilter, searchFilter, $window, $log;
+    var subject, DataConf, $httpBackend, MapService, spatialSpy, geospatialFilter, searchFilter, $window, $log;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _searchFilter_, _$window_, _$log_) {
+    beforeEach( inject( function(_DataConf_, _HeatMapSourceGenerator_, _$httpBackend_, _Map_, _searchFilter_, _$window_, _$log_) {
+        DataConf = _DataConf_;
         subject = _HeatMapSourceGenerator_;
         $httpBackend = _$httpBackend_;
         MapService = _Map_;
@@ -17,8 +18,8 @@ describe( 'HeatMapSourceGenerator', function() {
     describe('#search', function() {
         var exportRequest;
         beforeEach(function() {
-            solrHeatmapApp.bopwsConfig = { csvDocsLimit: 10 };
-            solrHeatmapApp.appConfig = { tweetsSearchBaseUrl: '/search' };
+            DataConf.solrHeatmapApp.bopwsConfig = { csvDocsLimit: 10 };
+            DataConf.solrHeatmapApp.appConfig = { tweetsSearchBaseUrl: '/search' };
             geospatialFilter = {queryGeo: { minX: 1, maxX: 1, minY: 1, maxY: 1}};
             searchFilter.minDate = new Date('2016-12-10');
             searchFilter.maxDate = new Date('2016-12-21');

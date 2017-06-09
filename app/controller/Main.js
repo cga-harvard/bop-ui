@@ -7,10 +7,13 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
+    .factory('DataConf', function () {
+        return { solrHeatmapApp: false };
+    })
     .controller('MainController',
-                ['Map', 'HeatMapSourceGenerator', '$http', '$scope', '$location',
+                ['DataConf', 'Map', 'HeatMapSourceGenerator', '$http', '$scope', '$location',
                     '$rootScope', '$stateParams', 'searchFilter', 'queryService',
-        function(Map, HeatMapSourceGenerator, $http, $scope, $location,
+        function(DataConf, Map, HeatMapSourceGenerator, $http, $scope, $location,
                  $rootScope, $stateParams, searchFilter, queryService) {
             var MapService = Map;
             var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
@@ -49,8 +52,8 @@
                     if (!vm.isThereInteraction) {
                         isBackbuttonPressed = true;
                         var extent = queryService.
-                          getExtentForProjectionFromQuery($location.search().geo,
-                                                          solrHeatmapApp.initMapConf.view.projection);
+                            getExtentForProjectionFromQuery(
+                                $location.search().geo, DataConf.solrHeatmapApp.initMapConf.view.projection);
                         MapService.getMap().getView().fit(extent, MapService.getMapSize());
                     }
                     vm.isThereInteraction = false;
@@ -73,10 +76,10 @@
                         bopwsConfig = data.bopwsConfig,
                         instructions = data.instructions;
 
-                    if(solrHeatmapApp.$state.geo) {
+                    if(DataConf.solrHeatmapApp.$state.geo) {
                         mapConf.view.initExtent = mapConf.view.extent;
                         mapConf.view.extent = queryService.
-                          getExtentForProjectionFromQuery(solrHeatmapApp.$state.geo,
+                          getExtentForProjectionFromQuery(DataConf.solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
                         mapConf.view.extent = MapService
                             .calculateFullScreenExtentFromBoundingBox(mapConf.view.extent);
@@ -84,22 +87,15 @@
                     MapService.init({
                         mapConfig: mapConf
                     });
-                    solrHeatmapApp.appConfig = appConf;
-                    solrHeatmapApp.initMapConf = mapConf;
-                    solrHeatmapApp.bopwsConfig = bopwsConfig;
-                    solrHeatmapApp.instructions = instructions;
+                    DataConf.solrHeatmapApp.appConfig = appConf;
+                    DataConf.solrHeatmapApp.initMapConf = mapConf;
+                    DataConf.solrHeatmapApp.bopwsConfig = bopwsConfig;
+                    DataConf.solrHeatmapApp.instructions = instructions;
 
                     // fire event mapReady
                     $rootScope.$broadcast('mapReady', MapService.getMap());
 
-                    solrHeatmapApp.setupEvents();
-                    /*
-                    * register some events
-                    */
-
-                // Prepared featureInfo (display number of elements)
-                //solrHeatmapApp.map.on('singleclick',
-                //                          MapService.displayFeatureInfo);
+                    DataConf.solrHeatmapApp.setupEvents();
 
                 } else {
                     throw new Error('Could not find the mapConfig');
@@ -109,11 +105,11 @@
                 throw new Error('Error while loading the config.json');
             };
 
-            solrHeatmapApp = vm;
+            DataConf.solrHeatmapApp = vm;
 
             //  get the app config
             $http.get('./config/appConfig.json')
-                .then(solrHeatmapApp.response, solrHeatmapApp.badResponse);
+                .then(DataConf.solrHeatmapApp.response, DataConf.solrHeatmapApp.badResponse);
         }]
 );
 })();

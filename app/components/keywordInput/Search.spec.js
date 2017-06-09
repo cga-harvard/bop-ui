@@ -1,9 +1,10 @@
 describe( 'SearchDirective', function() {
-    var $scope, scope, rootScope, HeatMapSourceGeneratorService, MapService, element, compiledElement, searchFilter;
+    var $scope, scope, rootScope, DataConf, HeatMapSourceGeneratorService, MapService, element, compiledElement, searchFilter;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function($compile, $controller, $rootScope, _HeatMapSourceGenerator_, _Map_, _searchFilter_) {
+    beforeEach( inject( function($compile, $controller, $rootScope, _DataConf_,
+            _HeatMapSourceGenerator_, _Map_, _searchFilter_) {
         rootScope = $rootScope;
         $scope = $rootScope.$new();
 
@@ -14,6 +15,7 @@ describe( 'SearchDirective', function() {
         $scope.$digest();
         scope = compiledElement.isolateScope();
 
+        DataConf = _DataConf_;
         HeatMapSourceGeneratorService = _HeatMapSourceGenerator_;
         MapService = _Map_;
         searchFilter = _searchFilter_;

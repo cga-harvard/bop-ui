@@ -7,9 +7,9 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$log',
+    .factory('HeatMapSourceGenerator', ['DataConf', 'Map', '$rootScope', '$controller', '$filter', '$log',
         '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
-        function(Map, $rootScope, $controller, $filter, $log, $document, $q,
+        function(DataConf, Map, $rootScope, $controller, $filter, $log, $document, $q,
             $http, $state, searchFilter, DateTimeService, DataCacheService) {
             var MapService= Map;
             var canceler = $q.defer();
@@ -22,7 +22,7 @@
                 canceler.resolve();
                 canceler = $q.defer();
                 var config = {
-                    url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                    url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                     method: 'GET',
                     params: params,
                     timeout: canceler.promise
@@ -71,9 +71,9 @@
                     canceler.resolve();
                     canceler = $q.defer();
 
-                    params['a.hm.limit'] = solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
+                    params['a.hm.limit'] = DataConf.solrHeatmapApp.bopwsConfig.heatmapFacetLimit;
                     config = {
-                        url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                        url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                         method: 'GET',
                         params: params,
                         timeout: canceler.promise
@@ -122,9 +122,9 @@
                     params = createParamsForGeospatialSearch();
                 if (params) {
                     params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
-                            numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
+                            numberOfDocuments : DataConf.solrHeatmapApp.bopwsConfig.csvDocsLimit;
                     config = {
-                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
+                        url: DataConf.solrHeatmapApp.appConfig.tweetsExportBaseUrl,
                         method: 'GET',
                         params: params
                     };
