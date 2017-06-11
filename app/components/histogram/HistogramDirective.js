@@ -142,16 +142,16 @@
                     }
                     data.forEach(function (datetime, index) {
                         if (index < data.length - 1) {
-                            var startDate = moment(datetime.value);
-                            var nextHour = startDate.add(1, unitOfTime);
-                            var nextDate = moment(data[index + 1].value);
+                            var startDate = moment(datetime.value).utc();
+                            var nextTimeStep = startDate.add(1, unitOfTime);
+                            var nextDateInHistogramData = moment(data[index + 1].value).utc();
                             newData.push(datetime);
-                            while (new Date(nextHour.toJSON()) < new Date(nextDate.toJSON())) {
+                            while (nextDateInHistogramData.diff(nextTimeStep) > 0) {
                                 newData.push({
                                     count: 0,
-                                    value: nextHour.toJSON()
+                                    value: nextTimeStep.toJSON()
                                 });
-                                nextHour = nextHour.add(1, unitOfTime);
+                                nextTimeStep = nextTimeStep.add(1, unitOfTime);
                             }
                         }
                     });
