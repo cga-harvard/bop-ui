@@ -48,7 +48,11 @@
                  *
                  */
                 function getKeyboardCodeFromEvent(keyEvt) {
-                    return $window.event ? keyEvt.keyCode : keyEvt.which;
+                    if ($window.event && $window.event.type === 'keyup') {
+                        return keyEvt.keyCode;
+                    } else {
+                        return keyEvt.which;
+                    }
                 }
 
                 /**

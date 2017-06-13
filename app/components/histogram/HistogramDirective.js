@@ -115,16 +115,26 @@
                     disableSlider(false);
                     var firstDate = new Date(dataHistogram.counts[0].value);
                     var lastDate = new Date(dataHistogram.counts[dataHistogram.counts.length - 1].value);
+
+                    if (vm.slider.options.ceil === 1) {
+                        vm.slider.oldFirstDate = firstDate;
+                        vm.slider.oldLastDate = lastDate;
+                    }
+
+                    var isOutOfRange = dateOutOfRange(vm.slider.oldFirstDate, vm.slider.oldLastDate, firstDate, lastDate);
+                    var hasMoreColumnsThanBefore = dataHistogram.counts.length - 1 > vm.slider.options.ceil;
+
+                    // Histogram render new data or more histogram rows data
                     if (vm.slider.options.ceil === 1 || isTheInitialDate() ||
-                        dataHistogram.counts.length - 1 > vm.slider.options.ceil) {
+                        hasMoreColumnsThanBefore || isOutOfRange) {
                         vm.slider.counts = dataHistogram.counts;
                         vm.slider.options.ceil = dataHistogram.counts.length - 1;
                         vm.slider.maxValue = vm.slider.options.ceil;
                         vm.slider.minValue = 0;
                         dataHistogram.slider = vm.slider;
                         $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-                    }else if ( (dataHistogram.counts.length - 1 <= vm.slider.options.ceil && !vm.slider.changeTime) ||
-                        vm.slider.oldFirstDate > firstDate || vm.slider.oldLastDate < lastDate) {
+                    // When we perform a non-temporary search
+                    }else if (!hasMoreColumnsThanBefore && !vm.slider.changeTime && !isOutOfRange){
                         vm.slider.oldFirstDate = firstDate;
                         vm.slider.oldLastDate = lastDate;
                         dataHistogram.counts = getSubDataHistogram(dataHistogram, vm.slider);
@@ -135,6 +145,10 @@
                     }
                 }
 
+                function dateOutOfRange(rangeStartDate, rangeEndDate, startDate, endDate) {
+                    return startDate < rangeStartDate || endDate > rangeEndDate;
+                }
+
                 function generateAllDates(data) {
                     var newData = [];
                     var unitOfTime = DateTimeService.getDurationFormatFromGap(searchFilter.gap).duration;
@@ -143,16 +157,16 @@
                     }
                     data.forEach(function (datetime, index) {
                         if (index < data.length - 1) {
-                            var startDate = moment(datetime.value);
-                            var nextHour = startDate.add(1, unitOfTime);
-                            var nextDate = moment(data[index + 1].value);
+                            var startDate = moment(datetime.value).utc();
+                            var nextTimeStep = startDate.add(1, unitOfTime);
+                            var nextDateInHistogramData = moment(data[index + 1].value).utc();
                             newData.push(datetime);
-                            while (new Date(nextHour.toJSON()) < new Date(nextDate.toJSON())) {
+                            while (nextDateInHistogramData.diff(nextTimeStep) > 0) {
                                 newData.push({
                                     count: 0,
-                                    value: nextHour.toJSON()
+                                    value: nextTimeStep.toJSON()
                                 });
-                                nextHour = nextHour.add(1, unitOfTime);
+                                nextTimeStep = nextTimeStep.add(1, unitOfTime);
                             }
                         }
                     });
