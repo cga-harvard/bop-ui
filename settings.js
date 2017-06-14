@@ -18,8 +18,7 @@ const config = {
         'tweetsExportBaseUrl': tweetsExportBaseUrl,
         'ratioInnerBbox': 0.98,
         // Message to put on top of the application
-        'alertMsg' : '          ' 
-                     
+        'alertMsg': ''
     },
     'bopwsConfig': {
         'heatmapFacetLimit': process.env['HEATMAP_FACET_LIMIT'] || 10000,

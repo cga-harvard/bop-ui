@@ -1,11 +1,14 @@
-<div ng-if="message" class="alert alert-warning alert-bop" role="alert">
+<div ng-if="message" class="alert alert-info notification-bop">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{message}}
+</div>
+<div class="header-bop" role="alert">
     <p>
-        <b><font size="3">Harvard BOP</font></b>
-        <span style="float:right;">
-            <a href="http://gis.harvard.edu/services/project-consultation/project-resume/billion-object-platform-bop">
-                ABOUT
-            </a>
-        </span>
+        <b>Harvard BOP</b>
+        <a href="http://gis.harvard.edu/services/project-consultation/project-resume/billion-object-platform-bop">
+            ABOUT
+        </a>
     </p>
-    <span>{{message}}</span>
 </div>
