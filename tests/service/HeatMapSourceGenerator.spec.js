@@ -18,8 +18,7 @@ describe( 'HeatMapSourceGenerator', function() {
     describe('#search', function() {
         var exportRequest;
         beforeEach(function() {
-            DataConf.solrHeatmapApp.bopwsConfig = { csvDocsLimit: 10 };
-            DataConf.solrHeatmapApp.appConfig = { tweetsSearchBaseUrl: '/search' };
+            DataConf.solrHeatmapApp = { bopwsConfig: { csvDocsLimit: 10 }, appConfig: { tweetsSearchBaseUrl: '/search' } };
             geospatialFilter = {queryGeo: { minX: 1, maxX: 1, minY: 1, maxY: 1}};
             searchFilter.minDate = new Date('2016-12-10');
             searchFilter.maxDate = new Date('2016-12-21');
