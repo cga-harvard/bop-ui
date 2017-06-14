@@ -1,16 +1,33 @@
-.alert-bop {
+.notification-bop {
     z-index: 100;
     position: relative;
     margin: 0px;
-    padding:5px;
+    border-radius: 0;
+    background: #f6d171;
+    padding: 5px;
+    color: #3b372e;
+    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 0.9em;
+    button {
+        margin-top: -2px;
+    }
+}
+
+.header-bop {
+    z-index: 100;
+    position: relative;
+    margin: 0px;
+    padding: 5px;
     border-color: none;
     background-color: white;
     color: #000000;
     border-radius: 0;
-
     p {
         text-align:left;
         margin-left:0.2cm;
         margin-right:0.2cm;
+        a {
+            float:right;
+        }
     }
 }
