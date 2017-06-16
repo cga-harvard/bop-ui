@@ -263,6 +263,7 @@
                 counts_ints2D = fillNullValueToEmptyArray(counts_ints2D);
                 classifications = getClassifications(hmParams);
                 minMaxValue = [0, classifications.length - 1];
+
                 for (var i = 0 ; i < gridRows ; i++){
                     for (var j = 0 ; j < gridColumns ; j++){
                         var hmVal = counts_ints2D[counts_ints2D.length-i-1][j],

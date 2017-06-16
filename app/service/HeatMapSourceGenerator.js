@@ -104,12 +104,9 @@
                 data['a.text'] = data['a.text'] || [];
                 var heatmapData = {};
                 if (data && data['a.hm']) {
-                    if (data['a.hm.posSent']) {
-                        heatmapData = data['a.hm.posSent'];
-                        heatmapData.posSent = true;
-                    }else {
-                        heatmapData = data['a.hm'];
-                    }
+
+                    heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
+
                     MapService.createOrUpdateHeatMapLayer(heatmapData);
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
                     $rootScope.$broadcast('setHistogram', data['a.time']);
@@ -117,6 +114,24 @@
                     $rootScope.$broadcast('setSuggestWords', data['a.text']);
                     $rootScope.$broadcast('setUserSuggestWords', data['a.user']);
                 }
+            }
+
+            function NormalizeSentiment(heatMapData) {
+                var heatMapCountMatrix = heatMapData['a.hm'].counts_ints2D;
+                var positivesCountMatrix = heatMapData['a.hm.posSent'].counts_ints2D;
+
+                heatMapData['a.hm.posSent'].counts_ints2D = heatMapCountMatrix.map(
+                    function (heatMapCountRow, rowIndex) {
+                        var normalizedSentimentRow = new Float32Array(heatMapCountRow.length);
+
+                        heatMapCountRow.map(function (heatMapCellvalue, cellIndex) {
+                            normalizedSentimentRow[cellIndex] = heatMapCellvalue === 0 ?
+                                0 : (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue);
+                        });
+                        return normalizedSentimentRow;
+                });
+                heatMapData['a.hm.posSent'].posSent = true;
+                return heatMapData['a.hm.posSent'];
             }
 
             function startCsvExport(numberOfDocuments){
