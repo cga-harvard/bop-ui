@@ -247,6 +247,7 @@
                     maxX = hmParams.maxX,
                     maxY = hmParams.maxY,
                     hmProjection = hmParams.projection,
+                    units = hmParams.posSent ? '%' : null,
                     dx = maxX - minX,
                     dy = maxY - minY,
                     sx = dx / gridColumns,
@@ -286,6 +287,7 @@
 
                             feat = new ol.Feature({
                                 name: hmVal,
+                                units: units,
                                 scaledValue: scaledValue,
                                 geometry: new ol.geom.Point(coords),
                                 opacity: 1,
@@ -329,7 +331,7 @@
                     return feat;
                 });
 
-                var name = feature ? feature.get('name') : undefined;
+                var name = feature ? feature.get('name') + feature.get('units') : undefined;
                 tooltip.style.display = name ? '' : 'none';
                 if (name) {
                     overlay.setPosition(evt.coordinate);
