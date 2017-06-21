@@ -18,7 +18,7 @@
             };
 
             function ResetLink(scope) {
-                scope.reset = function reset() {
+                scope.reset = function() {
                     // Reset the map
                     Map.resetMap();
                     searchFilter.resetFilter();
