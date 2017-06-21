@@ -92,8 +92,8 @@
                     }, function errorCallback(response) {
                         $log.error('An error occured while reading heatmap data');
                     })
-                    .catch(function() {
-                        $log.error('An error occured while reading heatmap data');
+                    .catch(function(e) {
+                        $log.error('An error occured while reading heatmap data', e);
                     });
                 } else {
                     $log.error('Spatial filter could not be computed.');
@@ -102,10 +102,8 @@
 
             function broadcastData(data) {
                 data['a.text'] = data['a.text'] || [];
-                var heatmapData = {};
                 if (data && data['a.hm']) {
-
-                    heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
+                    var heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
 
                     MapService.createOrUpdateHeatMapLayer(heatmapData);
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
@@ -120,16 +118,24 @@
                 var heatMapCountMatrix = heatMapData['a.hm'].counts_ints2D;
                 var positivesCountMatrix = heatMapData['a.hm.posSent'].counts_ints2D;
 
-                heatMapData['a.hm.posSent'].counts_ints2D = heatMapCountMatrix.map(
+                var normalPositivesCountMatrix = heatMapCountMatrix.map(
                     function (heatMapCountRow, rowIndex) {
-                        var normalizedSentimentRow = new Float32Array(heatMapCountRow.length);
-
-                        heatMapCountRow.map(function (heatMapCellvalue, cellIndex) {
-                            normalizedSentimentRow[cellIndex] = heatMapCellvalue === 0 ?
-                                0 : (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue);
-                        });
-                        return normalizedSentimentRow;
+                        if (angular.isArray(heatMapCountRow) ) {
+                            var normalizedSentimentRow = new Float32Array(heatMapCountRow.length);
+                            heatMapCountRow.map(function (heatMapCellvalue, cellIndex) {
+                                if (heatMapCellvalue !== 0 && positivesCountMatrix[rowIndex]) {
+                                    normalizedSentimentRow[cellIndex] = (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue)*100
+                                } else {
+                                    normalizedSentimentRow[cellIndex] = null;
+                                }
+                            });
+                            return normalizedSentimentRow;
+                        }else{
+                            return null;
+                        }
                 });
+
+                heatMapData['a.hm.posSent'].counts_ints2D = normalPositivesCountMatrix;
                 heatMapData['a.hm.posSent'].posSent = true;
                 return heatMapData['a.hm.posSent'];
             }
