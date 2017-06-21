@@ -121,10 +121,10 @@
                 var normalPositivesCountMatrix = heatMapCountMatrix.map(
                     function (heatMapCountRow, rowIndex) {
                         if (angular.isArray(heatMapCountRow) ) {
-                            var normalizedSentimentRow = new Float32Array(heatMapCountRow.length);
+                            var normalizedSentimentRow = new Uint8Array(heatMapCountRow.length);
                             heatMapCountRow.map(function (heatMapCellvalue, cellIndex) {
                                 if (heatMapCellvalue !== 0 && positivesCountMatrix[rowIndex]) {
-                                    normalizedSentimentRow[cellIndex] = (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue)*100
+                                    normalizedSentimentRow[cellIndex] = (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue)*100;
                                 } else {
                                     normalizedSentimentRow[cellIndex] = null;
                                 }
@@ -133,7 +133,7 @@
                         }else{
                             return null;
                         }
-                });
+                    });
 
                 heatMapData['a.hm.posSent'].counts_ints2D = normalPositivesCountMatrix;
                 heatMapData['a.hm.posSent'].posSent = true;
