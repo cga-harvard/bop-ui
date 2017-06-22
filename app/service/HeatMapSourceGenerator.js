@@ -8,9 +8,10 @@
     angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$log',
-        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
+        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService',
+        'DataCacheService', '$httpParamSerializer', '$window',
         function(Map, $rootScope, $controller, $filter, $log, $document, $q,
-            $http, $state, searchFilter, DateTimeService, DataCacheService) {
+            $http, $state, searchFilter, DateTimeService, DataCacheService, $httpParamSerializer, $window) {
             var MapService= Map;
             var canceler = $q.defer();
 
@@ -120,35 +121,14 @@
             }
 
             function startCsvExport(numberOfDocuments){
-                var config,
+                var url,
                     params = createParamsForGeospatialSearch();
                 if (params) {
                     params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
                             numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
-                    config = {
-                        url: solrHeatmapApp.appConfig.tweetsExportBaseUrl,
-                        method: 'GET',
-                        params: params
-                    };
 
-                    //start the export
-                    $http(config)
-                    .then(function successCallback(response) {
-                        var anchor = angular.element('<a/>');
-                        anchor.css({display: 'none'}); // Make sure it's not visible
-                        angular.element($document.body).append(anchor); // Attach to document
-                        anchor.attr({
-                            href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
-                            target: '_blank',
-                            download: 'bop_export.csv'
-                        })[0].click();
-                        anchor.remove(); // Clean it up afterwards
-                    }, function errorCallback(response) {
-                        $log.error('An error occured while exporting csv data');
-                    })
-                    .catch(function() {
-                        $log.error('An error occured while exporting csv data');
-                    });
+                    url = solrHeatmapApp.appConfig.tweetsExportBaseUrl;
+                    $window.open(url + '?' + $httpParamSerializer(params), '_blank');
                 } else {
                     $log.error('Spatial filter could not be computed.');
                 }
