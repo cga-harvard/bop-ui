@@ -247,6 +247,7 @@
                     maxX = hmParams.maxX,
                     maxY = hmParams.maxY,
                     hmProjection = hmParams.projection,
+                    units = hmParams.posSent ? '%' : null,
                     dx = maxX - minX,
                     dy = maxY - minY,
                     sx = dx / gridColumns,
@@ -263,6 +264,7 @@
                 counts_ints2D = fillNullValueToEmptyArray(counts_ints2D);
                 classifications = getClassifications(hmParams);
                 minMaxValue = [0, classifications.length - 1];
+
                 for (var i = 0 ; i < gridRows ; i++){
                     for (var j = 0 ; j < gridColumns ; j++){
                         var hmVal = counts_ints2D[counts_ints2D.length-i-1][j],
@@ -285,6 +287,7 @@
 
                             feat = new ol.Feature({
                                 name: hmVal,
+                                units: units,
                                 scaledValue: scaledValue,
                                 geometry: new ol.geom.Point(coords),
                                 opacity: 1,
@@ -328,7 +331,7 @@
                     return feat;
                 });
 
-                var name = feature ? feature.get('name') : undefined;
+                var name = feature ? feature.get('name') + feature.get('units') : undefined;
                 tooltip.style.display = name ? '' : 'none';
                 if (name) {
                     overlay.setPosition(evt.coordinate);
@@ -339,15 +342,13 @@
             service.createOrUpdateHeatMapLayer = function(hmData) {
                 var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
 
-                var sentimetGradient = generateSigmoidColorGradient(390, 200);
-
                 // Hardcode linear color gradient
-                /** var normalCountGradient = ["hsl(0, 0%, 0%)", "hsl(300, 100%, 50%)",
-                    "hsl(270, 100%, 50%)", "hsl(240, 100%, 50%)", "hsl(210, 100%, 50%)",
-                    "hsl(180, 100%, 50%)", "hsl(150, 100%, 50%)", "hsl(120, 100%, 50%)",
-                    "hsl(90, 100%, 50%)", "hsl(60, 100%, 50%)", "hsl(30, 100%, 50%)",
-                    "hsl(0, 100%, 50%)"];
-                */
+                var sentimetGradient = ["hsl(400, 100%, 50%)", "hsl(399, 100%, 50%)",
+                    "hsl(396, 100%, 50%)", "hsl(393, 100%, 50%)", "hsl(390, 100%, 50%)",
+                    "hsl(385, 100%, 50%)", "hsl(380, 100%, 50%)", "hsl(360, 100%, 50%)",
+                    "hsl(340, 100%, 50%)", "hsl(300, 100%, 50%)",
+                    "hsl(260, 100%, 50%)", "hsl(200, 100%, 50%)"];
+
                 var normalCountGradient = generateSigmoidColorGradient(330, 0);
 
                 hmData.heatmapRadius = 20;
