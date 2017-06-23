@@ -1,5 +1,5 @@
 {
-  "name": "angular-search",
+  "name": "bop-ui",
   "private": true,
   "version": "0.0.1",
   "description": "Solr-Heatmap-Client based on AngularJS and OL3",
@@ -26,6 +26,9 @@
     "OpenLayers 3",
     "Heatmap"
   ],
+  "engines": {
+    "node": "6.x.x"
+  },
   "scripts": {
     "clean": "grunt clean",
     "settings": "node settings.js",
@@ -36,7 +39,9 @@
     "serve": "http-server -p 3001",
     "server": "parallelshell 'npm run settings' 'npm run serve -s' 'grunt dev-watch -s'",
     "deploy": "npm run settings && grunt deploy",
-    "publish": "npm run settings && grunt publish"
+    "publish": "npm run settings && grunt publish",
+    "build": "npm run deploy",
+    "start": "npm run serve"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5",

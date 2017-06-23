@@ -33,10 +33,6 @@
                     vm.yLegendRange = createRange(vm.histogramBarsDimensions.maxValue, 2);
                 });
 
-                vm.$on('changeSlider', function(event, slider) {
-                    HistogramBars.renderingSvgBars(slider.minValue, slider.maxValue);
-                });
-
                 vm.$on('setHistogram', setHistogram);
 
                 vm.$on('slideEnded', slideEnded);
@@ -112,41 +108,17 @@
                     }
                     dataHistogram.counts = generateAllDates(dataHistogram.counts);
                     disableSlider(false);
-                    var firstDate = new Date(dataHistogram.counts[0].value);
-                    var lastDate = new Date(dataHistogram.counts[dataHistogram.counts.length - 1].value);
-
-                    if (vm.slider.options.ceil === 1) {
-                        vm.slider.oldFirstDate = firstDate;
-                        vm.slider.oldLastDate = lastDate;
-                    }
-
-                    var isOutOfRange = dateOutOfRange(vm.slider.oldFirstDate, vm.slider.oldLastDate, firstDate, lastDate);
-                    var hasMoreColumnsThanBefore = dataHistogram.counts.length - 1 > vm.slider.options.ceil;
 
                     // Histogram render new data or more histogram rows data
-                    if (vm.slider.options.ceil === 1 || isTheInitialDate() ||
-                        hasMoreColumnsThanBefore || isOutOfRange) {
-                        vm.slider.counts = dataHistogram.counts;
-                        vm.slider.options.ceil = dataHistogram.counts.length - 1;
-                        vm.slider.maxValue = vm.slider.options.ceil;
-                        vm.slider.minValue = 0;
-                        dataHistogram.slider = vm.slider;
-                        $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-                    // When we perform a non-temporary search
-                    }else if (!hasMoreColumnsThanBefore && !vm.slider.changeTime && !isOutOfRange){
-                        vm.slider.oldFirstDate = firstDate;
-                        vm.slider.oldLastDate = lastDate;
-                        dataHistogram.counts = getSubDataHistogram(dataHistogram, vm.slider);
-                        $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
-                    }else{
-                        vm.slider.changeTime = false;
-                        $rootScope.$broadcast('changeSlider', vm.slider);
-                    }
+                    vm.slider.counts = dataHistogram.counts;
+                    vm.slider.options.ceil = dataHistogram.counts.length - 1;
+                    vm.slider.maxValue = vm.slider.options.ceil;
+                    vm.slider.minValue = 0;
+                    dataHistogram.slider = vm.slider;
+
+                    $rootScope.$broadcast('setHistogramRangeSlider', dataHistogram);
                 }
 
-                function dateOutOfRange(rangeStartDate, rangeEndDate, startDate, endDate) {
-                    return startDate < rangeStartDate || endDate > rangeEndDate;
-                }
 
                 function generateAllDates(data) {
                     var newData = [];
@@ -172,35 +144,19 @@
                     return newData;
                 }
 
-                function getSubDataHistogram(dataHistogram, slider) {
-                    var index = 0;
-                    var newData = slider.counts.map(function (bar) {
-                        var barDate = new Date(bar.value);
-                        if(slider.oldFirstDate > barDate || slider.oldLastDate < barDate
-                            || index === dataHistogram.counts.length){
-                            bar.count = 0;
-                        }else if(dataHistogram.counts[index]) {
-                            bar.count = dataHistogram.counts[index].count;
-                            index++;
-                        }
-                        return bar;
-                    });
-                    return newData;
-                }
-
-                function isTheInitialDate() {
-                    var initialDate = DateTimeService.formatDatesToString(searchFilter.minDate, searchFilter.maxDate);
-                    return initialDate === searchFilter.time;
-                }
-
                 function slideEnded() {
                     solrHeatmapApp.isThereInteraction = true;
                     var minKey = vm.slider.minValue;
                     var maxKey = vm.slider.maxValue;
-                    vm.datepickerStartDate = minKey === 0 ?
-                        searchFilter.minDate : new Date(vm.slider.counts[minKey].value);
-                    vm.datepickerEndDate = maxKey === vm.slider.counts.length - 1 ?
-                        searchFilter.maxDate : new Date(vm.slider.counts[maxKey].value);
+
+                    if (minKey !== 0) {
+                        searchFilter.minDate = new Date(vm.slider.counts[minKey].value);
+                    }
+                    if (maxKey !== vm.slider.counts.length - 1) {
+                        searchFilter.maxDate = new Date(vm.slider.counts[maxKey].value);
+                    }
+                    vm.datepickerStartDate = searchFilter.minDate;
+                    vm.datepickerEndDate = searchFilter.maxDate;
                     vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                             vm.datepickerEndDate);
                     performDateSearch();
