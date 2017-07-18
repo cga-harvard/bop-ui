@@ -7,10 +7,10 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['DataConf', 'Map', '$rootScope', '$controller', '$filter', '$log',
-        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
-        function(DataConf, Map, $rootScope, $controller, $filter, $log, $document, $q,
-            $http, $state, searchFilter, DateTimeService, DataCacheService) {
+    .factory('HeatMapSourceGenerator', ['DataConf', 'Map', '$rootScope', '$log',
+        '$q', '$http', '$state', 'searchFilter', 'DateTimeService', '$window', '$httpParamSerializer',
+        function(DataConf, Map, $rootScope, $log, $q, $http, $state, searchFilter,
+            DateTimeService, $window, $httpParamSerializer) {
             var MapService= Map;
             var canceler = $q.defer();
 
@@ -147,7 +147,7 @@
                     params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
                             numberOfDocuments : DataConf.solrHeatmapApp.bopwsConfig.csvDocsLimit;
 
-                    url = solrHeatmapApp.appConfig.tweetsExportBaseUrl;
+                    url = DataConf.solrHeatmapApp.appConfig.tweetsExportBaseUrl;
                     $window.open(url + '?' + $httpParamSerializer(params), '_blank');
                 } else {
                     $log.error('Spatial filter could not be computed.');

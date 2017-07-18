@@ -5,8 +5,8 @@
     angular.module('SolrHeatmapApp')
     .factory('searchFilter', ['Map', 'HeightModule', 'DateTimeService',
     function(Map, HeightModule, DateTimeService){
-        var MapService = Map;
-        var service = {
+        const MapService = Map;
+        const service = {
             geo: '[-90,-180 TO 90,180]',
             hm: '[-90,-180 TO 90,180]',
             time: null,
@@ -21,10 +21,9 @@
             maxDate: new Date(moment().format('YYYY-MM-DD'))
         };
 
-        var emptyStringForNull = function(value) {
-            return value === null ? '' : value;
-        };
-        service.setFilter = function(filter) {
+        const emptyStringForNull = value => value === null ? '' : value;
+
+        service.setFilter = filter => {
             if(filter.time) {
                 service.time = filter.time;
                 service.gap = DateTimeService.getGapFromTimeString(filter.time);
@@ -46,7 +45,7 @@
             }
         };
 
-        service.resetFilter = function() {
+        service.resetFilter = () => {
             service.time = DateTimeService.formatDatesToString(service.minDate, service.maxDate);
             service.text = null;
             service.user = null;

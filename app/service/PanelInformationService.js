@@ -5,16 +5,14 @@
     angular.module('SolrHeatmapApp')
     .factory('PanelInformationService', ['$window', function($window){
 
-        var service = {
-            selectedTweet: {},
-            tweetStatusUrl: tweetStatusUrl
+        const service = {
+            selectedTweet: {}, tweetStatusUrl
         };
 
         function tweetStatusUrl(tweetInfo) {
-            var url = 'https://twitter.com/' + tweetInfo.user_name + '/status/' + tweetInfo.id;
+            const url = `https://twitter.com/${tweetInfo.user_name}/status/${tweetInfo.id}`;
             $window.open(url, '_blank');
         }
-
         return service;
     }]);
 })();

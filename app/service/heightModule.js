@@ -5,20 +5,20 @@
     angular.module('SolrHeatmapApp')
     .factory('HeightModule', ['$window', function($window){
 
-        var service = {
+        const service = {
             itemHeight: 90,
-            otherHeights: otherHeights,
-            sideBarWidth:sideBarWidth,
             rightSideBarWidth: 4,
             bottomHeight: 4,
-            topPanelHeight: topPanelHeight,
-            documentHeight: documentHeight,
-            availableHeight: availableHeight,
-            getNumberofItems: calculateNumberofItems
+            otherHeights,
+            sideBarWidth,
+            topPanelHeight,
+            documentHeight,
+            availableHeight,
+            getNumberofItems
         };
 
         function documentHeight() {
-            var D = document;
+            const D = document;
             return Math.max(D.body.offsetHeight, D.documentElement.offsetHeight,
                 D.body.clientHeight, D.documentElement.clientHeight);
         }
@@ -48,8 +48,8 @@
             return documentHeight() - service.otherHeights();
         }
 
-        function calculateNumberofItems() {
-            var height = availableHeight();
+        function getNumberofItems() {
+            const height = availableHeight();
             if (height > 0) {
                 return Math.round(height / service.itemHeight);
             }

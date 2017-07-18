@@ -2,11 +2,10 @@
 (function() {
     angular.module('SolrHeatmapApp')
     .factory('DateTimeService', [function(){
-        var service = {
-            formatDatesToString: formatDatesToString,
-            getDurationFormatFromGap: getDurationFormatFromGap,
-            getGapFromTimeString: getGapFromTimeString
-
+        const service = {
+            formatDatesToString,
+            getDurationFormatFromGap,
+            getGapFromTimeString
         };
 
         /**
@@ -22,7 +21,7 @@
         }
 
         function getDurationFormatFromGap(gap) {
-            var obj = [];
+            let obj = [];
             if (gap === 'PT1H') {
                 obj = ['MMM.D.H[h]', 'hours'];
             }else if(gap === 'P1D') {
@@ -44,15 +43,16 @@
             if (!timeString) {
                 return;
             }
-            var gap,
-                partition = 80,
-                dates = formatStringToDates(timeString),
-                diffms = moment(dates[1]).diff(dates[0]),
-                hours = diffms/(1000*3600),
-                days = hours/24,
-                years = days/365,
-                months = years * 12;
 
+            const partition = 80;
+            const dates = formatStringToDates(timeString);
+            const diffms = moment(dates[1]).diff(dates[0]);
+            const hours = diffms/(1000*3600);
+            const days = hours/24;
+            const years = days/365;
+            const months = years * 12;
+
+            let gap;
             if (hours <= partition) {
                 gap = 'PT1H';
             }else if (days <= partition) {
@@ -68,7 +68,7 @@
         }
 
         function formatStringToDates(stringDates){
-            var dates = stringDates.split(' TO ');
+            const dates = stringDates.split(' TO ');
             dates[0] = dates[0].slice(1);
             dates[1] = dates[1].slice(0, -1);
             return dates;

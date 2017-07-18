@@ -5,18 +5,18 @@
     .module('SolrHeatmapApp')
     .factory('dataverseService', ['$rootScope', 'DataConf', '$http',
         function ($rootScope, DataConf, $http) {
-            var dataverse = {
+            const dataverse = {
                 AllowDataverseDeposit: false
             };
 
-            var mapReadyEvent = $rootScope.$on('mapReady', function(even, _) {
+            const mapReadyEvent = $rootScope.$on('mapReady', (even, _) => {
                 dataverse = DataConf.solrHeatmapApp.bopwsConfig.dataverse;
             });
 
             function prepareDataverseUrl() {
-                var dv = dataverse;
+                const dv = dataverse;
                 if (dv.AllowDataverseDeposit) {
-                    var urlArray = [dv.dataverseDepositUrl, dv.subsetRetrievalUrl,
+                    const urlArray = [dv.dataverseDepositUrl, dv.subsetRetrievalUrl,
                         paramsToString(dv.parameters)];
                     return urlArray.join('?');
                 }
@@ -24,31 +24,25 @@
             }
 
             function paramsToString(params) {
-                var stringParams = [];
-                for (var key in params) {
-                    stringParams.push(key + '=' + params[key]);
+                const stringParams = [];
+                for (let key in params) {
+                    stringParams.push(`${key}=${params[key]}`);
                 }
                 return stringParams.join('&');
             }
 
             function dataverseRequest(callback) {
-                var config = {
+                const config = {
                     url: prepareDataverseUrl(),
                     method: 'GET'
                 };
-                $http(config).then(function(response) {
-                    return callback(response);
-                }, function errorCallback(response) {
-                    return callback(response);
-                });
+                $http(config).then(response => callback(response));
             }
 
             return {
-                getDataverse: function () {
-                    return dataverse;
-                },
-                prepareDataverseUrl: prepareDataverseUrl,
-                dataverseRequest: dataverseRequest
+                getDataverse: () => dataverse,
+                prepareDataverseUrl,
+                dataverseRequest
             };
         }]);
 })();

@@ -3,9 +3,7 @@
     .module('SolrHeatmapApp')
     .factory('Normalize', function() {
 
-        return {
-            normalizeExtent: normalize
-        };
+        return { normalizeExtent };
 
         /**
          * Clamps given number `num` to be inside the allowed range from `min`
@@ -19,7 +17,7 @@
          */
         function clamp(num, min, max) {
             if (max < min) {
-                var tmp = min;
+                let tmp = min;
                 min = max;
                 max = tmp;
             }
@@ -77,41 +75,42 @@
          * Examples:
          *
          *     // valid world in, returned as-is:
-         *     normalize([-180, -90, 180, 90])  // => [-180, -90, 180, 90]
+         *     normalizeExtent([-180, -90, 180, 90])  // => [-180, -90, 180, 90]
          *
          *     // valid extent in world in, returned as-is:
-         *     normalize([-160, -70, 150, 70])  // => [-160, -70, 150, 70]
+         *     normalizeExtent([-160, -70, 150, 70])  // => [-160, -70, 150, 70]
          *
          *     // shifted one degree westwards, returns one-true world:
-         *     normalize([-181, -90, 179, 90])  // => [-180, -90, 180, 90]
+         *     normalizeExtent([-181, -90, 179, 90])  // => [-180, -90, 180, 90]
          *
          *     // shifted one degree eastwards, returns one-true world:
-         *     normalize([-179, -90, 181, 90])  // => [-180, -90, 180, 90]);
+         *     normalizeExtent([-179, -90, 181, 90])  // => [-180, -90, 180, 90]);
          *
          *     // shifted more than one world westwards, returns one-true world:
-         *     normalize([-720, -90, -360, 90]) // => [-180, -90, 180, 90]);
+         *     normalizeExtent([-720, -90, -360, 90]) // => [-180, -90, 180, 90]);
          *
          *     // shifted to the south, returns one-true world:
-         *     normalize([-180, -91, 180, 89])  // =>   [-180, -90, 180, 90]);
+         *     normalizeExtent([-180, -91, 180, 89])  // =>   [-180, -90, 180, 90]);
          *
          *     // multiple worlds, returns one-true world:
-         *     normalize([-360, -90, 180, 90])  // =>   [-180, -90, 180, 90]);
+         *     normalizeExtent([-360, -90, 180, 90])  // =>   [-180, -90, 180, 90]);
          *
          *     // multiple worlds, returns one-true world:
-         *     normalize([-360, -180, 180, 90]) // =>  [-180, -90, 180, 90]);
+         *     normalizeExtent([-360, -180, 180, 90]) // =>  [-180, -90, 180, 90]);
          *
-         * @param {Array<number>} Extent to normalize: [minx, miny, maxx, maxy].
+         * @param {Array<number>} Extent to normalizeExtent: [minx, miny, maxx, maxy].
          * @return {Array<number>} Normalized extent: [minx, miny, maxx, maxy].
          */
-        function normalize(extent) {
-            var minX = extent[0];
-            var minY = extent[1];
-            var maxX = extent[2];
-            var maxY = extent[3];
-            var width = Math.min(maxX - minX, 360);
-            var height = Math.min(maxY - minY, 180);
+        function normalizeExtent(extent) {
+            let minX = extent[0];
+            let minY = extent[1];
+            let maxX = extent[2];
+            let maxY = extent[3];
 
-            var rangeCheck = function(min,max, rangeFunc, clampFunc, extra) {
+            const width = Math.min(maxX - minX, 360);
+            const height = Math.min(maxY - minY, 180);
+
+            const rangeCheck = (min, max, rangeFunc, clampFunc, extra) => {
                 if (rangeFunc(min)) {
                     min = clampFunc(min);
                     max = min + extra;
@@ -122,10 +121,10 @@
                 return [min,max];
             };
 
-            var x = rangeCheck(minX, maxX, outsideLonRange, clampLon, width);
+            const x = rangeCheck(minX, maxX, outsideLonRange, clampLon, width);
             minX = x[0];
             maxX = x[1];
-            var y = rangeCheck(minY, maxY, outsideLatRange, clampLat, height);
+            const y = rangeCheck(minY, maxY, outsideLatRange, clampLat, height);
             minY = y[0];
             maxY = y[1];
 

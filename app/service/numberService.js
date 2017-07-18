@@ -8,17 +8,16 @@
         function compactInteger(input, decimals) {
             decimals = decimals || 0;
             decimals = Math.max(decimals, 0);
-            var number = parseInt(input, 10);
-            var signString = number < 0 ? '-' : '';
-            var unsignedNumber = Math.abs(number);
-            var unsignedNumberString = String(unsignedNumber);
-            var numberLength = unsignedNumberString.length;
-            var numberLengths = [13, 10, 7, 4];
-            var bigNumPrefixes = ['T', 'B', 'M', 'k'];
+            const number = parseInt(input, 10);
+            const signString = number < 0 ? '-' : '';
+            const unsignedNumber = Math.abs(number);
+            const unsignedNumberString = String(unsignedNumber);
+            const numberLength = unsignedNumberString.length;
+            const numberLengths = [13, 10, 7, 4];
+            const bigNumPrefixes = ['T', 'B', 'M', 'k'];
 
               // small numbers
             if (unsignedNumber < 1000) {
-                // return `${ signString }${ unsignedNumberString }`;
                 return signString + unsignedNumberString;
             }
 
@@ -28,43 +27,40 @@
             }
 
             // 999 < unsignedNumber < 999,999,999,999,999
-            var length;
-            for (var i = 0; i < numberLengths.length; i++) {
-                var _length = numberLengths[i];
+            let length;
+            for (let _length of numberLengths) {
                 if (numberLength >= _length) {
                     length = _length;
                     break;
                 }
             }
 
-            var decimalIndex = numberLength - length + 1;
-            var unsignedNumberCharacterArray = unsignedNumberString.split('');
+            const decimalIndex = numberLength - length + 1;
+            const unsignedNumberCharacterArray = unsignedNumberString.split('');
 
-            var wholePartArray = unsignedNumberCharacterArray.slice(0, decimalIndex);
-            var decimalPartArray = unsignedNumberCharacterArray.slice(
+            const wholePartArray = unsignedNumberCharacterArray.slice(0, decimalIndex);
+            const decimalPartArray = unsignedNumberCharacterArray.slice(
                 decimalIndex, decimalIndex + decimals + 1);
 
-            var wholePart = wholePartArray.join('');
+            const wholePart = wholePartArray.join('');
 
               // pad decimalPart if necessary
-            var decimalPart = decimalPartArray.join('');
+            let decimalPart = decimalPartArray.join('');
             if (decimalPart.length < decimals) {
                 decimalPart += Array(decimals - decimalPart.length + 1).join('0');
             }
 
-            var output;
+            let output;
             if (decimals === 0) {
                 output = signString + wholePart + bigNumPrefixes[numberLengths.indexOf(length)];
             } else {
-                var outputNumber = Number(wholePart + '.' + decimalPart).toFixed(decimals);
+                let outputNumber = Number(wholePart + '.' + decimalPart).toFixed(decimals);
                 output = signString + outputNumber + bigNumPrefixes[numberLengths.indexOf(length)];
             }
 
             return output;
         }
 
-        return {
-            compactInteger: compactInteger
-        };
+        return { compactInteger };
     }]);
 })();

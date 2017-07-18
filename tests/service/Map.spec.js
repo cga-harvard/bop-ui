@@ -336,7 +336,6 @@ describe( 'HeatMapSourceGenerator', function() {
             $window.innerWidth = 800;
         });
         it('returns boundingbox', function() {
-            console.log('DataConf', DataConf);
             expect(subject.calculateReducedBoundingBoxFromInFullScreen({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: 0.5, minY: 2.25, maxX: 0.75, maxY: 2.5});
         });
         describe('#reducedQueryForExtent', function() {
