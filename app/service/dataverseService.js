@@ -3,14 +3,14 @@
 (function () {
     angular
     .module('SolrHeatmapApp')
-    .factory('dataverseService', ['$rootScope', '$http',
-        function ($rootScope, $http) {
+    .factory('dataverseService', ['$rootScope', 'DataConf', '$http',
+        function ($rootScope, DataConf, $http) {
             var dataverse = {
                 AllowDataverseDeposit: false
             };
 
             var mapReadyEvent = $rootScope.$on('mapReady', function(even, _) {
-                dataverse = solrHeatmapApp.bopwsConfig.dataverse;
+                dataverse = DataConf.solrHeatmapApp.bopwsConfig.dataverse;
             });
 
             function prepareDataverseUrl() {

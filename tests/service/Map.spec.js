@@ -1,10 +1,11 @@
 describe( 'HeatMapSourceGenerator', function() {
-    var subject, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy, olgmSpy,
+    var subject, DataConf, NormalizeService, olSpy, mapSpy, viewSpy, mapViewSpy, olgmSpy,
         olgmObjSpy, defaultConfig, defaultViewConfig, layer, HeightModule, $window;
 
     beforeEach( module( 'SolrHeatmapApp' ) );
 
-    beforeEach( inject( function( _Map_, _Normalize_, _HeightModule_, _$window_) {
+    beforeEach( inject( function(_DataConf_, _Map_, _Normalize_, _HeightModule_, _$window_) {
+        DataConf = _DataConf_;
         subject = _Map_;
         NormalizeService = _Normalize_;
         HeightModule = _HeightModule_;
@@ -290,7 +291,7 @@ describe( 'HeatMapSourceGenerator', function() {
         });
         describe('no initialZoom or center is defined',function() {
             beforeEach(function() {
-                solrHeatmapApp.initMapConf = defaultConfig.mapConfig;
+                DataConf.solrHeatmapApp = { initMapConf: defaultConfig.mapConfig };
             });
             it('does not call the spy', function() {
                 subject.resetMap();
@@ -299,7 +300,7 @@ describe( 'HeatMapSourceGenerator', function() {
         });
         describe('initialZoom and center is defined',function() {
             beforeEach(function() {
-                solrHeatmapApp.initMapConf = { view: { zoom: 1, center: [0,0], extent: [0,0,0,0] }};
+                DataConf.solrHeatmapApp = { initMapConf: { view: { zoom: 1, center: [0,0], extent: [0,0,0,0] } } };
             });
             it('does not call the spy', function() {
                 subject.resetMap();
@@ -326,7 +327,7 @@ describe( 'HeatMapSourceGenerator', function() {
     });
     describe('#calculateReducedBoundingBox', function() {
         beforeEach(function() {
-            solrHeatmapApp.appConfig.ratioInnerBbox = 2;
+            DataConf.solrHeatmapApp = { appConfig: { ratioInnerBbox: 2 } };
             spyOn(HeightModule, 'documentHeight').and.returnValue(400);
             spyOn(HeightModule, 'topPanelHeight').and.returnValue(200);
             spyOn(HeightModule, 'sideBarWidth').and.returnValue(400);
@@ -335,6 +336,7 @@ describe( 'HeatMapSourceGenerator', function() {
             $window.innerWidth = 800;
         });
         it('returns boundingbox', function() {
+            console.log('DataConf', DataConf);
             expect(subject.calculateReducedBoundingBoxFromInFullScreen({minX: 0, minY: 2, maxX: 1, maxY: 3})).toEqual({minX: 0.5, minY: 2.25, maxX: 0.75, maxY: 2.5});
         });
         describe('#reducedQueryForExtent', function() {

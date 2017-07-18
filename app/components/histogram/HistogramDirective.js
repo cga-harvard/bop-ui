@@ -4,9 +4,9 @@
 
     angular
     .module('search_timehistogram_component', [])
-    .directive('timeHistogram', ['$rootScope', 'HeatMapSourceGenerator',
+    .directive('timeHistogram', ['$rootScope', 'DataConf', 'HeatMapSourceGenerator',
         'searchFilter', 'DateTimeService', 'NumberService',
-        function timeHistogram($rootScope, HeatMapSourceGenerator,
+        function timeHistogram($rootScope, DataConf, HeatMapSourceGenerator,
             searchFilter, DateTimeService, NumberService) {
             var directive = {
                 templateUrl: 'components/histogram/histogram.tpl.html',
@@ -79,20 +79,21 @@
                             histogram.bars = document.getElementById(scope.barId);
                             var rectWidth = (histogrambarsWidth - 2*paddingBar) / histogram.counts.length;
                             var svgRect = histogram.counts.map(renderSvgBar);
-                            histogram.bars.innerHTML = '<svg style="padding-left:' + paddingBar + 'px" width="100%" height="' +
-                                barsheight + '">' + svgRect.join('') + '</svg>';
+                            histogram.bars.innerHTML = `<svg style="padding-left:${paddingBar}px" width="100%"
+                                height="${barsheight}"> ${svgRect.join('')}</svg>`;
                         }
 
                         function renderSvgBar(bar, barKey) {
-                            var height = histogram.maxValue === 0 ?
-                                0 : barsheight * bar.count / histogram.maxValue;
+                            var height = 10;
+                            if ( histogram.maxValue > 0) {
+                                height = (barsheight * bar.count) / histogram.maxValue;
+                            }
                             var y = barsheight - height;
                             var translate = (rectWidth) * barKey;
                             var color = getColor(barKey, minValue, maxValue);
-                            return '<g transform="translate(' + translate + ', 0)">' +
-                                 '  <rect width="' + rectWidth + '" height="' + height +
-                                 '" y="' + y + '" fill="' + color + '"></rect>' +
-                                 '</g>';
+                            return `<g transform="translate(${translate}, 0)">
+                                        <rect width="${rectWidth}" height="${height}" y="${y}" fill="${color}"></rect>
+                                    </g>`;
                         }
 
                         function getColor(barkey, minvalue, maxvalue) {
@@ -145,7 +146,7 @@
                 }
 
                 function slideEnded() {
-                    solrHeatmapApp.isThereInteraction = true;
+                    DataConf.solrHeatmapApp.isThereInteraction = true;
                     var minKey = vm.slider.minValue;
                     var maxKey = vm.slider.maxValue;
 

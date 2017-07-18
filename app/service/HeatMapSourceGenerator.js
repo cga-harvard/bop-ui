@@ -7,11 +7,10 @@
 (function() {
     angular
     .module('SolrHeatmapApp')
-    .factory('HeatMapSourceGenerator', ['Map', '$rootScope', '$controller', '$filter', '$log',
-        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService',
-        'DataCacheService', '$httpParamSerializer', '$window',
-        function(Map, $rootScope, $controller, $filter, $log, $document, $q,
-            $http, $state, searchFilter, DateTimeService, DataCacheService, $httpParamSerializer, $window) {
+    .factory('HeatMapSourceGenerator', ['DataConf', 'Map', '$rootScope', '$controller', '$filter', '$log',
+        '$document', '$q', '$http', '$state', 'searchFilter', 'DateTimeService', 'DataCacheService',
+        function(DataConf, Map, $rootScope, $controller, $filter, $log, $document, $q,
+            $http, $state, searchFilter, DateTimeService, DataCacheService) {
             var MapService= Map;
             var canceler = $q.defer();
 
@@ -23,7 +22,7 @@
                 canceler.resolve();
                 canceler = $q.defer();
                 var config = {
-                    url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                    url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                     method: 'GET',
                     params: params,
                     timeout: canceler.promise
@@ -51,7 +50,7 @@
                     'a.text.limit': sF.textLimit,
                     'a.user.limit': sF.userLimit,
                     'd.docs.sort': 'distance',
-                    'a.hm.limit': solrHeatmapApp.bopwsConfig.heatmapFacetLimit
+                    'a.hm.limit': DataConf.solrHeatmapApp.bopwsConfig.heatmapFacetLimit
                 };
             }
 
@@ -74,7 +73,7 @@
                     canceler.resolve();
                     canceler = $q.defer();
                     config = {
-                        url: solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
+                        url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                         method: 'GET',
                         params: params,
                         timeout: canceler.promise
@@ -146,7 +145,7 @@
                     params = createParamsForGeospatialSearch();
                 if (params) {
                     params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
-                            numberOfDocuments : solrHeatmapApp.bopwsConfig.csvDocsLimit;
+                            numberOfDocuments : DataConf.solrHeatmapApp.bopwsConfig.csvDocsLimit;
 
                     url = solrHeatmapApp.appConfig.tweetsExportBaseUrl;
                     $window.open(url + '?' + $httpParamSerializer(params), '_blank');

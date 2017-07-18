@@ -7,7 +7,7 @@
 (function() {
     angular
     .module('search_alert_component', [])
-    .directive('alert', ['$rootScope', function($rootScope) {
+    .directive('alert', ['DataConf', '$rootScope', function(DataConf, $rootScope) {
         return {
             link: link,
             restrict: 'EA',
@@ -19,7 +19,7 @@
             scope.message = '';
             // set the message when the solrHeatmapApp was assigned
             var mapReady = $rootScope.$on('mapReady', function(event, _) {
-                scope.message = solrHeatmapApp.appConfig.alertMsg;
+                scope.message = DataConf.solrHeatmapApp.appConfig.alertMsg;
             });
 
         }

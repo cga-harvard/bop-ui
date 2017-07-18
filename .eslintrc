@@ -10,7 +10,6 @@
         "window": false,
         "location": false,
         "angular": false,
-        "solrHeatmapApp": false,
         "proj4": false,
         "olgm": false,
         "google": false,

@@ -2,8 +2,8 @@
 (function() {
     angular
     .module('search_keywordinput_component', [])
-    .directive('keywordInput', ['HeatMapSourceGenerator', 'searchFilter', '$window', 'filterKeywordService',
-        function keywordInput(HeatMapSourceGenerator, searchFilter, $window, filterKeywordService) {
+    .directive('keywordInput', ['DataConf', 'HeatMapSourceGenerator', 'searchFilter', '$window', 'filterKeywordService',
+        function keywordInput(DataConf, HeatMapSourceGenerator, searchFilter, $window, filterKeywordService) {
 
             return {
                 link: keywordInputLink,
@@ -142,7 +142,7 @@
 
                 function search() {
                     try {
-                        solrHeatmapApp.isThereInteraction = true;
+                        DataConf.solrHeatmapApp.isThereInteraction = true;
                     } catch (e) {
                         void 0;
                     } finally {

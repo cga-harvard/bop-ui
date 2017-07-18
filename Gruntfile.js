@@ -5,6 +5,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    require('load-grunt-tasks')(grunt);
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-html2js');
 
@@ -48,6 +49,16 @@ module.exports = function(grunt) {
                 dest: 'tmp/hm-client.js'
             }
         },
+        babel: {
+            options: {
+              sourceMap: true
+            },
+            dist: {
+              files: {
+                'tmp/hm-client-es6.js': ['<%= concat.dist.dest %>']
+              }
+            }
+        },
         uglify: {
             options: {
               // the banner is inserted at the top of the output
@@ -56,7 +67,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'build/hm-client.min.js': ['<%= concat.dist.dest %>']
+                    'build/hm-client.min.js': 'tmp/hm-client-es6.js'
                 }
             }
         },
@@ -127,9 +138,9 @@ module.exports = function(grunt) {
 
     grunt.registerTask('css', ['less:development', 'less:production']);
 
-    grunt.registerTask('buildjs', ['html2js', 'concat', 'uglify']);
+    grunt.registerTask('buildjs', ['html2js', 'concat', 'babel', 'uglify']);
 
-    grunt.registerTask('dev', ['clean', 'html2js', 'less:development']);
+    grunt.registerTask('dev', ['clean', 'html2js', 'concat', 'babel', 'less:development']);
 
     grunt.registerTask('dev-watch', ['dev', 'watch']);
 
