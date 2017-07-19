@@ -11,29 +11,29 @@
              'queryService', 'HeightModule', '$window',
         function($rootScope, DataConf, $filter, $document, Normalize, $controller,
             queryService, HeightModule, $window) {
-            var NormalizeService = Normalize;
-            var service = {};
-            var map = {},
-                defaults = {
-                    renderer: 'canvas',
-                    view: {
-                        center: [0 ,0],
-                        projection: 'EPSG:3857',
-                        zoom: 2
-                    }
-                },
-                rs = $rootScope;
+
+            const NormalizeService = Normalize;
+            const service = {};
+            const defaults = {
+                renderer: 'canvas',
+                view: {
+                    center: [0 ,0],
+                    projection: 'EPSG:3857',
+                    zoom: 2
+                }
+            };
+            let map = {};
 
             /**
              *
              */
             function buildMapLayers(layerConfig) {
-                var layer,
-                    layers = [];
+                const layers = [];
+                let layer;
 
                 if (angular.isArray(layerConfig)) {
 
-                    angular.forEach(layerConfig, function(conf) {
+                    angular.forEach(layerConfig, conf => {
                         if (conf.type === 'googleLayer') {
                             service.googleLayer = new olgm.layer.Google({
                                 backgroundLayer: conf.visible,
@@ -99,90 +99,37 @@
             /**
             *
             */
-            service.getMap = function() {
-                return map;
-            };
+            service.getMap = () => map;
 
-            service.getMapView = function() {
-                return service.getMap().getView();
-            };
+            service.getMapView = () => service.getMap().getView();
 
-            service.getMapZoom = function() {
-                return service.getMapView().getZoom();
-            };
+            service.getMapZoom = () => service.getMapView().getZoom();
 
-            service.getMapSize = function() {
-                return service.getMap().getSize();
-            };
+            service.getMapSize = () => service.getMap().getSize();
 
-            service.getMapProjection = function() {
+            service.getMapProjection = () => {
                 return service.getMapView().getProjection().getCode();
             };
 
-            service.getLayers = function() {
-                return service.getMap().getLayers().getArray();
-            };
+            service.getLayers = () => service.getMap().getLayers().getArray();
 
-            service.getInteractions = function () {
-                return service.getMap().getInteractions().getArray();
-            };
-
-            service.getLayersBy = function(key, value) {
-                var layers = service.getLayers();
-                return layers.filter(function (layer) {
+            service.getLayersBy = (key, value) => {
+                const layers = service.getLayers();
+                return layers.filter(layer => {
                     return layer.get(key) === value;
                 });
             };
 
-            /**
-             *
-             */
-            service.getInteractionsByClass = function(value) {
-                var interactions = service.getInteractions();
-                return $filter('filter')(interactions, function(interaction) {
-                    return interaction instanceof value;
-                });
-            };
-
-            /**
-             *
-             */
-            service.getInteractionsByType = function(interactions, type) {
-                return $filter('filter')(interactions, function(interaction) {
-                    return interaction.type_ === type;
-                });
-            };
-
-            service.updateTransformationLayerFromQueryForMap = function(query) {
-                var extent = queryService.
+            service.updateTransformationLayerFromQueryForMap = query => {
+                const extent = queryService.
                     getExtentForProjectionFromQuery(query,
                                                     service.getMapProjection());
                 setTransactionBBox(extent);
             };
 
-            /**
-            * Helper method to change active mode of masks for backgroundLayer and
-            * heatmap layer
-            */
-            var _switchMasks = function(hmAvailable) {
-                var heatMapLayer = service.getLayersBy('name', 'HeatMapLayer')[0];
-                var heatMapMask = heatMapLayer.getFilters()[0];
-                var backgroundLayer = service.getLayersBy('backgroundLayer', true)[0],
-                    backgroundLayerMask = backgroundLayer.getFilters()[0];
-
-                // disable mask of backgroundLayer if heatmap is available and vice versa
-                backgroundLayerMask.setActive(!hmAvailable);
-                // enable mask of heatMapLayer if heatmap is available and vice versa
-                heatMapMask.setActive(hmAvailable);
-            };
-
             function fillNullValueToEmptyArray(heatmap) {
-                return heatmap.map(function (row) {
-                    if (row === null) {
-                        return [];
-                    }else{
-                        return row;
-                    }
+                return heatmap.map(row => {
+                    return row === null ? [] : row;
                 });
             }
 
@@ -202,19 +149,20 @@
                 if ((minMaxValue[1] - minMaxValue[0]) === 0){
                     return 0;
                 }
-                var scaledValue = (value - minMaxValue[0]) / (minMaxValue[1] - minMaxValue[0]);
-
+                const scaledValue = (value - minMaxValue[0]) / (minMaxValue[1] - minMaxValue[0]);
                 return scaledValue;
             }
 
             function getClassifications(hmParams) {
-                var flattenCount = [];
-                hmParams.counts_ints2D.forEach(function(row) {
-                    flattenCount.push.apply(flattenCount, row);
+                const flattenCount = [];
+                hmParams.counts_ints2D.forEach(row => {
+                    row = row === null ? [] : row;
+                    flattenCount.push(...row);
                 });
-                var series = new geostats(flattenCount);
-                var gradientLength = hmParams.gradientArray.length;
-                var numberOfClassifications = gradientLength - Math.ceil(gradientLength*0.4);
+
+                const series = new geostats(flattenCount);
+                const gradientLength = hmParams.gradientArray.length;
+                const numberOfClassifications = gradientLength - Math.ceil(gradientLength*0.4);
                 return series.getClassJenks(numberOfClassifications);
             }
 
@@ -223,11 +171,11 @@
                 if (value === 0) {
                     return 0;
                 }
-                var currValue = arrayOfValues[0];
-                var currIndex = 1;
-                for (var i = 1; i < arrayOfValues.length; i++) {
-                    if (Math.abs(value - arrayOfValues[i]) < Math.abs(value - currValue)) {
-                        currValue = arrayOfValues[i];
+                let currentValue = arrayOfValues[0];
+                let currIndex = 1;
+                for (let i = 1; i < arrayOfValues.length; i++) {
+                    if (Math.abs(value - arrayOfValues[i]) < Math.abs(value - currentValue)) {
+                        currentValue = arrayOfValues[i];
                         currIndex = i;
                     }
                 }
@@ -238,36 +186,29 @@
              *
              */
             function createHeatMapSource(hmParams) {
-                var counts_ints2D = hmParams.counts_ints2D,
-                    gridLevel = hmParams.gridLevel,
-                    gridColumns = hmParams.columns,
-                    gridRows = hmParams.rows,
-                    minX = hmParams.minX,
-                    minY = hmParams.minY,
-                    maxX = hmParams.maxX,
-                    maxY = hmParams.maxY,
-                    hmProjection = hmParams.projection,
-                    units = hmParams.posSent ? '%' : null,
-                    dx = maxX - minX,
-                    dy = maxY - minY,
-                    sx = dx / gridColumns,
-                    sy = dy / gridRows,
-                    olFeatures = [],
-                    minMaxValue,
-                    sumOfAllVals = 0,
-                    classifications,
-                    olVecSrc;
-
-                if (!counts_ints2D) {
+                if (!hmParams.counts_ints2D) {
                     return null;
                 }
-                counts_ints2D = fillNullValueToEmptyArray(counts_ints2D);
-                classifications = getClassifications(hmParams);
-                minMaxValue = [0, classifications.length - 1];
+                const counts_ints2D = fillNullValueToEmptyArray(hmParams.counts_ints2D);
+                const gridColumns = hmParams.columns;
+                const gridRows = hmParams.rows;
+                const minX = hmParams.minX;
+                const minY = hmParams.minY;
+                const maxX = hmParams.maxX;
+                const maxY = hmParams.maxY;
+                const hmProjection = hmParams.projection;
+                const units = hmParams.posSent ? '%' : null;
+                const dx = maxX - minX;
+                const dy = maxY - minY;
+                const sx = dx / gridColumns;
+                const sy = dy / gridRows;
+                const olFeatures = [];
+                const classifications = getClassifications(hmParams);
+                const minMaxValue = [0, classifications.length - 1];
 
-                for (var i = 0 ; i < gridRows ; i++){
-                    for (var j = 0 ; j < gridColumns ; j++){
-                        var hmVal = counts_ints2D[counts_ints2D.length-i-1][j],
+                for (let i = 0 ; i < gridRows ; i++){
+                    for (let j = 0 ; j < gridColumns ; j++){
+                        let hmVal = counts_ints2D[counts_ints2D.length-i-1][j],
                             lon,
                             lat,
                             feat,
@@ -277,13 +218,13 @@
                             lat = minY + i*sy + (0.5 * sy);
                             lon = minX + j*sx + (0.5 * sx);
                             coords = ol.proj.transform(
-                              [lon, lat],
-                              hmProjection,
-                              map.getView().getProjection().getCode()
+                                [lon, lat],
+                                hmProjection,
+                                map.getView().getProjection().getCode()
                             );
 
-                            var classifiedValue = closestValue(classifications, hmVal);
-                            var scaledValue = rescaleHeatmapValue(classifiedValue, minMaxValue);
+                            let classifiedValue = closestValue(classifications, hmVal);
+                            let scaledValue = rescaleHeatmapValue(classifiedValue, minMaxValue);
 
                             feat = new ol.Feature({
                                 name: hmVal,
@@ -302,36 +243,18 @@
                     }
                 }
 
-                olVecSrc = new ol.source.Vector({
+                const olVecSrc = new ol.source.Vector({
                     features: olFeatures,
                     useSpatialIndex: true
                 });
                 return olVecSrc;
             }
 
-            function createCircle_() {
-                var radius = this.getRadius();
-                var blur = this.getBlur();
-                var halfSize = radius + blur + 1;
-                var size = 2 * halfSize;
-                var context = ol.dom.createCanvasContext2D(size, size);
-                context.shadowOffsetX = context.shadowOffsetY = this.shadow_;
-                context.shadowBlur = blur;
-                context.shadowColor = '#000';
-                context.beginPath();
-                var center = halfSize - this.shadow_;
-                context.arc(center, center, radius, 0, Math.PI * 2, true);
-                context.fill();
-                return context.canvas.toDataURL();
-            }
-
             function displayTooltip(evt, overlay, tooltip) {
-                var pixel = evt.pixel;
-                var feature = map.forEachFeatureAtPixel(pixel, function(feat) {
-                    return feat;
-                });
+                const pixel = evt.pixel;
+                const feature = map.forEachFeatureAtPixel(pixel, feat => feat);
 
-                var name = feature ? feature.get('name') + feature.get('units') : undefined;
+                const name = feature ? feature.get('name') + feature.get('units') : undefined;
                 tooltip.style.display = name ? '' : 'none';
                 if (name) {
                     overlay.setPosition(evt.coordinate);
@@ -339,38 +262,35 @@
                 }
             }
 
-            service.createOrUpdateHeatMapLayer = function(hmData) {
-                var existingHeatMapLayers, transformInteractionLayer, olVecSrc, newHeatMapLayer;
-
+            service.createOrUpdateHeatMapLayer = hmData => {
                 // Hardcode linear color gradient
-                var sentimetGradient = ["hsl(400, 100%, 50%)", "hsl(399, 100%, 50%)",
+                const sentimetGradient = ["hsl(400, 100%, 50%)", "hsl(399, 100%, 50%)",
                     "hsl(396, 100%, 50%)", "hsl(393, 100%, 50%)", "hsl(390, 100%, 50%)",
                     "hsl(385, 100%, 50%)", "hsl(380, 100%, 50%)", "hsl(360, 100%, 50%)",
                     "hsl(340, 100%, 50%)", "hsl(300, 100%, 50%)",
                     "hsl(260, 100%, 50%)", "hsl(200, 100%, 50%)"];
-
-                var normalCountGradient = generateSigmoidColorGradient(330, 0);
+                const normalCountGradient = generateSigmoidColorGradient(330, 0);
+                const existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
+                const transformInteractionLayer = service.getLayersBy('name',
+                                                                "TransformInteractionLayer")[0];
 
                 hmData.heatmapRadius = 20;
                 hmData.blur = 12;
                 hmData.gradientArray = hmData.posSent ? sentimetGradient : normalCountGradient;
 
-                existingHeatMapLayers = service.getLayersBy('name', 'HeatMapLayer');
-                transformInteractionLayer = service.getLayersBy('name',
-                                                                "TransformInteractionLayer")[0];
-                olVecSrc = createHeatMapSource(hmData);
+                const olVecSrc = createHeatMapSource(hmData);
 
                 if (existingHeatMapLayers && existingHeatMapLayers.length > 0){
-                    var currHeatmapLayer = existingHeatMapLayers[0];
+                    const currHeatmapLayer = existingHeatMapLayers[0];
                     // Update layer source
-                    var layerSrc = currHeatmapLayer.getSource();
+                    const layerSrc = currHeatmapLayer.getSource();
                     if (layerSrc){
                         layerSrc.clear();
                     }
                     currHeatmapLayer.setSource(olVecSrc);
                     currHeatmapLayer.setGradient(hmData.gradientArray);
                 } else {
-                    newHeatMapLayer = new ol.layer.Heatmap({
+                    const newHeatMapLayer = new ol.layer.Heatmap({
                         name: 'HeatMapLayer',
                         source: olVecSrc,
                         radius: hmData.heatmapRadius,
@@ -393,15 +313,13 @@
             * The HEX was replaced with the HSL color model, this allows to generate and
                 array of colors that changes only the hue and maintains saturation and luminosity.
             **/
-            function generateSigmoidColorGradient(maxHue, minHue) {
-                maxHue = maxHue || 300;
-                minHue = minHue || 0;
-                var normalCountGradient = [];
-                var NumberPartition = 12;
-                var delta = (maxHue-minHue);
-                for (var i = -NumberPartition/2; i < NumberPartition/2; i++) {
-                    var hue = sigmoid(i)*delta + minHue;
-                    var hsl = 'hsl(' + hue + ', 100%, 50%)';
+            function generateSigmoidColorGradient(maxHue=300, minHue=0) {
+                const normalCountGradient = [];
+                const NumberPartition = 12;
+                const delta = (maxHue-minHue);
+                for (let i = -NumberPartition/2; i < NumberPartition/2; i++) {
+                    let hue = sigmoid(i)*delta + minHue;
+                    let hsl = 'hsl(' + hue + ', 100%, 50%)';
                     normalCountGradient.push(hsl);
                 }
                 return normalCountGradient.reverse();
@@ -416,18 +334,18 @@
              * will have a white shadow
              */
             function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
-                var polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature)),
-                    backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
+                let polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature));
+                let backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
 
                 if (fromSrs !== service.getMapProjection()){
-                    var polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
+                    const polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
                                                     service.getMapProjection());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
                 // TransformInteractionLayer
                 // holds the value of q.geo
-                var vector = new ol.layer.Vector({
+                const vector = new ol.layer.Vector({
                     name: 'TransformInteractionLayer',
                     source: new ol.source.Vector(),
                     style: new ol.style.Style({
@@ -445,47 +363,45 @@
             }
 
             function setTransactionBBox(extent) {
-                var transformationLayer = service.getLayersBy('name',
-                                                              'TransformInteractionLayer')[0],
-                    vectorSrc = transformationLayer.getSource(),
-                    currentBbox = vectorSrc.getFeatures()[0],
-                    polyNew;
-
-                polyNew = ol.geom.Polygon.fromExtent(extent);
+                const transformationLayer = service.getLayersBy('name',
+                                                              'TransformInteractionLayer')[0];
+                const vectorSrc = transformationLayer.getSource();
+                const currentBbox = vectorSrc.getFeatures()[0];
+                const polyNew = ol.geom.Polygon.fromExtent(extent);
                 currentBbox.setGeometry(polyNew);
             }
 
-            service.calculateReducedBoundingBoxFromInFullScreen = function(extent) {
-                var sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
-                var rightSideBarWidth = 1 - (HeightModule.rightSideBarWidth/$window.innerWidth);
-                var bottomHeight = 1 - (HeightModule.bottomHeight/$window.innerWidth);
-                var topBarPercent = 1 -
+            service.calculateReducedBoundingBoxFromInFullScreen = extent => {
+                const sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
+                const rightSideBarWidth = 1 - (HeightModule.rightSideBarWidth/$window.innerWidth);
+                const bottomHeight = 1 - (HeightModule.bottomHeight/$window.innerWidth);
+                const topBarPercent = 1 -
                     (HeightModule.topPanelHeight()/HeightModule.documentHeight());
                 if(DataConf.solrHeatmapApp.appConfig) {
-                    var dx = extent.maxX - extent.minX,
-                        dy = extent.maxY - extent.minY,
-                        minX = extent.minX + (1 - sideBarPercent) * dx,
-                        maxX = extent.minX + (rightSideBarWidth) * dx,
-                        minY = extent.minY + (1 - bottomHeight) * dy,
-                        maxY = extent.minY + (topBarPercent) * dy;
-                    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+                    const dx = extent.maxX - extent.minX;
+                    const dy = extent.maxY - extent.minY;
+                    const minX = extent.minX + (1 - sideBarPercent) * dx;
+                    const maxX = extent.minX + (rightSideBarWidth) * dx;
+                    const minY = extent.minY + (1 - bottomHeight) * dy;
+                    const maxY = extent.minY + (topBarPercent) * dy;
+                    return {minX, minY, maxX, maxY};
                 }
                 return extent;
             };
 
-            service.calculateFullScreenExtentFromBoundingBox = function(extent) {
+            service.calculateFullScreenExtentFromBoundingBox = extent => {
                 extent = {
                     minX: extent[0], minY: extent[1],
                     maxX: extent[2], maxY: extent[3]
                 };
-                var sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
-                var topBarPercent = 1 -
+                const sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
+                const topBarPercent = 1 -
                     (HeightModule.topPanelHeight()/HeightModule.documentHeight());
 
-                var dx = extent.maxX - extent.minX,
-                    dy = extent.maxY - extent.minY,
-                    minX = extent.minX + dx - (dx/sideBarPercent),
-                    maxY = extent.minY + dy/topBarPercent;
+                const dx = extent.maxX - extent.minX;
+                const dy = extent.maxY - extent.minY;
+                const minX = extent.minX + dx - (dx/sideBarPercent);
+                const maxY = extent.minY + dy/topBarPercent;
                 return [minX, extent.minY, extent.maxX, maxY];
             };
 
@@ -495,11 +411,11 @@
              * the transform box will be resized to
              * DataConf.solrHeatmapApp.appConfig.ratioInnerBbox percent
              */
-            service.checkBoxOfTransformInteraction = function() {
-                var mapExtent = service.getMapView().calculateExtent(service.getMapSize());
+            service.checkBoxOfTransformInteraction = () => {
+                const mapExtent = service.getMapView().calculateExtent(service.getMapSize());
 
                 // calculate reduced bounding box
-                var reducedBoundingBox = service.calculateReducedBoundingBoxFromInFullScreen({
+                const reducedBoundingBox = service.calculateReducedBoundingBoxFromInFullScreen({
                     minX: mapExtent[0], minY: mapExtent[1],
                     maxX: mapExtent[2], maxY: mapExtent[3]
                 });
@@ -511,34 +427,34 @@
             /**
              * Helper method to reset the map
              */
-            service.resetMap = function() {
+            service.resetMap = () => {
                 // Reset view
-                var intitalCenter = DataConf.solrHeatmapApp.initMapConf.view.center,
-                    intitalZoom = DataConf.solrHeatmapApp.initMapConf.view.zoom;
+                const intitalCenter = DataConf.solrHeatmapApp.initMapConf.view.center;
+                const intitalZoom = DataConf.solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
-                    var vw = service.getMapView();
+                    const vw = service.getMapView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
                     service.checkBoxOfTransformInteraction();
                 }
             };
 
-            service.getReducedQueryFromExtent = function(extentQuery) {
-                var extent = queryService.getExtentFromQuery(extentQuery);
+            service.getReducedQueryFromExtent = extentQuery => {
+                const extent = queryService.getExtentFromQuery(extentQuery);
                 return queryService.
                     createQueryFromExtent(
                         service.calculateReducedBoundingBoxFromInFullScreen(extent));
             };
 
-            service.getCurrentExtentQuery = function(){
-                var currentExtent = service.getCurrentExtent();
+            service.getCurrentExtentQuery = () => {
+                const currentExtent = service.getCurrentExtent();
                 return {
                     geo: queryService.createQueryFromExtent(currentExtent.geo),
                     hm: queryService.createQueryFromExtent(currentExtent.hm)
                 };
             };
 
-            service.createExtentFromNormalize = function(normalizedExtent) {
+            service.createExtentFromNormalize = normalizedExtent => {
                 return {
                     minX: normalizedExtent[0],
                     minY: normalizedExtent[1],
@@ -552,22 +468,20 @@
              * This filter will be used later for `q.geo` parameter of the API
              * search or export request.
              */
-            service.getCurrentExtent = function(){
-                var viewProj = service.getMapProjection(),
-                    extent = service.getMapView().calculateExtent(service.getMapSize()),
-                    extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326'),
-                    transformInteractionLayer = service.
-                                    getLayersBy('name', 'TransformInteractionLayer')[0],
-                    currentBbox,
-                    currentBboxExtentWgs84,
-                    currentExtent = {},
-                    currentExtentBox = {};
+            service.getCurrentExtent = () => {
+                const viewProj = service.getMapProjection();
+                const extent = service.getMapView().calculateExtent(service.getMapSize());
+                const transformInteractionLayer = service.
+                                    getLayersBy('name', 'TransformInteractionLayer')[0];
+                let extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326');
+                let currentExtent = {};
+                let currentExtentBox = {};
 
                 if (!transformInteractionLayer) {
                     return null;
                 }
-                currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
-                currentBboxExtentWgs84 = ol.proj.transformExtent(
+                const currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
+                const currentBboxExtentWgs84 = ol.proj.transformExtent(
                                 currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
 
                 // default: Zoom level <= 1 query whole world
@@ -576,50 +490,50 @@
                 }
 
                 if (extent && extentWgs84){
-                    var normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84);
-                    var normalizedExtentBox = NormalizeService
+                    const normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84);
+                    const normalizedExtentBox = NormalizeService
                             .normalizeExtent(currentBboxExtentWgs84);
 
                     currentExtent = service.createExtentFromNormalize(normalizedExtentMap);
 
                     currentExtentBox = service.createExtentFromNormalize(normalizedExtentBox);
 
-                    var roundToFixed = function(value){
+                    const roundToFixed = value => {
                         return parseFloat(Math.round(value* 100) / 100).toFixed(2);
                     };
                     // Reset the date fields
-                    $rootScope.$broadcast('geoFilterUpdated', '[' +
-                                            roundToFixed(currentExtentBox.minX) + ',' +
-                                            roundToFixed(currentExtentBox.minY) + ' TO ' +
-                                            roundToFixed(currentExtentBox.maxX) + ',' +
-                                            roundToFixed(currentExtentBox.maxY) + ']');
+                    $rootScope.$broadcast('geoFilterUpdated',
+                                                    `[${roundToFixed(currentExtentBox.minX)},
+                                                    ${roundToFixed(currentExtentBox.minY)} TO
+                                                    ${roundToFixed(currentExtentBox.maxX)},
+                                                    ${roundToFixed(currentExtentBox.maxY)}]`);
                 }
 
-                return {hm: currentExtent, geo: currentExtentBox};
+                return { hm: currentExtent, geo: currentExtentBox };
             };
 
-            service.removeAllfeatures = function() {
+            service.removeAllfeatures = () => {
                 if (angular.isObject(map)) {
-                    var layersWithBbox = service.getLayersBy('isbbox', true);
+                    const layersWithBbox = service.getLayersBy('isbbox', true);
                     layersWithBbox[0].getSource().clear();
                 }
             };
 
-            service.addCircle = function(point, style) {
+            service.addCircle = (point, style) => {
 
-                var geojsonObject = {
+                const geojsonObject = {
                     "type": "Feature",
                     "geometry": {"type": "Point", "coordinates": ol.proj.fromLonLat(point)}
                 };
 
                 if (angular.isObject(map) && Object.keys(map).length !== 0) {
-                    var layersWithBbox = service.getLayersBy('isbbox', true);
-                    var features = (new ol.format.GeoJSON).readFeatures(geojsonObject);
+                    const layersWithBbox = service.getLayersBy('isbbox', true);
+                    const features = (new ol.format.GeoJSON).readFeatures(geojsonObject);
 
                     if (layersWithBbox.length) {
                         layersWithBbox[0].getSource().addFeatures(features);
                     }else{
-                        var vectorLayer = new ol.layer.Vector({
+                        const vectorLayer = new ol.layer.Vector({
                             isbbox: true,
                             source: new ol.source.Vector({
                                 features: features
@@ -632,7 +546,7 @@
                 }
             };
 
-            service.toggleBaseMaps = function() {
+            service.toggleBaseMaps = () => {
                 service.googleLayer.setVisible(!service.googleLayer.getVisible());
                 service.tonerLayer.setVisible(!service.tonerLayer.getVisible());
             };
@@ -640,12 +554,11 @@
             /**
              *
              */
-            service.init = function(config) {
-                var viewConfig = angular.extend(defaults.view,
-                                                    config.mapConfig.view),
-                    rendererConfig = config.mapConfig.renderer ?
-                        config.mapConfig.renderer : defaults.renderer,
-                    layerConfig = config.mapConfig.layers;
+            service.init = config => {
+                const viewConfig = angular.extend(defaults.view, config.mapConfig.view);
+                const rendererConfig = config.mapConfig.renderer ?
+                        config.mapConfig.renderer : defaults.renderer;
+                const layerConfig = config.mapConfig.layers;
 
                 map = new ol.Map({
                     // use OL3-Google-Maps recommended default interactions
@@ -681,11 +594,11 @@
                     })
                 });
 
-                var olGM = new olgm.OLGoogleMaps({map: map}); // map is the ol.Map instance
+                const olGM = new olgm.OLGoogleMaps({map: map}); // map is the ol.Map instance
                 olGM.activate();
 
                 if (angular.isArray(viewConfig.extent)) {
-                    var vw = map.getView();
+                    const vw = map.getView();
                     vw.set('extent', viewConfig.extent);
                     generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
 
@@ -694,17 +607,15 @@
                     }
                 }
 
-                var tooltip = $window.document.getElementById('tooltip');
-                var overlay = new ol.Overlay({
+                const tooltip = $window.document.getElementById('tooltip');
+                const overlay = new ol.Overlay({
                     element: tooltip,
                     offset: [10, 0],
                     positioning: 'bottom-left'
                 });
                 map.addOverlay(overlay);
 
-                map.on('pointermove', function (evt) {
-                    displayTooltip(evt, overlay, tooltip);
-                });
+                map.on('pointermove', evt => displayTooltip(evt, overlay, tooltip));
             };
             return service;
         }]

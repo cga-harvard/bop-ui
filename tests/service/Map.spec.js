@@ -141,18 +141,6 @@ describe( 'HeatMapSourceGenerator', function() {
             expect(getMapSpy.getArray).toHaveBeenCalled();
         });
     });
-    describe('#getInteractions', function() {
-        var getMapSpy;
-        beforeEach(function() {
-            getMapSpy = jasmine.createSpyObj('map', ['getArray']);
-            var mapView = { getInteractions: function() { return getMapSpy; } };
-            spyOn(subject, 'getMap').and.returnValue(mapView);
-        });
-        it('calls the spy', function() {
-            subject.getInteractions();
-            expect(getMapSpy.getArray).toHaveBeenCalled();
-        });
-    });
     describe('#getMapZoom', function() {
         var getMapSpy;
         beforeEach(function() {
@@ -176,31 +164,7 @@ describe( 'HeatMapSourceGenerator', function() {
             expect(subject.getLayersBy('key', 'SF')).toEqual([]);
         });
     });
-    describe('#getInteractionByClass', function() {
-        function SD() {}
-        function SF() {}
-        beforeEach(function() {
-            spyOn(subject, 'getInteractions').and.returnValue([new SD()]);
-        });
-        it('returns interaction for class ', function() {
-            expect(subject.getInteractionsByClass(SD)).toEqual([new SD]);
-        });
-        it('returns interaction for class ', function() {
-            expect(subject.getInteractionsByClass(SF)).toEqual([]);
-        });
-    });
-    describe('#getInteractionByType', function() {
-        var interaction;
-        beforeEach(function() {
-            interaction = { type_: 'SD' };
-        });
-        it('returns interaction for class ', function() {
-            expect(subject.getInteractionsByType([interaction], 'SD')).toEqual([interaction]);
-        });
-        it('returns interaction for class ', function() {
-            expect(subject.getInteractionsByType([interaction], 'SF')).toEqual([]);
-        });
-    });
+
     describe('#getCurrentExtent', function() {
         var extent, mapZoomSpy, layerSpy, view;
         beforeEach(function() {
@@ -285,7 +249,6 @@ describe( 'HeatMapSourceGenerator', function() {
             layer = { getSource: function() { return { clear: function() {}, getFeatures: function() { return [{setGeometry: function() { }}];}}; }};
             getViewSpy = jasmine.createSpyObj('map', ['setCenter', 'setZoom']);
             spyOn(subject, 'getMapView').and.returnValue(getViewSpy);
-            spyOn(subject, 'getInteractions').and.returnValue([]);
             spyOn(subject, 'getLayersBy').and.returnValue([layer]);
             spyOn(subject, 'checkBoxOfTransformInteraction');
         });
@@ -318,7 +281,6 @@ describe( 'HeatMapSourceGenerator', function() {
             spyOn(subject, 'getLayersBy').and.returnValue([layer]);
             spyOn(subject, 'getMapView').and.returnValue(getView);
             spyOn(subject, 'getMapSize').and.returnValue([10,10]);
-            spyOn(subject, 'getInteractions').and.returnValue([]);
         });
         it('does call the spy', function() {
             subject.checkBoxOfTransformInteraction();
@@ -363,7 +325,6 @@ describe( 'HeatMapSourceGenerator', function() {
         it('sets new extent', function() {
             layer = { getSource: function() { return { clear: function() {}, getFeatures: function() { return [{setGeometry: function() { }}];}}; }};
             spyOn(subject, 'getMapProjection').and.returnValue('EPSG:4326');
-            spyOn(subject, 'getInteractions').and.returnValue([]);
             var layerSpy = spyOn(subject, 'getLayersBy').and.returnValue([layer]);
             subject.updateTransformationLayerFromQueryForMap('[0,2 TO 1,3]', 'EPSG:3857');
         });

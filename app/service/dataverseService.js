@@ -5,7 +5,7 @@
     .module('SolrHeatmapApp')
     .factory('dataverseService', ['$rootScope', 'DataConf', '$http',
         function ($rootScope, DataConf, $http) {
-            const dataverse = {
+            let dataverse = {
                 AllowDataverseDeposit: false
             };
 
