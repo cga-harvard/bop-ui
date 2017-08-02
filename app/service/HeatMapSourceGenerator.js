@@ -11,32 +11,30 @@
         '$q', '$http', '$state', 'searchFilter', 'DateTimeService', '$window', '$httpParamSerializer',
         function(DataConf, Map, $rootScope, $log, $q, $http, $state, searchFilter,
             DateTimeService, $window, $httpParamSerializer) {
-            var MapService= Map;
-            var canceler = $q.defer();
+            const MapService = Map;
+            let canceler = $q.defer();
 
             function simpleSearch(params, callback) {
-                var sF = searchFilter;
+                const sF = searchFilter;
                 params['q.text'] = sF.text;
                 params['q.user'] = sF.user;
                 params['q.time'] = timeTextFormat(sF.time, sF.minDate, sF.maxDate);
                 canceler.resolve();
                 canceler = $q.defer();
-                var config = {
+                const config = {
                     url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                     method: 'GET',
                     params: params,
                     timeout: canceler.promise
                 };
-                $http(config).then(function(response) {
-                    return callback(response);
-                });
+                $http(config).then(response => callback(response));
             }
 
             /**
              *
              */
             function createParamsForGeospatialSearch () {
-                var sF = searchFilter;
+                const sF = searchFilter;
                 return {
                     'q.text': sF.text,
                     'q.user': sF.user,
@@ -67,12 +65,12 @@
              * Performs search with the given full configuration / search object.
              */
             function search(changeUrl){
-                var config, params = createParamsForGeospatialSearch();
+                const params = createParamsForGeospatialSearch();
                 changeUrl = angular.isUndefined(changeUrl) || changeUrl ? true : false;
                 if (params) {
                     canceler.resolve();
                     canceler = $q.defer();
-                    config = {
+                    const config = {
                         url: DataConf.solrHeatmapApp.appConfig.tweetsSearchBaseUrl,
                         method: 'GET',
                         params: params,
@@ -80,17 +78,19 @@
                     };
                     //load the data
                     $http(config)
-                    .then(function successCallback(response) {
+                    .then(response => {
                         if (changeUrl) {
                             setUrlwithParams(params);
                         }
-                        // check if we have a heatmap facet and update the map with it
-                        var data = response.data;
-                        // DataCacheService.insertData(config.params, data);
-                        broadcastData(data);
+                        broadcastData(response.data);
 
-                    }, function errorCallback(response) {
-                        $log.error('An error occured while reading heatmap data');
+                    }, errorResponse => {
+                        $log.error('An error occured while reading heatmap data', errorResponse);
+                        $http.get('./config/demoBOP.json').then(response => {
+                            broadcastData(response.data);
+                        }, errorResponse => {
+                            $log.error('An error occured while reading the demo heatmap data', errorResponse);
+                        });
                     })
                     .catch(function(e) {
                         $log.error('An error occured while reading heatmap data', e);
@@ -103,7 +103,7 @@
             function broadcastData(data) {
                 data['a.text'] = data['a.text'] || [];
                 if (data && data['a.hm']) {
-                    var heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
+                    const heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
 
                     MapService.createOrUpdateHeatMapLayer(heatmapData);
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
@@ -115,14 +115,14 @@
             }
 
             function NormalizeSentiment(heatMapData) {
-                var heatMapCountMatrix = heatMapData['a.hm'].counts_ints2D;
-                var positivesCountMatrix = heatMapData['a.hm.posSent'].counts_ints2D;
+                const heatMapCountMatrix = heatMapData['a.hm'].counts_ints2D;
+                const positivesCountMatrix = heatMapData['a.hm.posSent'].counts_ints2D;
 
-                var normalPositivesCountMatrix = heatMapCountMatrix.map(
+                const normalPositivesCountMatrix = heatMapCountMatrix.map(
                     function (heatMapCountRow, rowIndex) {
                         if (angular.isArray(heatMapCountRow) ) {
-                            var normalizedSentimentRow = new Uint8Array(heatMapCountRow.length);
-                            heatMapCountRow.map(function (heatMapCellvalue, cellIndex) {
+                            const normalizedSentimentRow = new Uint8Array(heatMapCountRow.length);
+                            heatMapCountRow.map( (heatMapCellvalue, cellIndex) => {
                                 if (heatMapCellvalue !== 0 && positivesCountMatrix[rowIndex]) {
                                     normalizedSentimentRow[cellIndex] = (positivesCountMatrix[rowIndex][cellIndex]/heatMapCellvalue)*100;
                                 } else {
@@ -141,8 +141,8 @@
             }
 
             function startCsvExport(numberOfDocuments){
-                var url,
-                    params = createParamsForGeospatialSearch();
+                let url;
+                const params = createParamsForGeospatialSearch();
                 if (params) {
                     params['d.docs.limit'] = angular.isNumber(numberOfDocuments) ?
                             numberOfDocuments : DataConf.solrHeatmapApp.bopwsConfig.csvDocsLimit;

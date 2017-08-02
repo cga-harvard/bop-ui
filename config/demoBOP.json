@@ -1,0 +1,542 @@
+{
+  "a.matchDocs" : 19212377,
+  "d.docs" : [ {
+    "id" : "875808613561806848",
+    "created_at" : "2017-06-16T20:13:39.867Z",
+    "coord" : "2.38333,-52.45",
+    "text" : "recarregando \uD83D\uDD0B\uD83C\uDF1E @ Cachoeira Pedreira https://t.co/fF90zhAufF",
+    "user_name" : "victoriarocha__",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "865193569962917888",
+    "created_at" : "2017-05-18T13:13:16.255Z",
+    "coord" : "2.57435871,-52.73332746",
+    "text" : "#17572\nCamopi, French Guiana\nmap: https://t.co/1qgL064q0c https://t.co/O4Ai2DzWAP",
+    "user_name" : "BPEarth",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/1",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Camopi"
+  }, {
+    "id" : "864078644607672320",
+    "created_at" : "2017-05-15T11:22:57.336Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "8 dias de serviÃ§o em um cliente em Oiapoque Ap, FarmÃ¡cia Araujo Cliente TNT... @ Oiapoque https://t.co/Ahpx4hMK2L",
+    "user_name" : "xguardiao",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "875007755253301251",
+    "created_at" : "2017-06-14T15:11:20.367Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Boa tarde! @ Oiapoque https://t.co/LJUKz51PHw",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "878758506815533056",
+    "created_at" : "2017-06-24T23:35:29.225Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Vamo pro forrÃ³ \uD83D\uDE02\uD83D\uDE02\uD83D\uDE02 @ Oiapoque https://t.co/LrxlPFTnug",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "853465657631010817",
+    "created_at" : "2017-04-16T04:30:44.061Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Boatos que Oiapoque Ã© um lugar ruim de viver kkkk #Amazon @ Oiapoque https://t.co/BhmdkqZJlB",
+    "user_name" : "DarrlanFarias",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "854673796103622656",
+    "created_at" : "2017-04-19T12:31:26.719Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Ãndio Ã© aquele que diz que Ã©, e nÃ£o aquele que usa pena ou cocar !! @ Oiapoque https://t.co/w4AFM7XdPx",
+    "user_name" : "tumucumaq",
+    "sentiment_pos" : false,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "856161666723045376",
+    "created_at" : "2017-04-23T15:03:42.718Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Muito calmo \uD83E\uDD19\uD83C\uDFFF\uD83D\uDE03 @ Oiapoque https://t.co/SXBhfLcscN",
+    "user_name" : "brbrruno",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "857189631212765184",
+    "created_at" : "2017-04-26T11:08:28.551Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Vamos lÃ¡! @ Oiapoque https://t.co/tVwwSekk6m",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "857189635188981760",
+    "created_at" : "2017-04-26T11:08:29.499Z",
+    "coord" : "3.83333,-51.8333",
+    "text" : "Vamos lÃ¡! @ Oiapoque https://t.co/iTU10G3QZb",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "861435707457495041",
+    "created_at" : "2017-05-08T04:20:52.016Z",
+    "coord" : "3.8353305,-51.8322815",
+    "text" : "Eita que o sono nÃ£o vem",
+    "user_name" : "ingridiara2",
+    "sentiment_pos" : false,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "862134976808181760",
+    "created_at" : "2017-05-10T02:39:30.821Z",
+    "coord" : "3.84508806,-51.83473131",
+    "text" : "I'm at Oiapoque in AP https://t.co/AMawiVUMPl",
+    "user_name" : "Weltonleite",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "860096641700724740",
+    "created_at" : "2017-05-04T11:39:53.861Z",
+    "coord" : "3.8454529,-51.8339859",
+    "text" : "Vai um cafezinho aÃ­, dryers? \uD83D\uDE02 Bom dia! @ Unifap - Campus Binacional https://t.co/Za3mP19t2g",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "860096645962379265",
+    "created_at" : "2017-05-04T11:39:54.877Z",
+    "coord" : "3.8454529,-51.8339859",
+    "text" : "Vai um cafezinho aÃ­, dryers? \uD83D\uDE02 Bom dia! @ Unifap - Campus Binacional https://t.co/mP9yz07QIe",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "864507844451680256",
+    "created_at" : "2017-05-16T15:48:26.553Z",
+    "coord" : "3.8454529,-51.8339859",
+    "text" : "[\uD83D\uDD0B\uD83D\uDD0B\uD83D\uDD0B             ] @ Unifap - Campus Binacional https://t.co/VVpxa1ZnyT",
+    "user_name" : "IsanOliveira",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "858097776235864064",
+    "created_at" : "2017-04-28T23:17:07.197Z",
+    "coord" : "3.84672766,-51.83482405",
+    "text" : "Tomando uma ice 51, mais uma vez !!! @ Faceburguer https://t.co/20FEJC6T0S",
+    "user_name" : "Claude973",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/132",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Oiapoque"
+  }, {
+    "id" : "852674144131002370",
+    "created_at" : "2017-04-14T00:05:32.537Z",
+    "coord" : "1.383889,-51.811389",
+    "text" : "Just posted a photo @ AmapÃ¡ https://t.co/e6yevhQVvd",
+    "user_name" : "changkibr",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/135",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/PracuÃºba"
+  }, {
+    "id" : "873919771548557313",
+    "created_at" : "2017-06-11T15:08:04.838Z",
+    "coord" : "3.9,-51.8",
+    "text" : "So Lesson One : Enjoy The Life\uD83D\uDE0CâœŒ\nLesson Two : Life Is Good\uD83D\uDC99 @â€¦ https://t.co/USjmalxLEA",
+    "user_name" : "RaFaelKinG9",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/12",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Georges (de l'Oyapock)"
+  }, {
+    "id" : "851932008993390592",
+    "created_at" : "2017-04-11T22:56:33.732Z",
+    "coord" : "3.9292261,-53.03189155",
+    "text" : "Qui veux tester nos produits it works validÃ© par nos stars\nJessica Thivenin \nNabilla\nAnais\nMÃ©lanie \nPartager et pouâ€¦ https://t.co/Axs3W7NdNM",
+    "user_name" : "CharlesGladys4",
+    "sentiment_pos" : false,
+    "geoadmin_admin2" : "/80/1/8",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/RÃ©gina (-Kaw)"
+  }, {
+    "id" : "878626671330549760",
+    "created_at" : "2017-06-24T14:51:37.196Z",
+    "coord" : "2.49777778,-50.94888889",
+    "text" : "Nunca entendi essa fala, de que voltar para suas raÃ­zes lhe fazâ€¦ https://t.co/QpdLgUOU0q",
+    "user_name" : "ddiuan",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/125",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/CalÃ§oene"
+  }, {
+    "id" : "858871461674573824",
+    "created_at" : "2017-05-01T02:31:28.180Z",
+    "coord" : "2.15,-51.0167",
+    "text" : "Aquele dia que vocÃª pega a estrada, com pessoas maravilhosamenteâ€¦ https://t.co/tfiMLncwyg",
+    "user_name" : "camischagaas",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "863444458225926144",
+    "created_at" : "2017-05-13T17:22:55.520Z",
+    "coord" : "4.0,-53.0",
+    "text" : "#flowers #mygarden #Guyane #973 #nature @ French Guiana https://t.co/tlTbhjgllU",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "863383020413345793",
+    "created_at" : "2017-05-13T13:18:47.604Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Ma nouvelle passion : les #plantescarnivores #Guyane #973 #nature @ French Guiana https://t.co/hziEjhYY4z",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "863065365668126720",
+    "created_at" : "2017-05-12T16:16:32.811Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Found this lil' baby #finderkeepers #snake #Guyane #serpencoco #nature #magic @ French Guiana https://t.co/nWamfKggPD",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "863005222645485568",
+    "created_at" : "2017-05-12T12:17:33.597Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Goodies from the #garden #growyourownfood #Guyane #973 #nature #igrowthings @ French Guiana https://t.co/774zFp7TyP",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "859114569154916352",
+    "created_at" : "2017-05-01T18:37:29.520Z",
+    "coord" : "4.0,-53.0",
+    "text" : "New baby #flowers #mygarden #Guyane #973 #nature #magic @ French Guiana https://t.co/WZTAzfYYw5",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "868861906970443776",
+    "created_at" : "2017-05-28T16:09:55.952Z",
+    "coord" : "4.0,-53.0",
+    "text" : "This lil baby in my pineaples #snake #serpent #mygarden #Guyane #973 #nature @ French Guiana https://t.co/10jv68q1NZ",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "868837068197285888",
+    "created_at" : "2017-05-28T14:31:13.927Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Finaly! #firsteggs #proud #growyourownfood #mygarden #Guyane @ French Guiana https://t.co/aJYZLlKHV6",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "864214373736296448",
+    "created_at" : "2017-05-15T20:22:17.682Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Located. \uD83D\uDDFA\n#Home. @ French Guiana https://t.co/IwO31HNWmk",
+    "user_name" : "Naorella",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "853109946304438272",
+    "created_at" : "2017-04-15T04:57:15.872Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Hoje Ã© meu dia parabÃ©ns pra mim .\nObrigado Deus por mais um ano de vida , obrigado por tudo queâ€¦ https://t.co/ClN6m5v7Nd",
+    "user_name" : "Thonnyyankee",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "858716578971611136",
+    "created_at" : "2017-04-30T16:16:01.266Z",
+    "coord" : "4.0,-53.0",
+    "text" : "Morning #flowers #mygarden #Guyane #973 #nature #magic @ French Guiana https://t.co/NwJ2Gr2XYq",
+    "user_name" : "Julienresiste",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/80/1/11",
+    "geoadmin_admin2_txt" : "/French Guiana/Cayenne/Saint-Elie"
+  }, {
+    "id" : "869966047071264768",
+    "created_at" : "2017-05-31T17:17:23.466Z",
+    "coord" : "1.0,-52.0",
+    "text" : "Ã‰ aquela velha frase, \"quem faz o que gosta...\" \nInfantaria de selva! Aqui comeÃ§a o Brasil...â€¦ https://t.co/hGTdDc0ZVz",
+    "user_name" : "_lp12pte",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/137",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Serra do Navio"
+  }, {
+    "id" : "859484195881615360",
+    "created_at" : "2017-05-02T19:06:15.399Z",
+    "coord" : "0.983333,-52.05",
+    "text" : "25Â° aniversÃ¡rio do nosso municÃ­pio de Serra do Navio! @ Serra do Navio https://t.co/5q6OxDMGUQ",
+    "user_name" : "priscillasilve2",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/133",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Pedra Branca do AmaparÃ­"
+  }, {
+    "id" : "852724452290772992",
+    "created_at" : "2017-04-14T03:25:26.937Z",
+    "coord" : "0.983333,-52.05",
+    "text" : "HÃ¡ pessoas na vida que chegam de repente, onde e quando menosâ€¦ https://t.co/ZkgtZ2w7ng",
+    "user_name" : "priscillasilve2",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/133",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/Pedra Branca do AmaparÃ­"
+  }, {
+    "id" : "863056031995375616",
+    "created_at" : "2017-05-12T15:39:27.490Z",
+    "coord" : "2.05,-50.8",
+    "text" : "Rio Flexal ! \n\n#rioflexal #jimdavisadventures #pororocasurftrips #pescaria #pescaesportivaâ€¦ https://t.co/HVet4z1thT",
+    "user_name" : "jim_almeida",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "860139674257559552",
+    "created_at" : "2017-05-04T14:30:53.622Z",
+    "coord" : "2.05,-50.8",
+    "text" : "Pescaria no Rio Flexal, a tarde Pororoca!!!!!\n\n#jimdavis #jimdavisadventures #municÃ­piodeamapÃ¡â€¦ https://t.co/p3mQCCvDt0",
+    "user_name" : "jim_almeida",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "859456755717349377",
+    "created_at" : "2017-05-02T17:17:13.154Z",
+    "coord" : "2.05,-50.8",
+    "text" : "Eu e o piloto e conhecedor da Pororoca do Rio Flexal no AmapÃ¡.\nEsse Ã© Jairo, soldado eâ€¦ https://t.co/Sy6M68VEPN",
+    "user_name" : "jim_almeida",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "864147583668826112",
+    "created_at" : "2017-05-15T15:56:53.689Z",
+    "coord" : "2.05,-50.8",
+    "text" : "\uD83C\uDF33\uD83C\uDF33\uD83D\uDC1F\uD83C\uDF1E\uD83D\uDCB0\uD83D\uDC8E\n\n#oil \n#gemstones \n#mining \n#mininglife @ AmapÃ¡, Amapa, Brazil https://t.co/0NBgxlKFHh",
+    "user_name" : "CTAMenezes",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "858731398106144769",
+    "created_at" : "2017-04-30T17:14:54.423Z",
+    "coord" : "2.05,-50.8",
+    "text" : "Garantir e reconhecer direitos das pessoas com Transtorno do Espectro Autista Ã© uma das grandesâ€¦ https://t.co/aTsiTC3u0i",
+    "user_name" : "tumucumaq",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "853450264707293184",
+    "created_at" : "2017-04-16T03:29:34.102Z",
+    "coord" : "2.0526399,-50.79242",
+    "text" : "#noitecomeles â¤ï¸#pqsomoslindos \uD83D\uDC85\uD83C\uDFFB #evidence #insoniaâ€¦ https://t.co/zf3I72jcQL",
+    "user_name" : "milenadelgado87",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "858780220639199232",
+    "created_at" : "2017-04-30T20:28:54.622Z",
+    "coord" : "2.0471,-50.7927899",
+    "text" : "Hoje Ã© dia de... Mengooo \uD83D\uDE0Dâ¤ï¸\uD83D\uDDA4 @ Quiosque Aconchego, PraÃ§a Do CocÃ´ https://t.co/aeZ4NZLmTj",
+    "user_name" : "KarenBrito__",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "863152213660762112",
+    "created_at" : "2017-05-12T22:01:38.986Z",
+    "coord" : "2.0471315,-50.79203",
+    "text" : "JÃ¡ na terrinha (@ MunicÃ­pio de AmapÃ¡ in AmapÃ¡, ap) https://t.co/kjd0W9vNeh",
+    "user_name" : "miikebrow",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "852803444880449537",
+    "created_at" : "2017-04-14T08:39:20.238Z",
+    "coord" : "2.0471315,-50.79203",
+    "text" : "Bom dia :) uma sexta feira santa abenÃ§oda Ã  vocÃªs! (@ MunicÃ­pio de AmapÃ¡ in AmapÃ¡, ap) https://t.co/8d8MTlqIlq",
+    "user_name" : "_GabiCastillo",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "855639867144916992",
+    "created_at" : "2017-04-22T04:30:16.004Z",
+    "coord" : "2.04782,-50.79148",
+    "text" : "â¤ï¸\uD83C\uDF43âš“ï¸ @ Kiosko Bar https://t.co/eAl91xpwKp",
+    "user_name" : "milenadelgado87",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "863212473360539649",
+    "created_at" : "2017-05-13T02:01:06.018Z",
+    "coord" : "2.047106,-50.791332",
+    "text" : "Vamos lÃ¡ galera pro esquenta de 10 do Dj Tubinho, jÃ¡ por aqui (@ Kiosko Bar) https://t.co/9IiLRJLY5x",
+    "user_name" : "miikebrow",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "858187247585308672",
+    "created_at" : "2017-04-29T05:12:38.829Z",
+    "coord" : "2.047106,-50.791332",
+    "text" : "I'm at Kiosko Bar https://t.co/Qrt3HfzGM0",
+    "user_name" : "miikebrow",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "871133510744059904",
+    "created_at" : "2017-06-03T22:36:28.496Z",
+    "coord" : "2.04122266,-50.79301357",
+    "text" : "ClÃ¡ssico! Vera x Fronteira (@ Estadio Julio Vieira in AmapÃ¡, AP) https://t.co/AjwgXC6dbH",
+    "user_name" : "vickgauthier",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "860962457518579712",
+    "created_at" : "2017-05-06T21:00:20.438Z",
+    "coord" : "2.05006755,-50.78863363",
+    "text" : "Ontem o pessoal quase me matam do coraÃ§Ã£o, literalmente, a pressÃ£oâ€¦ https://t.co/k9VfrBVV3d",
+    "user_name" : "JP_JessyPaty",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "852533499504582656",
+    "created_at" : "2017-04-13T14:46:40.245Z",
+    "coord" : "2.05006755,-50.78863363",
+    "text" : "â™¦â™ \uD83C\uDCCF\uD83C\uDFB2\uD83C\uDFB1\uD83C\uDFB0\uD83C\uDFABâ™£â™¥ï¸ _\nâœ¨\uD83D\uDC5B âœ¨#SAB|29|ABRIL âœ¨\uD83D\uDC5Bâœ¨ _\nâœ¨\uD83D\uDC83\uD83C\uDFFB MUNICÃPIO DE AMAPÃ \uD83D\uDD7A\uD83C\uDFFBâœ¨\n_ \n#UMA_NOITE_NO_CABARET\uD83C\uDF77 \n_\nOâ€¦ https://t.co/VZ9f1qiAi7",
+    "user_name" : "hadsonn",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  }, {
+    "id" : "854872399476666368",
+    "created_at" : "2017-04-20T01:40:37.453Z",
+    "coord" : "2.05006755,-50.78863363",
+    "text" : "â™¦â™ \uD83C\uDCCF\uD83C\uDFB2\uD83C\uDFB1\uD83C\uDFB0\uD83C\uDFABâ™£â™¥ï¸ _\nâœ¨\uD83D\uDC5B âœ¨#SAB|29|ABRIL âœ¨\uD83D\uDC5Bâœ¨ _\nâœ¨\uD83D\uDC83\uD83C\uDFFB MUNICÃPIO DE AMAPÃ \uD83D\uDD7A\uD83C\uDFFBâœ¨\n#UMA_NOITE_NO_CABARET\uD83C\uDF77 \n_\nO Luxoâ€¦ https://t.co/BO3Z7spQLC",
+    "user_name" : "hadsonn",
+    "sentiment_pos" : true,
+    "geoadmin_admin2" : "/33/3/124",
+    "geoadmin_admin2_txt" : "/Brazil/AmapÃ¡/AmapÃ¡"
+  } ],
+  "a.time" : {
+    "start" : "2017-04-10T00:00:00Z",
+    "end" : "2017-07-10T00:00:00Z",
+    "gap" : "P1W",
+    "counts" : [ {
+      "value" : "2017-04-10T00:00:00Z",
+      "count" : 3002821
+    }, {
+      "value" : "2017-04-17T00:00:00Z",
+      "count" : 2889559
+    }, {
+      "value" : "2017-04-24T00:00:00Z",
+      "count" : 2907842
+    }, {
+      "value" : "2017-05-01T00:00:00Z",
+      "count" : 2558621
+    }, {
+      "value" : "2017-05-08T00:00:00Z",
+      "count" : 2804371
+    }, {
+      "value" : "2017-05-15T00:00:00Z",
+      "count" : 943903
+    }, {
+      "value" : "2017-05-22T00:00:00Z",
+      "count" : 460610
+    }, {
+      "value" : "2017-05-29T00:00:00Z",
+      "count" : 736221
+    }, {
+      "value" : "2017-06-05T00:00:00Z",
+      "count" : 838878
+    }, {
+      "value" : "2017-06-12T00:00:00Z",
+      "count" : 651175
+    }, {
+      "value" : "2017-06-19T00:00:00Z",
+      "count" : 909127
+    }, {
+      "value" : "2017-06-26T00:00:00Z",
+      "count" : 509249
+    }, {
+      "value" : "2017-07-03T00:00:00Z",
+      "count" : 0
+    } ]
+  },
+  "a.hm" : {
+    "gridLevel" : 7,
+    "rows" : 48,
+    "columns" : 85,
+    "minX" : -180.0,
+    "maxX" : 59.0625,
+    "minY" : -61.875,
+    "maxY" : 73.125,
+    "counts_ints2D" : [ [ 2, 0, 0, 0, 0, 0, 0, 1, 67, 1, 2, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 7, 1, 3, 129, 0, 1, 0, 0, 0, 0, 0, 1, 4, 2, 2, 0, 76, 2, 0, 1, 0, 0, 2, 64, 0, 0, 0, 25, 1, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 23, 5, 4, 6, 10, 6, 0, 2, 0, 2, 1, 0 ], [ 0, 0, 0, 0, 32, 0, 3, 4, 1, 4, 18, 55, 39, 0, 2, 6, 84, 0, 0, 1, 0, 0, 0, 7, 0, 1, 55, 0, 0, 3, 1, 12, 3, 0, 0, 2, 0, 0, 13, 0, 0, 2, 0, 0, 3, 38, 5, 10, 0, 0, 1, 0, 1, 1, 0, 0, 1, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 111, 165, 318, 105, 206, 93, 32, 602, 53, 1, 0, 1, 0, 1, 4, 1, 4 ], [ 2, 0, 0, 3, 57, 16, 29, 5, 19, 42, 222, 1668, 132, 25, 4, 4, 31, 1, 6, 2, 0, 18, 1, 1, 10, 2, 5, 0, 0, 3, 1, 0, 2, 4, 0, 0, 0, 1, 1, 0, 79, 0, 1, 0, 30, 9, 18, 0, 0, 0, 8, 1, 0, 0, 0, 237, 79, 793, 118, 52, 0, 0, 1, 0, 0, 0, 0, 11, 90, 188, 50, 496, 150, 713, 94, 29, 10, 0, 0, 2, 1, 0, 1, 1, 41 ], [ 0, 0, 7, 0, 0, 224, 9, 7, 15, 117, 2389, 877, 185, 46, 128, 48, 25, 2, 0, 0, 0, 0, 17, 521, 3, 0, 2, 3, 0, 7, 8, 100, 1, 0, 0, 0, 0, 4, 1, 116, 1, 0, 0, 0, 0, 491, 0, 0, 0, 0, 0, 2, 0, 0, 0, 316, 3678, 542, 239, 0, 0, 217, 0, 0, 0, 30, 390, 1259, 448, 496, 568, 796, 558, 2870, 256, 26, 14, 10, 1211, 18, 0, 6, 40, 59, 7 ], [ 1, 0, 1, 0, 5, 0, 84, 15, 5, 1054, 14414, 1125, 131, 276, 379, 4670, 511, 4, 29, 11, 20, 84, 15, 34, 56, 1, 7, 0, 2, 0, 71, 0, 0, 2, 0, 0, 1, 5, 5, 3, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 17, 183, 4, 1259, 1453, 7647, 883, 2539, 16746, 1655, 13387, 1149, 23766, 899, 226, 286, 717, 25, 42, 7, 288, 137, 101 ], [ 2, 0, 0, 257, 13, 0, 14, 58, 370, 515, 59, 3, 0, 7, 17, 482, 1568, 16, 1, 6, 126, 89, 139, 9, 764, 14, 4, 5, 5, 0, 20, 1, 0, 0, 0, 0, 9, 0, 0, 15, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1140, 7710, 3764, 585, 67, 1881, 1923, 10684, 2960, 659, 789, 9937, 1744, 293, 288, 1125, 1440, 2899, 2097, 50, 1091, 1074, 4218, 2550 ], [ 0, 0, 0, 12, 246, 173, 552, 21, 0, 0, 0, 0, 0, 0, 1, 0, 54, 782, 5078, 389, 615, 1048, 1072, 38150, 797, 1088, 255, 55, 90, 63, 14, 0, 2, 0, 1, 14, 98, 0, 2, 1, 0, 0, 4, 1, 0, 0, 0, 0, 0, 4, 0, 7, 0, 2, 0, 0, 0, 0, 1, 0, 2640, 14799, 39667, 85164, 1478, 791, 1573, 14809, 15944, 1254, 2175, 2171, 2968, 10990, 1151, 471, 3076, 65163, 1466, 649, 1640, 7871, 1301, 2395, 153 ], [ 750, 303, 162, 70, 144, 37, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 88, 112, 47, 680, 1981, 9029, 49270, 642, 197, 4388, 494, 220, 164, 280, 6, 9, 8, 3, 7, 11, 3, 1, 1, 59, 0, 159, 99, 12, 0, 0, 0, 0, 0, 0, 0, 1, 10, 0, 1, 0, 0, 0, 0, 9634, 30875, 79898, 402468, 98326, 148334, 66934, 13435, 59402, 2453, 19035, 7950, 2127, 745, 875, 1389, 1266, 3515, 1357, 238, 3159, 2598, 1077, 724, 682 ], [ 27, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 113, 4923, 144773, 7558, 2594, 10983, 1476, 477, 3504, 2778, 1861, 18236, 823, 498, 969, 180, 80, 1047, 70, 31, 276, 166, 182, 53, 2, 186, 945, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 820, 15596, 11243, 100381, 7325, 20338, 31623, 16209, 26169, 6166, 5051, 6210, 2383, 14460, 3933, 6161, 1606, 372, 1807, 66, 7, 15, 2, 207 ], [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 19, 4311, 322636, 16638, 19018, 5776, 9936, 7014, 575, 2615, 4195, 8317, 43260, 9182, 5827, 2782, 1105, 2379, 2601, 50791, 4917, 1374, 4043, 2686, 664, 71, 86, 2142, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1911, 9295, 8360, 11421, 32672, 70543, 26971, 14456, 12732, 2641, 3342, 1371, 5975, 1250, 877, 4108, 4213, 176, 44, 674, 1375, 17, 1 ], [ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 1, 2565, 31576, 1588, 18053, 2287, 8586, 1793, 3215, 5213, 1427, 12650, 104998, 25028, 136500, 53747, 124828, 199587, 59925, 52524, 204711, 16011, 1078, 7845, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 11, 7037, 17254, 17885, 19496, 10496, 13888, 16995, 25376, 31118, 9465, 5262, 6923, 4333, 7582, 591, 1025, 1666, 2158, 4245, 2520, 1235, 125, 287, 1, 6 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3991, 14112, 17921, 1162, 607, 61957, 2961, 167682, 2899, 12579, 63117, 44191, 26928, 247750, 106437, 184602, 135958, 82798, 1054416, 155311, 4242, 1, 19, 0, 0, 0, 0, 11, 0, 4, 0, 0, 0, 32, 3, 0, 0, 0, 0, 1, 1, 17330, 14238, 103067, 24407, 104154, 9255, 445, 2920, 43467, 19731, 5032, 5160, 4742, 56447, 607129, 75534, 26364, 19321, 28625, 10592, 655, 4318, 27, 10, 5 ], [ 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 239, 625419, 47429, 1548, 6439, 3866, 15634, 36323, 2986, 5963, 34604, 127804, 87824, 26418, 121120, 32529, 36993, 410876, 22634, 5, 1, 0, 1, 0, 0, 1, 0, 2, 0, 0, 4, 1, 0, 0, 69, 918, 66, 0, 1, 5, 4, 27891, 34743, 33629, 28849, 6617, 1563, 897, 3498, 14296, 10008, 385, 3260, 15860, 193597, 87321, 18232, 66760, 19137, 5817, 2121, 1516, 1159, 279, 134, 293 ], [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4247, 615951, 204557, 156279, 18383, 2760, 39074, 7977, 8185, 103548, 28368, 53156, 35431, 175628, 147343, 202485, 71517, 2495, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 0, 0, 0, 0, 1, 0, 2, 0, 0, 13, 5693, 14987, 790, 596, 510, 1410, 1514, 18, 3170, 35, 90, 1516, 2690, 3651, 15098, 19489, 518, 8, 1138, 1471, 819, 9935, 63, 57 ], [ 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4480, 282986, 5049, 170445, 1760, 31391, 24335, 8492, 291852, 31651, 27447, 18338, 106421, 45568, 52065, 6, 0, 1, 2, 1483, 116, 0, 0, 4, 1, 2, 1, 1, 3, 2, 1, 0, 0, 0, 2, 0, 1056, 266, 1, 383, 5443, 586, 20, 24, 61, 93, 57, 1410, 197, 1, 598, 87, 102, 4590, 3344, 24770, 132, 397, 2316, 221, 1156, 2158, 454, 45 ], [ 201, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 133, 107, 10842, 370, 4743, 1309, 71015, 177875, 250510, 88311, 26346, 16723, 80586, 135979, 1, 1, 0, 3, 1, 1, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 272, 6386, 2504, 872, 114, 24, 2, 2, 3, 3, 4, 0, 137, 11, 78, 2, 23, 538, 20420, 1794, 448, 155, 53, 7699, 153327, 1185, 76, 199 ], [ 0, 1, 2, 2, 0, 0, 1, 1, 3, 1, 0, 1, 0, 1, 2, 1, 0, 1, 0, 2, 1, 2, 1, 44, 3671, 3004, 1041, 15863, 76067, 36205, 25, 29, 18, 2, 109191, 240810, 1017, 0, 1, 3, 1, 0, 3, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 14, 113, 5712, 66, 1, 29, 1, 17, 28, 22, 1, 3, 6, 29, 6, 1, 0, 9, 441, 1306, 1541, 164, 1284, 2616, 564, 28484, 4324, 4188, 748 ], [ 0, 0, 1, 1, 1, 2, 0, 1, 12, 1, 1, 1, 0, 2, 2, 1, 1, 1, 0, 1, 3, 1, 1, 2, 8936, 7026, 9241, 6462, 5134, 169, 5, 41, 7, 54, 8256, 3767, 4660, 416, 26, 2, 1, 2, 1, 1, 1, 2, 3, 0, 17, 1, 1, 2, 1, 0, 1, 1, 1, 0, 10, 6, 0, 2, 2, 0, 1, 25, 0, 2, 4, 2, 3, 1, 1, 4, 0, 398, 57, 659, 4373, 10285, 33112, 369, 6075, 52299, 7885 ], [ 1, 0, 0, 2, 1, 1, 0, 56377, 14948, 1, 8, 1, 1, 0, 1, 1, 3, 1, 2, 0, 1, 1, 3, 1, 1, 24, 13881, 83954, 61297, 12078, 1, 4163, 21712, 27752, 64, 807, 207, 622, 3506, 5, 2, 3, 1, 1, 1, 1, 1, 1, 5, 3, 1, 1, 1, 1, 0, 1, 0, 11, 4, 3, 0, 2, 1, 0, 1, 0, 1, 2, 1, 0, 1, 5, 2, 2, 2, 23, 1, 21143, 8290, 105, 148, 0, 1, 50, 83 ], [ 0, 1, 0, 0, 0, 1, 2, 1, 5153, 0, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 1, 1, 12, 15, 24, 1732, 5753, 419749, 67243, 15172, 3820, 4162, 15, 2, 1442, 13360, 231, 16972, 59836, 50814, 4087, 1310, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 2, 2, 30, 0, 1, 166, 2, 1, 0, 16, 1, 2, 1, 3, 4, 0, 9, 3, 2, 1, 0, 1, 36, 13, 93, 575, 2212, 21, 1, 4, 321, 21 ], [ 0, 0, 0, 98, 1, 2, 0, 1, 1, 0, 0, 0, 2, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 2, 0, 3, 7, 9238, 3802, 8547, 43378, 7194, 2704, 9, 0, 1, 74, 0, 0, 0, 82, 5050, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 453, 1, 1274, 89, 16, 4, 3, 24, 9, 5, 0, 1, 2, 0, 0, 7, 4, 2, 2, 9, 4881, 26, 335, 10, 763, 208, 196, 6, 1, 1 ], [ 0, 0, 0, 1, 0, 3, 0, 1, 0, 0, 0, 0, 3, 1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 4, 3, 4, 687, 10647, 17890, 1955, 280, 0, 756, 998, 10543, 86, 12, 5571, 7, 0, 0, 1, 0, 0, 0, 5, 17, 1, 1, 1, 1, 0, 0, 315, 10, 7, 401, 11, 456, 341, 334, 465, 1338, 414, 341, 6, 3, 27, 16, 23, 28, 4, 74, 20, 647, 88, 15, 12, 28, 1 ], [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 11, 13, 0, 18949, 43801, 33785, 306, 38682, 29743, 49539, 80350, 15936, 7505, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 1033, 20, 17, 36, 139, 295, 1241, 85200, 9451, 317, 15, 35, 4, 20, 1, 4, 0, 8, 707, 58, 283, 27, 18, 14, 3, 16 ], [ 0, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 57, 0, 0, 0, 0, 1, 0, 1, 1205, 3759, 1567, 33518, 19406, 515, 6105, 6439, 102, 607, 461, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 43, 517, 25, 355, 5452, 1291, 92264, 4390, 357, 16, 4, 6, 18, 3, 0, 9, 3, 7, 97, 17, 3, 31, 13, 24, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 2, 0, 0, 8, 2, 1, 15956, 132237, 1001, 36, 8, 5, 4071, 10, 84, 247, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 17, 1174, 5551, 14, 2, 37141, 1633, 1150, 3, 327, 10, 18, 41, 28, 144, 17, 14, 4, 5, 7, 0, 56, 1, 0 ], [ 0, 0, 0, 0, 1, 0, 0, 44, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 8, 1, 34, 0, 1001, 4943, 1056, 115, 17, 10, 2, 1020, 3, 1, 15464, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 34, 154, 6, 162, 526, 9, 1, 14, 56, 265, 37, 67, 4020, 1061, 804, 7, 4, 297, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 658, 309, 0, 0, 45009, 28840, 57, 16, 4, 33, 7, 320, 1381, 3032, 4022, 58588, 2293, 13328, 688, 0, 1, 0, 10, 1, 0, 1, 0, 0, 1, 0, 0, 0, 22, 6, 3, 1, 49, 10, 9, 45, 6, 13, 14, 1169, 297, 4688, 24138, 95, 4, 1, 0, 0, 0, 0 ], [ 0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7409, 47, 1018, 23, 339, 48, 229, 34555, 232, 169, 171, 2465, 3922, 17853, 9781, 71952, 844, 571, 0, 0, 0, 0, 1, 0, 16, 1, 0, 2, 10, 0, 1, 0, 7, 92, 1451, 53, 2292, 23, 12, 237, 84, 129, 878, 2183, 0, 1, 0, 4, 513, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4874, 1499, 199, 146, 67, 4, 90, 18, 4, 127, 198, 1781, 1133, 965, 4489, 13322, 144301, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 2, 0, 0, 0, 0, 17, 10, 8, 241, 18, 16, 41, 72, 431, 9100, 79, 0, 1, 0, 66, 0, 0 ], [ 0, 1, 1, 73, 1, 0, 0, 69, 0, 0, 0, 0, 0, 0, 101, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1545, 185, 44, 3552, 77, 3277, 24, 25, 1865, 2424, 2309, 190, 192, 3531, 19744, 24065, 1, 1, 0, 10, 0, 0, 1, 2, 1, 5, 3, 0, 36, 0, 0, 0, 1493, 50, 5, 9, 15, 279, 46, 263, 101, 19, 42, 0, 7, 0, 1, 0, 0 ], [ 6, 73, 149, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 71001, 1274, 4546, 139, 445, 191, 416, 329, 1031, 76, 387, 562, 763, 2928, 68740, 0, 0, 0, 0, 0, 0, 0, 21, 25, 1, 1, 0, 0, 1, 0, 0, 1, 113, 48, 37, 2, 8, 569, 578, 68, 581, 1, 50, 327, 117, 38, 1, 0, 1 ], [ 43, 4, 72, 102, 0, 0, 8, 0, 0, 6, 261, 29, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 946, 1980, 2315, 58, 65, 72, 676, 8738, 356, 111990, 6940, 3668, 3319, 7124, 1, 0, 4, 1, 2, 1, 0, 1, 0, 0, 64, 0, 0, 0, 0, 0, 0, 67, 15, 6, 1, 26, 57, 2324, 81, 340, 26, 6, 0, 6, 0, 0, 0, 0 ], [ 94, 59, 58, 108, 0, 0, 0, 52, 1, 0, 779, 12, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 29, 1315, 2081, 1531, 1820, 75, 545, 226, 1635, 10759, 3707, 12899, 8630, 193, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 1, 0, 0, 1, 0, 0, 9, 115, 23, 38, 134, 343, 269, 1518, 42, 18, 0, 6, 454, 33, 0, 0, 0 ], [ 40, 201, 84, 4, 2, 4, 2, 174, 8, 4, 2, 2, 1, 2, 4, 2, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2, 3, 84, 5825, 699, 74, 66, 516, 16740, 6116, 32017, 25002, 123975, 39825, 0, 0, 1, 2, 1, 1, 0, 0, 1, 1, 3, 0, 10, 1, 0, 0, 1, 0, 5, 60, 77, 38, 94, 150, 870, 35, 117, 2, 2, 25, 82, 2, 0, 550, 1431 ], [ 47, 58, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 83, 88, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3767, 1476, 5987, 828, 80, 40663, 11383, 21661, 16784, 385069, 424329, 14013, 2, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 276, 789, 3, 16, 2252, 4559, 1320, 80, 0, 0, 21, 22, 0, 0, 0, 0 ], [ 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 548, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 16, 1896, 314, 8538, 2197, 1965, 46344, 27011, 11828, 140472, 1, 7, 0, 3, 0, 977, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 2, 0, 0, 0, 0, 13, 27, 60, 292, 32912, 17977, 3643, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 1, 23, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6073, 275, 3522, 1795, 2919, 4301, 22862, 180872, 23768, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 45, 67, 8311, 2105, 7052, 8815, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], [ 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 1, 1, 232308, 16030, 4219, 42843, 40995, 13516, 16399, 12701, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 932, 214, 83, 1806, 978, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 ], [ 22, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 16, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 23, 14343, 3132, 499, 8423, 17006, 283246, 27109, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 22946, 814, 805, 2394, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2549, 21580, 7501, 1386, 10277, 6380, 17467, 2, 38, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3083, 8508, 58, 1582, 2228, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 1157, 614, 129, 2319, 44, 6, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 1817, 773, 1160, 3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 6, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 12, 60, 881, 127, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 2835, 889, 13, 0, 4, 112, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 2361, 34, 1, 0, 1, 0, 0, 0, 0, 2, 1, 13, 85, 0, 23, 56, 0, 0, 0, 0, 1, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 29, 0, 0, 0, 23, 0, 13, 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 ] ],
+    "projection" : "EPSG:4326"
+  },
+  "a.hm.posSent" : null,
+  "a.user" : null,
+  "a.text" : null,
+  "timing" : {
+    "label" : "callSolr.elapsed",
+    "millis" : 254,
+    "subs" : [ {
+      "label" : "QTime",
+      "millis" : 423,
+      "subs" : [ {
+        "label" : "prepare",
+        "millis" : 6,
+        "subs" : [ {
+          "label" : "query",
+          "millis" : 1
+        }, {
+          "label" : "facet",
+          "millis" : 1
+        } ]
+      }, {
+        "label" : "process",
+        "millis" : 412,
+        "subs" : [ {
+          "label" : "query",
+          "millis" : 8
+        }, {
+          "label" : "facet",
+          "millis" : 401
+        } ]
+      } ]
+    } ]
+  }
+}
