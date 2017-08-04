@@ -2,8 +2,8 @@
 (function() {
     angular
     .module('search_tweetlist_component', [])
-    .directive('tweetlist', ['Map', 'HeightModule', 'PanelInformationService',
-        function tweetlist(Map, HeightModule, PanelInformationService) {
+    .directive('tweetlist', ['Map', 'PanelInformationService',
+        function tweetlist(Map, PanelInformationService) {
             var MapService = Map;
             return {
                 link: tweetlistLink,
@@ -20,7 +20,7 @@
                 vm.selectTweet = selectTweet;
                 vm.removeAllfeatures = removeAllfeatures;
 
-                vm.availableHeight = HeightModule.availableHeight();
+                vm.availableHeight = BOP.HeightModule.availableHeight();
 
                 vm.sendToTweetStatus = PanelInformationService.tweetStatusUrl;
 
@@ -37,7 +37,7 @@
                 function setTweetList(event, tweetList) {
                     vm.tweetList = tweetList ? tweetList : [];
                     vm.tweetList.exist = true;
-                    vm.availableHeight = HeightModule.availableHeight();
+                    vm.availableHeight = BOP.HeightModule.availableHeight();
                 }
 
                 function selectTweet(tweet) {

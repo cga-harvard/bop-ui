@@ -4,10 +4,9 @@
 (function() {
     angular
     .module('search_modaltweets_component', [])
-    .directive('modalTweets', ['Map', 'queryService',
-        'HeatMapSourceGenerator', 'Normalize', 'PanelInformationService',
-        function(Map, queryService, HeatMapSourceGenerator,
-            Normalize, PanelInformationService) {
+    .directive('modalTweets', ['Map',
+        'HeatMapSourceGenerator', 'PanelInformationService',
+        function(Map, HeatMapSourceGenerator, PanelInformationService) {
             return {
                 link: modalLink,
                 templateUrl: 'components/modalTweets/modalTweets.tpl.html',
@@ -53,10 +52,10 @@
                         maxY: centerPoint[1] + deltaY/2
                     };
 
-                    var normalizedExtent = Normalize.normalizeExtent([
+                    var normalizedExtent = BOP.normalizeExtent([
                         newExtent.minX, newExtent.minY, newExtent.maxX, newExtent.maxY
                     ]);
-                    return queryService.createQueryFromExtent(
+                    return BOP.queryService.createQueryFromExtent(
                         MapService.createExtentFromNormalize(normalizedExtent)
                     );
                 }

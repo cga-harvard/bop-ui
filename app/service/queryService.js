@@ -3,7 +3,7 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('queryService', ['Normalize', function(Normalize){
+    .factory('queryService', [function(){
 
         const service = {};
 
@@ -25,7 +25,7 @@
 
         service.getExtentForProjectionFromQuery = (query, projection) => {
             const extentObj = service.getExtentFromQuery(query);
-            const extent = Normalize.normalizeExtent([
+            const extent = BOP.normalizeExtent([
                 extentObj.minY,
                 extentObj.minX,
                 extentObj.maxY,

@@ -7,12 +7,11 @@
 (function() {
     angular.module('SolrHeatmapApp')
     .factory('Map',
-             ['$rootScope', 'DataConf', '$filter', '$document', 'Normalize', '$controller',
-             'queryService', 'HeightModule', '$window',
-        function($rootScope, DataConf, $filter, $document, Normalize, $controller,
-            queryService, HeightModule, $window) {
+             ['$rootScope', 'DataConf', '$filter', '$document', '$controller',
+              '$window',
+        function($rootScope, DataConf, $filter, $document, $controller,
+            $window) {
 
-            const NormalizeService = Normalize;
             const service = {};
             const defaults = {
                 renderer: 'canvas',
@@ -121,7 +120,7 @@
             };
 
             service.updateTransformationLayerFromQueryForMap = query => {
-                const extent = queryService.
+                const extent = BOP.queryService.
                     getExtentForProjectionFromQuery(query,
                                                     service.getMapProjection());
                 setTransactionBBox(extent);
@@ -372,11 +371,11 @@
             }
 
             service.calculateReducedBoundingBoxFromInFullScreen = extent => {
-                const sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
-                const rightSideBarWidth = 1 - (HeightModule.rightSideBarWidth/$window.innerWidth);
-                const bottomHeight = 1 - (HeightModule.bottomHeight/$window.innerWidth);
+                const sideBarPercent = 1 - (BOP.HeightModule.sideBarWidth()/$window.innerWidth);
+                const rightSideBarWidth = 1 - (BOP.HeightModule.rightSideBarWidth/$window.innerWidth);
+                const bottomHeight = 1 - (BOP.HeightModule.bottomHeight/$window.innerWidth);
                 const topBarPercent = 1 -
-                    (HeightModule.topPanelHeight()/HeightModule.documentHeight());
+                    (BOP.HeightModule.topPanelHeight()/BOP.HeightModule.documentHeight());
                 if(DataConf.solrHeatmapApp.appConfig) {
                     const dx = extent.maxX - extent.minX;
                     const dy = extent.maxY - extent.minY;
@@ -394,9 +393,9 @@
                     minX: extent[0], minY: extent[1],
                     maxX: extent[2], maxY: extent[3]
                 };
-                const sideBarPercent = 1 - (HeightModule.sideBarWidth()/$window.innerWidth);
+                const sideBarPercent = 1 - (BOP.HeightModule.sideBarWidth()/$window.innerWidth);
                 const topBarPercent = 1 -
-                    (HeightModule.topPanelHeight()/HeightModule.documentHeight());
+                    (BOP.HeightModule.topPanelHeight()/BOP.HeightModule.documentHeight());
 
                 const dx = extent.maxX - extent.minX;
                 const dy = extent.maxY - extent.minY;
@@ -440,8 +439,8 @@
             };
 
             service.getReducedQueryFromExtent = extentQuery => {
-                const extent = queryService.getExtentFromQuery(extentQuery);
-                return queryService.
+                const extent = BOP.queryService.getExtentFromQuery(extentQuery);
+                return BOP.queryService.
                     createQueryFromExtent(
                         service.calculateReducedBoundingBoxFromInFullScreen(extent));
             };
@@ -449,8 +448,8 @@
             service.getCurrentExtentQuery = () => {
                 const currentExtent = service.getCurrentExtent();
                 return {
-                    geo: queryService.createQueryFromExtent(currentExtent.geo),
-                    hm: queryService.createQueryFromExtent(currentExtent.hm)
+                    geo: BOP.queryService.createQueryFromExtent(currentExtent.geo),
+                    hm: BOP.queryService.createQueryFromExtent(currentExtent.hm)
                 };
             };
 
@@ -490,9 +489,8 @@
                 }
 
                 if (extent && extentWgs84){
-                    const normalizedExtentMap = NormalizeService.normalizeExtent(extentWgs84);
-                    const normalizedExtentBox = NormalizeService
-                            .normalizeExtent(currentBboxExtentWgs84);
+                    const normalizedExtentMap = BOP.normalizeExtent(extentWgs84);
+                    const normalizedExtentBox = BOP.normalizeExtent(currentBboxExtentWgs84);
 
                     currentExtent = service.createExtentFromNormalize(normalizedExtentMap);
 

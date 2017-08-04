@@ -12,9 +12,9 @@
     })
     .controller('MainController',
                 ['DataConf', 'Map', 'HeatMapSourceGenerator', '$http', '$scope', '$location',
-                    '$rootScope', '$stateParams', 'searchFilter', 'queryService',
+                    '$rootScope', '$stateParams', 'searchFilter',
         function(DataConf, Map, HeatMapSourceGenerator, $http, $scope, $location,
-                 $rootScope, $stateParams, searchFilter, queryService) {
+                 $rootScope, $stateParams, searchFilter) {
             var MapService = Map;
             var HeatMapSourceGeneratorService = HeatMapSourceGenerator;
             var mapIsMoved = false;
@@ -51,7 +51,7 @@
                 var locationChangeEventBroadcast = $rootScope.$on('$locationChangeSuccess', function() {
                     if (!vm.isThereInteraction) {
                         isBackbuttonPressed = true;
-                        var extent = queryService.
+                        var extent = BOP.queryService.
                             getExtentForProjectionFromQuery(
                                 $location.search().geo, DataConf.solrHeatmapApp.initMapConf.view.projection);
                         MapService.getMap().getView().fit(extent, MapService.getMapSize());
@@ -78,7 +78,7 @@
 
                     if(DataConf.solrHeatmapApp.$state.geo) {
                         mapConf.view.initExtent = mapConf.view.extent;
-                        mapConf.view.extent = queryService.
+                        mapConf.view.extent = BOP.queryService.
                           getExtentForProjectionFromQuery(DataConf.solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
                         mapConf.view.extent = MapService

@@ -3,8 +3,8 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('searchFilter', ['Map', 'HeightModule', 'DateTimeService',
-    function(Map, HeightModule, DateTimeService){
+    .factory('searchFilter', ['Map', 'DateTimeService',
+    function(Map, DateTimeService){
         const MapService = Map;
         const service = {
             geo: '[-90,-180 TO 90,180]',

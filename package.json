@@ -42,12 +42,18 @@
     "deploy": "npm run settings && grunt deploy",
     "publish": "npm run settings && grunt publish",
     "build": "npm run deploy",
-    "start": "npm run serve"
+    "start": "npm run serve",
+    "build2": "webpack",
+    "serve2": "webpack-dev-server --open",
+    "dev": "webpack -d --watch"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5",
     "angular-ui-bootstrap": "^1.3.3",
     "angularjs-slider": "^5.5.0",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.5.2",
     "codeclimate-test-reporter": "^0.3.3",
     "eslint": "^2.13.0",
@@ -64,6 +70,7 @@
     "grunt-gh-pages": "1.1.0",
     "grunt-html2js": "^0.3.6",
     "http-server": "^0.9.0",
+    "imports-loader": "^0.7.1",
     "jasmine-core": "^2.5.0",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.1.1",
@@ -74,6 +81,8 @@
     "karma-spec-reporter": "0.0.26",
     "less-plugin-clean-css": "^1.5.1",
     "load-grunt-tasks": "^3.5.2",
-    "parallelshell": "^2.0.0"
+    "parallelshell": "^2.0.0",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
   }
 }

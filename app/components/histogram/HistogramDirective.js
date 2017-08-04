@@ -5,9 +5,9 @@
     angular
     .module('search_timehistogram_component', [])
     .directive('timeHistogram', ['$rootScope', 'DataConf', 'HeatMapSourceGenerator',
-        'searchFilter', 'DateTimeService', 'NumberService',
+        'searchFilter', 'DateTimeService',
         function timeHistogram($rootScope, DataConf, HeatMapSourceGenerator,
-            searchFilter, DateTimeService, NumberService) {
+            searchFilter, DateTimeService) {
             var directive = {
                 templateUrl: 'components/histogram/histogram.tpl.html',
                 restrict: 'EA',
@@ -215,7 +215,7 @@
                     maxValue = maxValue || 0;
                     var step = Math.floor(maxValue/partition);
                     for (var i = 0; i <= maxValue; i = i+step) {
-                        range.push(NumberService.compactInteger(i));
+                        range.push(BOP.compactInteger(i));
                     }
                     return range;
                 }
