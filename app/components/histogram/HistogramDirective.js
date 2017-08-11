@@ -5,9 +5,9 @@
     angular
     .module('search_timehistogram_component', [])
     .directive('timeHistogram', ['$rootScope', 'DataConf', 'HeatMapSourceGenerator',
-        'searchFilter', 'DateTimeService',
+        'searchFilter',
         function timeHistogram($rootScope, DataConf, HeatMapSourceGenerator,
-            searchFilter, DateTimeService) {
+            searchFilter) {
             var directive = {
                 templateUrl: 'components/histogram/histogram.tpl.html',
                 restrict: 'EA',
@@ -123,7 +123,7 @@
 
                 function generateAllDates(data) {
                     var newData = [];
-                    var unitOfTime = DateTimeService.getDurationFormatFromGap(searchFilter.gap).duration;
+                    var unitOfTime = BOP.dateTimeService.getDurationFormatFromGap(searchFilter.gap).duration;
                     if (!unitOfTime) {
                         return data;
                     }
@@ -158,7 +158,7 @@
                     }
                     vm.datepickerStartDate = searchFilter.minDate;
                     vm.datepickerEndDate = searchFilter.maxDate;
-                    vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
+                    vm.dateString = BOP.dateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                             vm.datepickerEndDate);
                     performDateSearch();
                 }

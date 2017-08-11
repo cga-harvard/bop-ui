@@ -43,7 +43,7 @@
     "publish": "npm run settings && grunt publish",
     "build": "npm run deploy",
     "start": "npm run serve",
-    "build2": "webpack",
+    "build2": "webpack --display-error-details",
     "serve2": "webpack-dev-server --open",
     "dev": "webpack -d --watch"
   },
@@ -84,5 +84,8 @@
     "parallelshell": "^2.0.0",
     "webpack": "^2.5.1",
     "webpack-dev-server": "^2.4.5"
+  },
+  "dependencies": {
+    "geostats": "^1.5.0"
   }
 }

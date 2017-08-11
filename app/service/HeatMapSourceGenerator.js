@@ -8,9 +8,9 @@
     angular
     .module('SolrHeatmapApp')
     .factory('HeatMapSourceGenerator', ['DataConf', 'Map', '$rootScope', '$log',
-        '$q', '$http', '$state', 'searchFilter', 'DateTimeService', '$window', '$httpParamSerializer',
+        '$q', '$http', '$state', 'searchFilter', '$window', '$httpParamSerializer',
         function(DataConf, Map, $rootScope, $log, $q, $http, $state, searchFilter,
-            DateTimeService, $window, $httpParamSerializer) {
+            $window, $httpParamSerializer) {
             const MapService = Map;
             let canceler = $q.defer();
 
@@ -105,7 +105,8 @@
                 if (data && data['a.hm']) {
                     const heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
 
-                    MapService.createOrUpdateHeatMapLayer(heatmapData);
+                    BOP.heatmap(MapService.getMap()).createOrUpdateHeatMapLayer(heatmapData);
+
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
                     $rootScope.$broadcast('setHistogram', data['a.time']);
                     $rootScope.$broadcast('setTweetList', data['d.docs']);
@@ -155,7 +156,7 @@
             }
 
             function timeTextFormat(textDate, minDate, maxDate) {
-                return textDate === null ? DateTimeService.formatDatesToString(minDate, maxDate) : textDate;
+                return textDate === null ? BOP.dateTimeService.formatDatesToString(minDate, maxDate) : textDate;
             }
 
             return {

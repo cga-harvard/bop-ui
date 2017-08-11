@@ -7,9 +7,8 @@
 
     angular
     .module('search_datepicker_component', [])
-    .directive('datePicker', ['HeatMapSourceGenerator',
-        'searchFilter', 'DateTimeService',
-        function(HeatMapSourceGenerator, searchFilter, DateTimeService) {
+    .directive('datePicker', ['HeatMapSourceGenerator', 'searchFilter',
+        function(HeatMapSourceGenerator, searchFilter) {
             return {
                 link: datePickerFilterLink,
                 templateUrl: 'components/datepicker/datepicker.tpl.html',
@@ -48,7 +47,7 @@
                  */
                 vm.datepickerStartDate = searchFilter.minDate;
                 vm.datepickerEndDate = searchFilter.maxDate;
-                vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
+                vm.dateString = BOP.dateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                         vm.datepickerEndDate);
 
                 vm.onChangeDatepicker = onChangeDatepicker;
@@ -71,7 +70,7 @@
                  * Will be fired after the start and the end date was chosen.
                  */
                 function onChangeDatepicker(){
-                    vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
+                    vm.dateString = BOP.dateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                             vm.datepickerEndDate);
                     performDateSearch();
                 }
@@ -99,7 +98,7 @@
                         vm.datepickerEndDate = dateArray[1];
                         return true;
                     } else{
-                        vm.dateString = DateTimeService.formatDatesToString(vm.datepickerStartDate,
+                        vm.dateString = BOP.dateTimeService.formatDatesToString(vm.datepickerStartDate,
                                                                 vm.datepickerEndDate);
                         return false;
                     }

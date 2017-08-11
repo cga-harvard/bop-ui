@@ -3,8 +3,7 @@
 
 (function() {
     angular.module('SolrHeatmapApp')
-    .factory('searchFilter', ['Map', 'DateTimeService',
-    function(Map, DateTimeService){
+    .factory('searchFilter', ['Map', function(Map){
         const MapService = Map;
         const service = {
             geo: '[-90,-180 TO 90,180]',
@@ -26,7 +25,7 @@
         service.setFilter = filter => {
             if(filter.time) {
                 service.time = filter.time;
-                service.gap = DateTimeService.getGapFromTimeString(filter.time);
+                service.gap = BOP.dateTimeService.getGapFromTimeString(filter.time);
             }
             if(filter.user) {
                 service.user = filter.user;
@@ -46,7 +45,7 @@
         };
 
         service.resetFilter = () => {
-            service.time = DateTimeService.formatDatesToString(service.minDate, service.maxDate);
+            service.time = BOP.dateTimeService.formatDatesToString(service.minDate, service.maxDate);
             service.text = null;
             service.user = null;
             service.geo = MapService.getCurrentExtentQuery().geo;
