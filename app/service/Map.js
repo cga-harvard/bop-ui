@@ -12,7 +12,6 @@
         function($rootScope, DataConf, $filter, $document, $controller,
             $window) {
 
-            const service = {};
             const defaults = {
                 renderer: 'canvas',
                 view: {
@@ -98,33 +97,42 @@
             /**
             *
             */
-            service.getMap = () => map;
+            function getMap() {
+                return map;
+            }
 
-            service.getMapView = () => service.getMap().getView();
+            function getMapView(){
+                return getMap().getView();
+            }
 
-            service.getMapZoom = () => service.getMapView().getZoom();
+            function getMapZoom(){
+                return getMapView().getZoom();
+            }
 
-            service.getMapSize = () => service.getMap().getSize();
+            function getMapSize(){
+                return getMap().getSize();
+            }
 
-            service.getMapProjection = () => {
-                return service.getMapView().getProjection().getCode();
+            function getMapProjection(){
+                return getMapView().getProjection().getCode();
             };
 
-            service.getLayers = () => service.getMap().getLayers().getArray();
+            function getLayers() {
+                return getMap().getLayers().getArray();
+            }
 
-            service.getLayersBy = (key, value) => {
-                const layers = service.getLayers();
+            function getLayersBy(key, value) {
+                const layers = getLayers();
                 return layers.filter(layer => {
                     return layer.get(key) === value;
                 });
             };
 
-            service.updateTransformationLayerFromQueryForMap = query => {
+            function updateTransformationLayerFromQueryForMap(query) {
                 const extent = BOP.queryService.
-                    getExtentForProjectionFromQuery(query,
-                                                    service.getMapProjection());
+                    getExtentForProjectionFromQuery(query, getMapProjection());
                 setTransactionBBox(extent);
-            };
+            }
 
             function displayTooltip(evt, overlay, tooltip) {
                 const pixel = evt.pixel;
@@ -145,11 +153,11 @@
              */
             function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
                 let polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature));
-                let backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
+                let backGroundLayer = getLayersBy('backgroundLayer', true)[0];
 
-                if (fromSrs !== service.getMapProjection()){
+                if (fromSrs !== getMapProjection()){
                     const polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                                    service.getMapProjection());
+                                                    getMapProjection());
                     polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
                 }
 
@@ -168,12 +176,12 @@
                         })
                     })
                 });
-                service.getMap().addLayer(vector);
+                getMap().addLayer(vector);
                 vector.getSource().addFeature(polygon);
             }
 
             function setTransactionBBox(extent) {
-                const transformationLayer = service.getLayersBy('name',
+                const transformationLayer = getLayersBy('name',
                                                               'TransformInteractionLayer')[0];
                 const vectorSrc = transformationLayer.getSource();
                 const currentBbox = vectorSrc.getFeatures()[0];
@@ -181,7 +189,7 @@
                 currentBbox.setGeometry(polyNew);
             }
 
-            service.calculateReducedBoundingBoxFromInFullScreen = extent => {
+            function calculateReducedBoundingBoxFromInFullScreen(extent){
                 const sideBarPercent = 1 - (BOP.HeightModule.sideBarWidth()/$window.innerWidth);
                 const rightSideBarWidth = 1 - (BOP.HeightModule.rightSideBarWidth/$window.innerWidth);
                 const bottomHeight = 1 - (BOP.HeightModule.bottomHeight/$window.innerWidth);
@@ -197,9 +205,9 @@
                     return {minX, minY, maxX, maxY};
                 }
                 return extent;
-            };
+            }
 
-            service.calculateFullScreenExtentFromBoundingBox = extent => {
+            function calculateFullScreenExtentFromBoundingBox(extent) {
                 extent = {
                     minX: extent[0], minY: extent[1],
                     maxX: extent[2], maxY: extent[3]
@@ -213,7 +221,7 @@
                 const minX = extent.minX + dx - (dx/sideBarPercent);
                 const maxY = extent.minY + dy/topBarPercent;
                 return [minX, extent.minY, extent.maxX, maxY];
-            };
+            }
 
             /*
              * For change:resolution event (zoom in map):
@@ -221,68 +229,60 @@
              * the transform box will be resized to
              * DataConf.solrHeatmapApp.appConfig.ratioInnerBbox percent
              */
-            service.checkBoxOfTransformInteraction = () => {
-                const mapExtent = service.getMapView().calculateExtent(service.getMapSize());
+            function checkBoxOfTransformInteraction() {
+                const mapExtent = getMapView().calculateExtent(getMapSize());
 
                 // calculate reduced bounding box
-                const reducedBoundingBox = service.calculateReducedBoundingBoxFromInFullScreen({
+                const reducedBoundingBox = calculateReducedBoundingBoxFromInFullScreen({
                     minX: mapExtent[0], minY: mapExtent[1],
                     maxX: mapExtent[2], maxY: mapExtent[3]
                 });
 
                 setTransactionBBox([reducedBoundingBox.minX, reducedBoundingBox.minY,
                     reducedBoundingBox.maxX, reducedBoundingBox.maxY]);
-            };
+            }
 
             /**
              * Helper method to reset the map
              */
-            service.resetMap = () => {
+            function resetMap() {
                 // Reset view
                 const intitalCenter = DataConf.solrHeatmapApp.initMapConf.view.center;
                 const intitalZoom = DataConf.solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
-                    const vw = service.getMapView();
+                    const vw = getMapView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
-                    service.checkBoxOfTransformInteraction();
+                    checkBoxOfTransformInteraction();
                 }
-            };
+            }
 
-            service.getReducedQueryFromExtent = extentQuery => {
-                const extent = BOP.queryService.getExtentFromQuery(extentQuery);
-                return BOP.queryService.
-                    createQueryFromExtent(
-                        service.calculateReducedBoundingBoxFromInFullScreen(extent));
-            };
-
-            service.getCurrentExtentQuery = () => {
-                const currentExtent = service.getCurrentExtent();
+            function getCurrentExtentQuery() {
+                const currentExtent = getCurrentExtent();
                 return {
                     geo: BOP.queryService.createQueryFromExtent(currentExtent.geo),
                     hm: BOP.queryService.createQueryFromExtent(currentExtent.hm)
                 };
-            };
+            }
 
-            service.createExtentFromNormalize = normalizedExtent => {
+            function createExtentFromNormalize(normalizedExtent) {
                 return {
                     minX: normalizedExtent[0],
                     minY: normalizedExtent[1],
                     maxX: normalizedExtent[2],
                     maxY: normalizedExtent[3]
                 };
-            };
+            }
 
             /**
              * Builds geospatial filter depending on the current map extent.
              * This filter will be used later for `q.geo` parameter of the API
              * search or export request.
              */
-            service.getCurrentExtent = () => {
-                const viewProj = service.getMapProjection();
-                const extent = service.getMapView().calculateExtent(service.getMapSize());
-                const transformInteractionLayer = service.
-                                    getLayersBy('name', 'TransformInteractionLayer')[0];
+            function getCurrentExtent() {
+                const viewProj = getMapProjection();
+                const extent = getMapView().calculateExtent(getMapSize());
+                const transformInteractionLayer = getLayersBy('name', 'TransformInteractionLayer')[0];
                 let extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326');
                 let currentExtent = {};
                 let currentExtentBox = {};
@@ -295,7 +295,7 @@
                                 currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
 
                 // default: Zoom level <= 1 query whole world
-                if (service.getMapZoom() <= 1) {
+                if (getMapZoom() <= 1) {
                     extentWgs84 = [-180, -90 ,180, 90];
                 }
 
@@ -303,9 +303,9 @@
                     const normalizedExtentMap = BOP.normalizeExtent(extentWgs84);
                     const normalizedExtentBox = BOP.normalizeExtent(currentBboxExtentWgs84);
 
-                    currentExtent = service.createExtentFromNormalize(normalizedExtentMap);
+                    currentExtent = createExtentFromNormalize(normalizedExtentMap);
 
-                    currentExtentBox = service.createExtentFromNormalize(normalizedExtentBox);
+                    currentExtentBox = createExtentFromNormalize(normalizedExtentBox);
 
                     const roundToFixed = value => {
                         return parseFloat(Math.round(value* 100) / 100).toFixed(2);
@@ -321,14 +321,14 @@
                 return { hm: currentExtent, geo: currentExtentBox };
             };
 
-            service.removeAllfeatures = () => {
+            function removeAllfeatures() {
                 if (angular.isObject(map)) {
-                    const layersWithBbox = service.getLayersBy('isbbox', true);
+                    const layersWithBbox = getLayersBy('isbbox', true);
                     layersWithBbox[0].getSource().clear();
                 }
-            };
+            }
 
-            service.addCircle = (point, style) => {
+            function addCircle(point, style) {
 
                 const geojsonObject = {
                     "type": "Feature",
@@ -336,7 +336,7 @@
                 };
 
                 if (angular.isObject(map) && Object.keys(map).length !== 0) {
-                    const layersWithBbox = service.getLayersBy('isbbox', true);
+                    const layersWithBbox = getLayersBy('isbbox', true);
                     const features = (new ol.format.GeoJSON).readFeatures(geojsonObject);
 
                     if (layersWithBbox.length) {
@@ -353,17 +353,17 @@
                     }
 
                 }
-            };
+            }
 
-            service.toggleBaseMaps = () => {
+            function toggleBaseMaps() {
                 service.googleLayer.setVisible(!service.googleLayer.getVisible());
                 service.tonerLayer.setVisible(!service.tonerLayer.getVisible());
-            };
+            }
 
             /**
              *
              */
-            service.init = config => {
+            function init(config) {
                 const viewConfig = angular.extend(defaults.view, config.mapConfig.view);
                 const rendererConfig = config.mapConfig.renderer ?
                         config.mapConfig.renderer : defaults.renderer;
@@ -412,7 +412,7 @@
                     generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
 
                     if (viewConfig.initExtent) {
-                        vw.fit(viewConfig.extent, service.getMapSize());
+                        vw.fit(viewConfig.extent, getMapSize());
                     }
                 }
 
@@ -425,6 +425,28 @@
                 map.addOverlay(overlay);
 
                 map.on('pointermove', evt => displayTooltip(evt, overlay, tooltip));
+            };
+
+            const service = {
+                init,
+                toggleBaseMaps,
+                addCircle,
+                removeAllfeatures,
+                getCurrentExtent,
+                createExtentFromNormalize,
+                getCurrentExtentQuery,
+                resetMap,
+                checkBoxOfTransformInteraction,
+                calculateFullScreenExtentFromBoundingBox,
+                updateTransformationLayerFromQueryForMap,
+
+                getMap,
+                getMapView,
+                getMapZoom,
+                getMapSize,
+                getMapProjection,
+                getLayers,
+                getLayersBy
             };
             return service;
         }]
