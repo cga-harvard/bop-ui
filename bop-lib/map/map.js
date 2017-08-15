@@ -3,8 +3,8 @@
 /**
  *
  */
-function initMap(config) {
-    const viewConfig = angular.extend(defaults.view, config.mapConfig.view);
+export default function initMap(config, defaults) {
+    const viewConfig = Object.assign(defaults.view, config.mapConfig.view);
     const rendererConfig = config.mapConfig.renderer ?
             config.mapConfig.renderer : defaults.renderer;
     const layerConfig = config.mapConfig.layers;
@@ -17,28 +17,28 @@ function initMap(config) {
             new ol.control.ZoomSlider()
         ]),
         layers: buildMapLayers(layerConfig),
-        renderer: angular.isString(rendererConfig) ?
+        renderer: typeof rendererConfig === 'string' ?
                                 rendererConfig : undefined,
         target: 'map',
 
         view: new ol.View({
-            center: angular.isArray(viewConfig.center) ?
+            center: Array.isArray(viewConfig.center) ?
                     viewConfig.center : undefined,
-            maxZoom: angular.isNumber(viewConfig.maxZoom) ?
+            maxZoom: typeof viewConfig.maxZoom === 'number' ?
                     viewConfig.maxZoom : undefined,
-            minZoom: angular.isNumber(viewConfig.minZoom) ?
+            minZoom: typeof viewConfig.minZoom === 'number' ?
                     viewConfig.minZoom : undefined,
-            projection: angular.isString(viewConfig.projection) ?
+            projection: typeof viewConfig.projection === 'string' ?
                     viewConfig.projection : undefined,
-            resolution: angular.isString(viewConfig.resolution) ?
+            resolution: typeof viewConfig.resolution === 'string' ?
                     viewConfig.resolution : undefined,
-            resolutions: angular.isArray(viewConfig.resolutions) ?
+            resolutions: Array.isArray(viewConfig.resolutions) ?
                     viewConfig.resolutions : undefined,
-            rotation: angular.isNumber(viewConfig.rotation) ?
+            rotation: typeof viewConfig.rotation === 'number' ?
                     viewConfig.rotation : undefined,
-            zoom: angular.isNumber(viewConfig.zoom) ?
+            zoom: typeof viewConfig.zoom === 'number' ?
                     viewConfig.zoom : undefined,
-            zoomFactor: angular.isNumber(viewConfig.zoomFactor) ?
+            zoomFactor: typeof viewConfig.zoomFactor === 'number' ?
                     viewConfig.zoomFactor : undefined
         })
     });
@@ -46,27 +46,38 @@ function initMap(config) {
     const olGM = new olgm.OLGoogleMaps({map: map}); // map is the ol.Map instance
     olGM.activate();
 
-    if (angular.isArray(viewConfig.extent)) {
+    map.helpers = mapHelpers(map);
+    zoomToTheMask(map, viewConfig);
+    setMapTooltip(map)
+
+    return map;
+}
+
+function zoomToTheMask(map, viewConfig) {
+    if (Array.isArray(viewConfig.extent)) {
         const vw = map.getView();
         vw.set('extent', viewConfig.extent);
-        generateMaskAndAssociatedInteraction(viewConfig.extent, viewConfig.projection);
+        generateMaskAndAssociatedInteraction(map, viewConfig.extent, viewConfig.projection);
 
         if (viewConfig.initExtent) {
-            vw.fit(viewConfig.extent, service.getMapSize());
+            vw.fit(viewConfig.extent, map.getSize());
         }
     }
-    const tooltip = $window.document.getElementById('tooltip');
+}
+
+function setMapTooltip(map) {
+    const tooltip = window.document.getElementById('tooltip');
     const overlay = new ol.Overlay({
         element: tooltip,
         offset: [10, 0],
         positioning: 'bottom-left'
     });
     map.addOverlay(overlay);
-    map.on('pointermove', evt => displayTooltip(evt, overlay, tooltip));
-    return map;
-};
 
-function displayTooltip(evt, overlay, tooltip) {
+    map.on('pointermove', evt => displayTooltip(evt, map, overlay, tooltip));
+}
+
+function displayTooltip(evt, map, overlay, tooltip) {
     const pixel = evt.pixel;
     const feature = map.forEachFeatureAtPixel(pixel, feat => feat);
 
@@ -80,27 +91,27 @@ function displayTooltip(evt, overlay, tooltip) {
 
 function buildMapLayers(layerConfig) {
     const layers = [];
-    let layer;
 
-    if (angular.isArray(layerConfig)) {
+    if (Array.isArray(layerConfig)) {
+        layerConfig.forEach(conf => {
+            let layer;
 
-        angular.forEach(layerConfig, conf => {
             if (conf.type === 'googleLayer') {
-                service.googleLayer = new olgm.layer.Google({
+                layer = new olgm.layer.Google({
+                    name: 'googleTerrain',
                     backgroundLayer: conf.visible,
                     mapTypeId: google.maps.MapTypeId.TERRAIN
                 });
-                layer = service.googleLayer;
             }
             if (conf.type === 'Toner') {
-                service.tonerLayer = new ol.layer.Tile({
+                layer = new ol.layer.Tile({
+                    name: 'toner',
                     source: new ol.source.Stamen({
                         layer: 'toner-lite'
                     }),
                     backgroundLayer: conf.backgroundLayer,
                     visible: conf.visible
                 });
-                layer = service.tonerLayer;
             }
             if (conf.type === 'TileWMS') {
                 layer = new ol.layer.Tile({
@@ -152,13 +163,11 @@ function buildMapLayers(layerConfig) {
  * The area outer the feature which can be modified by the transfrom interaction
  * will have a white shadow
  */
-function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
+function generateMaskAndAssociatedInteraction(map, bboxFeature, fromSrs) {
     let polygon = new ol.Feature(ol.geom.Polygon.fromExtent(bboxFeature));
-    let backGroundLayer = service.getLayersBy('backgroundLayer', true)[0];
-
-    if (fromSrs !== service.getMapProjection()){
-        const polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs,
-                                        service.getMapProjection());
+    const projection = map.helpers.getMapProjection();
+    if (fromSrs !== projection){
+        const polygonNew = ol.proj.transformExtent(bboxFeature, fromSrs, projection);
         polygon = new ol.Feature(ol.geom.Polygon.fromExtent(polygonNew));
     }
 
@@ -177,6 +186,37 @@ function generateMaskAndAssociatedInteraction(bboxFeature, fromSrs) {
             })
         })
     });
-    service.getMap().addLayer(vector);
+    map.addLayer(vector);
     vector.getSource().addFeature(polygon);
+}
+
+/**
+*
+*/
+function mapHelpers(map) {
+
+    function getLayers() {
+        return map.getLayers().getArray();
+    }
+
+    function getMapZoom(){
+        return map.getView().getZoom();
+    }
+
+    function getMapProjection(){
+        return map.getView().getProjection().getCode();
+    };
+
+    function getLayersBy(key, value) {
+        const layers = getLayers();
+        return layers.filter(layer => {
+            return layer.get(key) === value;
+        });
+    }
+    return {
+        getLayers,
+        getMapZoom,
+        getMapProjection,
+        getLayersBy
+    }
 }
