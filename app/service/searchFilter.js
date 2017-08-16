@@ -48,7 +48,7 @@
             service.time = BOP.dateTimeService.formatDatesToString(service.minDate, service.maxDate);
             service.text = null;
             service.user = null;
-            service.geo = MapService.getCurrentExtentQuery().geo;
+            service.geo = MapService.getMap().helpers.getCurrentExtentQuery().geo;
             service.textLimit = null;
             service.gap = 'P1W';
         };

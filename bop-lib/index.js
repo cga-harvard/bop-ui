@@ -4,7 +4,6 @@ import HeightModule from './heightModule';
 import compactInteger from './numberService';
 import { dateTimeService } from './dateTimeService';
 import initMap from './map/map';
-import heatmap from './map/heatmap';
 
 (function(window) {
 
@@ -13,7 +12,6 @@ import heatmap from './map/heatmap';
         queryService,
         compactInteger,
         dateTimeService,
-        heatmap,
         initMap,
         HeightModule: HeightModule(window)
     };

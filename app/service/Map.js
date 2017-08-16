@@ -7,10 +7,8 @@
 (function() {
     angular.module('SolrHeatmapApp')
     .factory('Map',
-             ['$rootScope', 'DataConf', '$filter', '$document', '$controller',
-              '$window',
-        function($rootScope, DataConf, $filter, $document, $controller,
-            $window) {
+             ['$rootScope', 'DataConf', '$window',
+        function($rootScope, DataConf, $window) {
 
             const defaults = {
                 renderer: 'canvas',
@@ -33,41 +31,14 @@
                 return map;
             }
 
-            function getMapView(){
-                return getMap().getView();
-            }
-
-            function getMapZoom(){
-                return getMapView().getZoom();
-            }
-
-            function getMapSize(){
-                return getMap().getSize();
-            }
-
-            function getMapProjection(){
-                return getMapView().getProjection().getCode();
-            };
-
-            function getLayers() {
-                return getMap().getLayers().getArray();
-            }
-
-            function getLayersBy(key, value) {
-                const layers = getLayers();
-                return layers.filter(layer => {
-                    return layer.get(key) === value;
-                });
-            };
-
             function updateTransformationLayerFromQueryForMap(query) {
                 const extent = BOP.queryService.
-                    getExtentForProjectionFromQuery(query, getMapProjection());
+                    getExtentForProjectionFromQuery(query, map.helpers.getMapProjection());
                 setTransactionBBox(extent);
             }
 
             function setTransactionBBox(extent) {
-                const transformationLayer = getLayersBy('name',
+                const transformationLayer = map.helpers.getLayersBy('name',
                                                               'TransformInteractionLayer')[0];
                 const vectorSrc = transformationLayer.getSource();
                 const currentBbox = vectorSrc.getFeatures()[0];
@@ -116,7 +87,7 @@
              * DataConf.solrHeatmapApp.appConfig.ratioInnerBbox percent
              */
             function checkBoxOfTransformInteraction() {
-                const mapExtent = getMapView().calculateExtent(getMapSize());
+                const mapExtent = map.getView().calculateExtent(map.helpers.getMapSize());
 
                 // calculate reduced bounding box
                 const reducedBoundingBox = calculateReducedBoundingBoxFromInFullScreen({
@@ -136,108 +107,10 @@
                 const intitalCenter = DataConf.solrHeatmapApp.initMapConf.view.center;
                 const intitalZoom = DataConf.solrHeatmapApp.initMapConf.view.zoom;
                 if (intitalZoom && intitalCenter) {
-                    const vw = getMapView();
+                    const vw = map.getView();
                     vw.setCenter(intitalCenter);
                     vw.setZoom(intitalZoom);
                     checkBoxOfTransformInteraction();
-                }
-            }
-
-            function getCurrentExtentQuery() {
-                const currentExtent = getCurrentExtent();
-                return {
-                    geo: BOP.queryService.createQueryFromExtent(currentExtent.geo),
-                    hm: BOP.queryService.createQueryFromExtent(currentExtent.hm)
-                };
-            }
-
-            function createExtentFromNormalize(normalizedExtent) {
-                return {
-                    minX: normalizedExtent[0],
-                    minY: normalizedExtent[1],
-                    maxX: normalizedExtent[2],
-                    maxY: normalizedExtent[3]
-                };
-            }
-
-            /**
-             * Builds geospatial filter depending on the current map extent.
-             * This filter will be used later for `q.geo` parameter of the API
-             * search or export request.
-             */
-            function getCurrentExtent() {
-                const viewProj = getMapProjection();
-                const extent = getMapView().calculateExtent(getMapSize());
-                const transformInteractionLayer = getLayersBy('name', 'TransformInteractionLayer')[0];
-                let extentWgs84 = ol.proj.transformExtent(extent, viewProj, 'EPSG:4326');
-                let currentExtent = {};
-                let currentExtentBox = {};
-
-                if (!transformInteractionLayer) {
-                    return null;
-                }
-                const currentBbox = transformInteractionLayer.getSource().getFeatures()[0];
-                const currentBboxExtentWgs84 = ol.proj.transformExtent(
-                                currentBbox.getGeometry().getExtent(), viewProj, 'EPSG:4326');
-
-                // default: Zoom level <= 1 query whole world
-                if (getMapZoom() <= 1) {
-                    extentWgs84 = [-180, -90 ,180, 90];
-                }
-
-                if (extent && extentWgs84){
-                    const normalizedExtentMap = BOP.normalizeExtent(extentWgs84);
-                    const normalizedExtentBox = BOP.normalizeExtent(currentBboxExtentWgs84);
-
-                    currentExtent = createExtentFromNormalize(normalizedExtentMap);
-
-                    currentExtentBox = createExtentFromNormalize(normalizedExtentBox);
-
-                    const roundToFixed = value => {
-                        return parseFloat(Math.round(value* 100) / 100).toFixed(2);
-                    };
-                    // Reset the date fields
-                    $rootScope.$broadcast('geoFilterUpdated',
-                                                    `[${roundToFixed(currentExtentBox.minX)},
-                                                    ${roundToFixed(currentExtentBox.minY)} TO
-                                                    ${roundToFixed(currentExtentBox.maxX)},
-                                                    ${roundToFixed(currentExtentBox.maxY)}]`);
-                }
-
-                return { hm: currentExtent, geo: currentExtentBox };
-            };
-
-            function removeAllfeatures() {
-                if (angular.isObject(map)) {
-                    const layersWithBbox = getLayersBy('isbbox', true);
-                    layersWithBbox[0].getSource().clear();
-                }
-            }
-
-            function addCircle(point, style) {
-
-                const geojsonObject = {
-                    "type": "Feature",
-                    "geometry": {"type": "Point", "coordinates": ol.proj.fromLonLat(point)}
-                };
-
-                if (angular.isObject(map) && Object.keys(map).length !== 0) {
-                    const layersWithBbox = getLayersBy('isbbox', true);
-                    const features = (new ol.format.GeoJSON).readFeatures(geojsonObject);
-
-                    if (layersWithBbox.length) {
-                        layersWithBbox[0].getSource().addFeatures(features);
-                    }else{
-                        const vectorLayer = new ol.layer.Vector({
-                            isbbox: true,
-                            source: new ol.source.Vector({
-                                features: features
-                            })
-                        });
-                        vectorLayer.setStyle(style);
-                        map.addLayer(vectorLayer);
-                    }
-
                 }
             }
 
@@ -251,23 +124,11 @@
             const service = {
                 init,
                 toggleBaseMaps,
-                addCircle,
-                removeAllfeatures,
-                getCurrentExtent,
-                createExtentFromNormalize,
-                getCurrentExtentQuery,
                 resetMap,
                 checkBoxOfTransformInteraction,
                 calculateFullScreenExtentFromBoundingBox,
                 updateTransformationLayerFromQueryForMap,
-
-                getMap,
-                getMapView,
-                getMapZoom,
-                getMapSize,
-                getMapProjection,
-                getLayers,
-                getLayersBy
+                getMap
             };
             return service;
         }]

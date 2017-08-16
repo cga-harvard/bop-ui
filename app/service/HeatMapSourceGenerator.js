@@ -105,7 +105,7 @@
                 if (data && data['a.hm']) {
                     const heatmapData = data['a.hm.posSent'] ? NormalizeSentiment(data) : data['a.hm'];
 
-                    BOP.heatmap(MapService.getMap()).createOrUpdateHeatMapLayer(heatmapData);
+                    MapService.getMap().heatmap.createOrUpdateHeatMapLayer(heatmapData);
 
                     $rootScope.$broadcast('setCounter', data['a.matchDocs']);
                     $rootScope.$broadcast('setHistogram', data['a.time']);

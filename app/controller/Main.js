@@ -54,7 +54,8 @@
                         var extent = BOP.queryService.
                             getExtentForProjectionFromQuery(
                                 $location.search().geo, DataConf.solrHeatmapApp.initMapConf.view.projection);
-                        MapService.getMap().getView().fit(extent, MapService.getMapSize());
+                        MapService.getMap().getView().fit(extent,
+                                        MapService.getMap().helpers.getMapSize());
                     }
                     vm.isThereInteraction = false;
                 });
@@ -62,7 +63,7 @@
                 function changeGeoSearch(changeUrl) {
                     changeUrl = angular.isUndefined(changeUrl) || changeUrl ? true : false;
                     MapService.checkBoxOfTransformInteraction();
-                    var currentExtent = MapService.getCurrentExtentQuery();
+                    var currentExtent = MapService.getMap().helpers.getCurrentExtentQuery();
                     searchFilter.setFilter({geo: currentExtent.geo, hm: currentExtent.hm });
                     HeatMapSourceGeneratorService.search(changeUrl);
                 }

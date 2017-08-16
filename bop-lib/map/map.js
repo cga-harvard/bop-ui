@@ -1,8 +1,9 @@
-
-
 /**
  *
  */
+import heatmap from './heatmap';
+import mapHelpers from './mapHelpers';
+
 export default function initMap(config, defaults) {
     const viewConfig = Object.assign(defaults.view, config.mapConfig.view);
     const rendererConfig = config.mapConfig.renderer ?
@@ -47,6 +48,7 @@ export default function initMap(config, defaults) {
     olGM.activate();
 
     map.helpers = mapHelpers(map);
+    map.heatmap = heatmap(map);
     zoomToTheMask(map, viewConfig);
     setMapTooltip(map)
 
@@ -188,35 +190,4 @@ function generateMaskAndAssociatedInteraction(map, bboxFeature, fromSrs) {
     });
     map.addLayer(vector);
     vector.getSource().addFeature(polygon);
-}
-
-/**
-*
-*/
-function mapHelpers(map) {
-
-    function getLayers() {
-        return map.getLayers().getArray();
-    }
-
-    function getMapZoom(){
-        return map.getView().getZoom();
-    }
-
-    function getMapProjection(){
-        return map.getView().getProjection().getCode();
-    };
-
-    function getLayersBy(key, value) {
-        const layers = getLayers();
-        return layers.filter(layer => {
-            return layer.get(key) === value;
-        });
-    }
-    return {
-        getLayers,
-        getMapZoom,
-        getMapProjection,
-        getLayersBy
-    }
 }

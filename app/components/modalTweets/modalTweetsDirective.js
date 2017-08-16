@@ -41,7 +41,7 @@
                 });
 
                 function createBboxFromCoordinatePoint(centerPoint) {
-                    var extentGeo = MapService.getCurrentExtent().geo;
+                    var extentGeo = MapService.getMap().helpers.getCurrentExtent().geo;
                     var deltaX = Math.abs(extentGeo.maxX - extentGeo.minX);
                     var deltaY = Math.abs(extentGeo.maxY - extentGeo.minY);
 
@@ -56,7 +56,7 @@
                         newExtent.minX, newExtent.minY, newExtent.maxX, newExtent.maxY
                     ]);
                     return BOP.queryService.createQueryFromExtent(
-                        MapService.createExtentFromNormalize(normalizedExtent)
+                        MapService.getMap().helpers.createExtentFromNormalize(normalizedExtent)
                     );
                 }
             }

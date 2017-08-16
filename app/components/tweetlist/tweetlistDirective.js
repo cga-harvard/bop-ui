@@ -47,7 +47,7 @@
 
                 function removeAllfeatures() {
                     PanelInformationService.selectedTweet = {};
-                    MapService.removeAllfeatures();
+                    MapService.getMap().helpers.removeAllfeatures();
                 }
 
                 function addCircle(coordinates) {
@@ -59,7 +59,10 @@
                         coordArray = coordinates.split(',').map(function(val) {
                             return Number(val);
                         });
-                        MapService.addCircle([coordArray[1], coordArray[0]], stylePoint);
+                        MapService.getMap().helpers.addCircle(
+                            [coordArray[1], coordArray[0]],
+                            stylePoint
+                        );
                     }
                 }
 

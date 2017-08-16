@@ -14,8 +14,9 @@ export default function heatmap(map) {
             "hsl(340, 100%, 50%)", "hsl(300, 100%, 50%)",
             "hsl(260, 100%, 50%)", "hsl(200, 100%, 50%)"];
         const normalCountGradient = generateSigmoidColorGradient(330, 0);
-        const existingHeatMapLayers = getLayersBy('name', 'HeatMapLayer');
-        const transformInteractionLayer = getLayersBy('name', "TransformInteractionLayer")[0];
+        const existingHeatMapLayers = map.helpers.getLayersBy('name', 'HeatMapLayer');
+        const transformInteractionLayer = map.helpers.getLayersBy('name',
+                                                "TransformInteractionLayer")[0];
         hmData.heatmapRadius = 20;
         hmData.blur = 12;
         hmData.gradientArray = hmData.posSent ? sentimetGradient : normalCountGradient;
@@ -69,15 +70,6 @@ export default function heatmap(map) {
 
     function sigmoid(x) {
         return 1/(1 + Math.pow(Math.E, -x));
-    }
-
-
-
-    function getLayersBy(key, value) {
-        const layers = getLayers();
-        return layers.filter(layer => {
-            return layer.get(key) === value;
-        });
     }
 
     function getLayers(){
