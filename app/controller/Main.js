@@ -62,7 +62,8 @@
 
                 function changeGeoSearch(changeUrl) {
                     changeUrl = angular.isUndefined(changeUrl) || changeUrl ? true : false;
-                    MapService.checkBoxOfTransformInteraction();
+                    MapService.getMap().helpers
+                        .checkBoxOfTransformInteraction(DataConf.solrHeatmapApp.appConfig);
                     var currentExtent = MapService.getMap().helpers.getCurrentExtentQuery();
                     searchFilter.setFilter({geo: currentExtent.geo, hm: currentExtent.hm });
                     HeatMapSourceGeneratorService.search(changeUrl);
@@ -82,7 +83,7 @@
                         mapConf.view.extent = BOP.queryService.
                           getExtentForProjectionFromQuery(DataConf.solrHeatmapApp.$state.geo,
                                                           mapConf.view.projection);
-                        mapConf.view.extent = MapService
+                        mapConf.view.extent = MapService.getMap().helpers
                             .calculateFullScreenExtentFromBoundingBox(mapConf.view.extent);
                     }
                     MapService.init({

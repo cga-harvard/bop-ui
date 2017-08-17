@@ -1,5 +1,7 @@
 import normalizeExtent from '../Normalize';
 import { queryService } from '../queryService';
+import HeightModule from '../heightModule';
+
 
 
 export default function mapHelpers(map){
@@ -13,7 +15,10 @@ export default function mapHelpers(map){
         createExtentFromNormalize,
         getCurrentExtentQuery,
         addCircle,
-        removeAllfeatures
+        removeAllBboxfeatures,
+        updateTransformationLayerFromQueryForMap,
+        checkBoxOfTransformInteraction,
+        calculateFullScreenExtentFromBoundingBox
     }
 
     function getMapZoom(){
@@ -123,13 +128,78 @@ export default function mapHelpers(map){
         }
     }
 
-    function removeAllfeatures() {
+    function removeAllBboxfeatures() {
         if (map !== null && typeof map === 'object') {
             const layersWithBbox = getLayersBy('isbbox', true);
             layersWithBbox[0].getSource().clear();
         }
     }
 
+    function updateTransformationLayerFromQueryForMap(query) {
+        const extent = queryService.
+            getExtentForProjectionFromQuery(query, getMapProjection());
+        setTransactionBBox(extent);
+    }
 
+    // private
+    function setTransactionBBox(extent) {
+        const transformationLayer = getLayersBy('name', 'TransformInteractionLayer')[0];
+        const vectorSrc = transformationLayer.getSource();
+        const currentBbox = vectorSrc.getFeatures()[0];
+        const polyNew = ol.geom.Polygon.fromExtent(extent);
+        currentBbox.setGeometry(polyNew);
+    }
+
+    /*
+     * For change:resolution event (zoom in map):
+     * If bounding of transform interaction is grater than the map extent
+     * the transform box will be resized to
+     * DataConf.solrHeatmapApp.appConfig.ratioInnerBbox percent
+     */
+    function checkBoxOfTransformInteraction(isConfig) {
+        const mapExtent = map.getView().calculateExtent(getMapSize());
+        if (!isConfig) { return setTransactionBBox(mapExtent); }
+
+        // calculate reduced bounding box
+        const reducedBoundingBox = calculateReducedBoundingBoxFromInFullScreen({
+            minX: mapExtent[0], minY: mapExtent[1],
+            maxX: mapExtent[2], maxY: mapExtent[3]
+        });
+        setTransactionBBox([reducedBoundingBox.minX, reducedBoundingBox.minY,
+            reducedBoundingBox.maxX, reducedBoundingBox.maxY]);
+    }
+
+    // private
+    function calculateReducedBoundingBoxFromInFullScreen(extent){
+        const screenDimensions = HeightModule(window);
+        const sideBarPercent = 1 - (screenDimensions.sideBarWidth()/window.innerWidth);
+        const rightSideBarWidth = 1 - (screenDimensions.rightSideBarWidth/window.innerWidth);
+        const bottomHeight = 1 - (screenDimensions.bottomHeight/window.innerWidth);
+        const topBarPercent = 1 -
+            (screenDimensions.topPanelHeight()/screenDimensions.documentHeight());
+        const dx = extent.maxX - extent.minX;
+        const dy = extent.maxY - extent.minY;
+        const minX = extent.minX + (1 - sideBarPercent) * dx;
+        const maxX = extent.minX + (rightSideBarWidth) * dx;
+        const minY = extent.minY + (1 - bottomHeight) * dy;
+        const maxY = extent.minY + (topBarPercent) * dy;
+        return {minX, minY, maxX, maxY};
+    }
+
+    function calculateFullScreenExtentFromBoundingBox(extent) {
+        extent = {
+            minX: extent[0], minY: extent[1],
+            maxX: extent[2], maxY: extent[3]
+        };
+        const sideBarPercent = 1 - (BOP.HeightModule.sideBarWidth()/$window.innerWidth);
+        const topBarPercent = 1 -
+            (BOP.HeightModule.topPanelHeight()/BOP.HeightModule.documentHeight());
+
+        const dx = extent.maxX - extent.minX;
+        const dy = extent.maxY - extent.minY;
+        const minX = extent.minX + dx - (dx/sideBarPercent);
+        const maxY = extent.minY + dy/topBarPercent;
+        return [minX, extent.minY, extent.maxX, maxY];
+    }
 
 }

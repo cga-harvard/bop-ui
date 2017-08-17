@@ -47,7 +47,7 @@
 
                 function removeAllfeatures() {
                     PanelInformationService.selectedTweet = {};
-                    MapService.getMap().helpers.removeAllfeatures();
+                    MapService.getMap().helpers.removeAllBboxfeatures();
                 }
 
                 function addCircle(coordinates) {

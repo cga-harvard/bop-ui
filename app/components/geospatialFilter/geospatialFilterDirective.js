@@ -24,7 +24,7 @@
                 };
 
                 scope.search = function() {
-                    Map.updateTransformationLayerFromQueryForMap(this.filter.geo);
+                    Map.getMap().helpers.updateTransformationLayerFromQueryForMap(this.filter.geo);
                     HeatMapSourceGenerator.search();
                 };
 
